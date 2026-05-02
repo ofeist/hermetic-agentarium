@@ -24,3 +24,13 @@ git diff --stat
 ```
 
 Add targeted tests when applicable.
+
+## Provider setup notes
+
+For DeepSeek child delegation setup, see:
+
+- [DeepSeek Provider Setup](./DEEPSEEK_PROVIDER_SETUP.md)
+
+Key lesson: for DeepSeek child delegation, use `provider: deepseek`, not `provider: custom`.
+
+If the child log shows `Model: deepseek-chat` but `Endpoint: https://api.openai.com/v1`, the child model changed but the endpoint did not.

@@ -32,11 +32,18 @@ It is intentionally named differently from Hermes bundled skills such as `subage
 
 ## Core workflow
 
-User task  
-→ parent agent plans  
-→ bounded child delegation  
-→ parent verifies with git diff/status/tests  
+User task
+→ parent agent plans
+→ bounded child delegation
+→ parent verifies with git diff/status/tests
 → parent decides accept/revise/revert/no-op
+
+## Documentation
+
+- [Workflow](docs/WORKFLOW.md)
+- [Security](docs/SECURITY.md)
+- [Install](docs/INSTALL.md)
+- [DeepSeek Provider Setup](docs/DEEPSEEK_PROVIDER_SETUP.md) — configure Hermes so the parent can stay on OpenAI while delegated child agents use DeepSeek.
 
 ## Security warning
 
