@@ -2,31 +2,27 @@
 
 ## Purpose
 
-This document describes how to configure Hermes so the parent agent can stay on OpenAI while delegated child agents use DeepSeek.
+This document describes how to configure Hermes so the parent agent uses OpenAI while delegated child agents use DeepSeek.
 
 The repository must not contain real API keys or runtime secrets.
 
-## Security rules
+## Do not commit checklist
 
-Never commit:
+Before each commit, confirm none of the following are staged:
 
-- `.env`
-- `.env.*`
-- `auth.json`
-- `config.yaml`
-- session files
-- logs
-- request dumps
-- API keys or tokens
+- `.env` or `.env.*` files
+- `auth.json`, `config.yaml`, or similar credential files
+- session files, logs, or request dumps
+- Any real API keys, tokens, or secrets
 
-Use environment variables for secrets.
+Use environment variables for all secrets. The repository must never contain real API keys or runtime secrets.
 
 ## Local `.env`
 
 Example only:
 
 ```bash
-DEEPSEEK_API_KEY="sk-..."
+DEEPSEEK_API_KEY="<your_deepseek_api_key>"
 DEEPSEEK_BASE_URL="https://api.deepseek.com"
 ```
 
@@ -40,7 +36,7 @@ chmod 600 ~/.hermes/profiles/coder/.env
 
 ## Hermes config pattern
 
-Parent model can stay on OpenAI:
+Parent model stays on OpenAI:
 
 ```yaml
 model:
@@ -62,19 +58,13 @@ delegation:
 
 ## Important note
 
-For DeepSeek delegation, prefer:
+For DeepSeek delegation, use:
 
 ```yaml
 provider: deepseek
 ```
 
-Do not use this for DeepSeek child delegation unless verified in your Hermes version:
-
-```yaml
-provider: custom
-```
-
-Using `provider: custom` may result in the child model being set to `deepseek-chat` while the endpoint still points to the parent OpenAI base URL.
+Do not use `provider: custom` for DeepSeek child delegation. Using `provider: custom` causes the child model to change to `deepseek-chat` but the endpoint still points to the parent OpenAI base URL.
 
 Symptom:
 
@@ -92,6 +82,34 @@ Provider: deepseek
 Model: deepseek-chat
 Endpoint: https://api.deepseek.com
 ```
+
+## Known-good config
+
+Minimal working Hermes config for DeepSeek delegation:
+
+```yaml
+model:
+  default: o4-mini
+  provider: custom
+  base_url: https://api.openai.com/v1
+  api_key: ${OPENAI_API_KEY}
+
+delegation:
+  model: deepseek-chat
+  provider: deepseek
+  base_url: ''
+  api_key: ''
+```
+
+With the following in your local `.env`:
+
+```bash
+OPENAI_API_KEY="<your_openai_api_key>"
+DEEPSEEK_API_KEY="<your_deepseek_api_key>"
+DEEPSEEK_BASE_URL="https://api.deepseek.com"
+```
+
+The parent uses OpenAI for the main conversation; delegation uses DeepSeek via its native provider with no overrides (empty `base_url` and `api_key` signal the provider to use its own defaults).
 
 ## Smoke test
 
@@ -160,7 +178,7 @@ delegation:
 and make sure the local `.env` contains:
 
 ```bash
-DEEPSEEK_API_KEY="sk-..."
+DEEPSEEK_API_KEY="<your_deepseek_api_key>"
 DEEPSEEK_BASE_URL="https://api.deepseek.com"
 ```
 
