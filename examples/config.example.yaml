@@ -1,0 +1,19 @@
+# Example only. Do not store real API keys in Git.
+#
+# In some Hermes/custom-provider setups, environment variable interpolation
+# such as ${OPENAI_API_KEY} may not work reliably in api_key fields.
+# If you use literal keys locally, keep config.yaml ignored and private.
+
+providers:
+  openai-custom:
+    base_url: "https://api.openai.com/v1"
+    api_key: "REPLACE_ME_DO_NOT_COMMIT_REAL_KEY"
+
+models:
+  parent:
+    provider: openai-custom
+    model: o4-mini
+
+  child:
+    provider: openai-custom
+    model: gpt-4.1-nano

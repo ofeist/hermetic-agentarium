@@ -1,0 +1,24 @@
+# Secrets
+.env
+.env.*
+*.key
+*.pem
+id_rsa
+id_ed25519
+auth.json
+config.yaml
+request_dump_*.json
+
+# Hermes runtime state
+sessions/
+logs/
+*.log
+
+# Python/editor noise
+__pycache__/
+.pytest_cache/
+.venv/
+venv/
+.DS_Store
+.idea/
+.vscode/
