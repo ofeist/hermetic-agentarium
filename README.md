@@ -9,7 +9,7 @@ This repository stores sanitized Hermes profile and skill templates for safe, re
 ## Includes
 
 - coder `SOUL.md`
-- `coding-orchestrator` `SKILL.md`
+- `hermetic-coding-orchestrator` `SKILL.md`
 - example configuration templates
 - workflow and security documentation
 - install helper scripts
@@ -23,6 +23,12 @@ This repository stores sanitized Hermes profile and skill templates for safe, re
 - local sessions
 - logs
 - request dumps
+
+## Custom skill name
+
+The main custom skill is `hermetic-coding-orchestrator`.
+
+It is intentionally named differently from Hermes bundled skills such as `subagent-driven-development`, so prompts can target this repository's workflow more explicitly.
 
 ## Core workflow
 

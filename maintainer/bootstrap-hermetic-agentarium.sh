@@ -13,7 +13,7 @@ if [[ "$ROOT" == "$HOME" || "$ROOT" == "/" ]]; then
 fi
 
 mkdir -p profiles/coder
-mkdir -p skills/coding-orchestrator
+mkdir -p skills/hermetic-coding-orchestrator
 mkdir -p examples
 mkdir -p docs
 mkdir -p scripts
@@ -27,12 +27,12 @@ else
   touch profiles/coder/SOUL.md
 fi
 
-if [[ -f "$HOME/.hermes/skills/coding-orchestrator/SKILL.md" ]]; then
-  cp "$HOME/.hermes/skills/coding-orchestrator/SKILL.md" skills/coding-orchestrator/SKILL.md
-  echo "Copied SKILL.md from ~/.hermes/skills/coding-orchestrator/"
+if [[ -f "$HOME/.hermes/skills/hermetic-coding-orchestrator/SKILL.md" ]]; then
+  cp "$HOME/.hermes/skills/hermetic-coding-orchestrator/SKILL.md" skills/hermetic-coding-orchestrator/SKILL.md
+  echo "Copied SKILL.md from ~/.hermes/skills/hermetic-coding-orchestrator/"
 else
-  echo "WARNING: ~/.hermes/skills/coding-orchestrator/SKILL.md not found"
-  touch skills/coding-orchestrator/SKILL.md
+  echo "WARNING: ~/.hermes/skills/hermetic-coding-orchestrator/SKILL.md not found"
+  touch skills/hermetic-coding-orchestrator/SKILL.md
 fi
 
 cat > .gitignore <<'GITIGNORE_EOF'
@@ -74,7 +74,7 @@ This repository stores sanitized Hermes profile and skill templates for safe, re
 ## Includes
 
 - coder `SOUL.md`
-- `coding-orchestrator` `SKILL.md`
+- `hermetic-coding-orchestrator` `SKILL.md`
 - example configuration templates
 - workflow and security documentation
 - install helper scripts
@@ -196,7 +196,7 @@ models:
 CONFIG_EOF
 
 cat > examples/real-repo-readonly-test.prompt.md <<'PROMPT_EOF'
-Use the coding-orchestrator skill.
+Use the hermetic-coding-orchestrator skill.
 
 Task:
 Inspect this repository and summarize:
@@ -230,17 +230,17 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 mkdir -p "$HOME/.hermes/profiles/coder"
-mkdir -p "$HOME/.hermes/skills/coding-orchestrator"
+mkdir -p "$HOME/.hermes/skills/hermetic-coding-orchestrator"
 
 cp "$REPO_ROOT/profiles/coder/SOUL.md" \
    "$HOME/.hermes/profiles/coder/SOUL.md"
 
-cp "$REPO_ROOT/skills/coding-orchestrator/SKILL.md" \
-   "$HOME/.hermes/skills/coding-orchestrator/SKILL.md"
+cp "$REPO_ROOT/skills/hermetic-coding-orchestrator/SKILL.md" \
+   "$HOME/.hermes/skills/hermetic-coding-orchestrator/SKILL.md"
 
 echo "Installed:"
 echo "- $HOME/.hermes/profiles/coder/SOUL.md"
-echo "- $HOME/.hermes/skills/coding-orchestrator/SKILL.md"
+echo "- $HOME/.hermes/skills/hermetic-coding-orchestrator/SKILL.md"
 echo
 echo "Note: config.yaml and auth.json are local runtime files and are not installed from this repo."
 INSTALL_EOF

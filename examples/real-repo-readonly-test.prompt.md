@@ -1,4 +1,4 @@
-Use the coding-orchestrator skill.
+Use the hermetic-coding-orchestrator skill.
 
 Task:
 Inspect this repository and summarize:

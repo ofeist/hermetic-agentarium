@@ -1,6 +1,6 @@
 ---
-name: coding-orchestrator
-description: Use this skill for non-trivial software development tasks that require planning, implementation, verification, and review.
+name: hermetic-coding-orchestrator
+description: Use this custom Hermetic Agentarium skill for controlled coding orchestration with bounded delegation, dirty-worktree protection, parent verification, and no-op/revise/revert review decisions.
 ---
 
 # Coding Orchestrator Workflow

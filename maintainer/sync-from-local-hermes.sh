@@ -4,10 +4,10 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 SRC_SOUL="$HOME/.hermes/profiles/coder/SOUL.md"
-SRC_SKILL="$HOME/.hermes/skills/coding-orchestrator/SKILL.md"
+SRC_SKILL="$HOME/.hermes/skills/hermetic-coding-orchestrator/SKILL.md"
 
 DST_SOUL="$REPO_ROOT/profiles/coder/SOUL.md"
-DST_SKILL="$REPO_ROOT/skills/coding-orchestrator/SKILL.md"
+DST_SKILL="$REPO_ROOT/skills/hermetic-coding-orchestrator/SKILL.md"
 
 if [[ ! -f "$SRC_SOUL" ]]; then
   echo "ERROR: Missing source file: $SRC_SOUL"
@@ -30,5 +30,5 @@ echo "- $SRC_SOUL -> $DST_SOUL"
 echo "- $SRC_SKILL -> $DST_SKILL"
 echo
 echo "Review changes with:"
-echo "  git diff -- profiles/coder/SOUL.md skills/coding-orchestrator/SKILL.md"
+echo "  git diff -- profiles/coder/SOUL.md skills/hermetic-coding-orchestrator/SKILL.md"
 
