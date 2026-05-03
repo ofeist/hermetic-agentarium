@@ -23,6 +23,7 @@ You may only create or modify:
 - Do not read, print, modify, or search for secrets.
 - Do not touch .env files, API keys, auth files, SSH keys, tokens, credentials, or private config.
 - Do not inspect ~/.config, ~/.local/share, or any auth/config locations outside this repository.
+- Do not read other repository files unless they are explicitly listed in Read scope.
 - Keep the diff minimal.
 - Parent will independently verify git diff and tests.
 
