@@ -15,4 +15,18 @@ if [[ ! -f "$PROMPT_FILE" ]]; then
 fi
 
 echo "Using model: $MODEL"
-opencode run --model "$MODEL" "$(cat "$PROMPT_FILE")"
+
+EXTRA_ENV=()
+if [[ -n "${OPENCODE_XDG_CONFIG_HOME:-}" ]]; then
+    EXTRA_ENV+=("XDG_CONFIG_HOME=$OPENCODE_XDG_CONFIG_HOME")
+fi
+if [[ -n "${OPENCODE_XDG_DATA_HOME:-}" ]]; then
+    EXTRA_ENV+=("XDG_DATA_HOME=$OPENCODE_XDG_DATA_HOME")
+fi
+
+if [[ ${#EXTRA_ENV[@]} -gt 0 ]]; then
+    echo "Using explicit OpenCode config/data home overrides"
+    env "${EXTRA_ENV[@]}" opencode run --model "$MODEL" "$(cat "$PROMPT_FILE")"
+else
+    opencode run --model "$MODEL" "$(cat "$PROMPT_FILE")"
+fi
