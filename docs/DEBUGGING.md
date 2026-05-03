@@ -204,6 +204,14 @@ The local run audit contract is documented in:
 
     docs/RUN-AUDIT.md
 
+Optional run capture can be enabled by passing a run id:
+
+    scripts/run-opencode-executor.sh /tmp/TASK-xxxx.prompt.md deepseek/deepseek-chat TASK-xxxx
+
+Or by setting:
+
+    AGENTOPS_RUN_ID=TASK-xxxx
+
 Safe committed summaries belong in:
 
     agentops/results/TASK-xxxx-result.md

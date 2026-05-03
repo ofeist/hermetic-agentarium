@@ -6,9 +6,9 @@ The goal is to make executor runs easier to inspect without committing raw promp
 
 ## Status
 
-Design only.
+Implemented for `scripts/run-opencode-executor.sh` as optional local run capture.
 
-This document defines the target contract. It does not imply that wrapper capture is implemented yet.
+Wrapper capture is opt-in. Existing two-argument usage remains supported.
 
 ## Local run directory
 
