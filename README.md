@@ -6,6 +6,25 @@ Controlled agentic coding workflows, profiles, and skills.
 
 This repository stores sanitized Hermes profile and skill templates for safe, reviewable coding orchestration.
 
+## Prerequisites
+
+Before installing the coder profile, make sure you already have:
+
+- Git
+- Bash
+- Python 3
+- Hermes installed and usable locally
+- OpenCode installed and authenticated locally
+- an OpenCode provider/model configured, for example `deepseek/deepseek-chat`
+
+Tested locally with:
+- Hermes Agent v0.12.0 (2026.4.30)
+- OpenCode 1.14.33
+
+This repository does **not** install Hermes, OpenCode, provider credentials, or auth files.
+
+The install script only copies the repo-managed Hermes `coder` profile and custom skill into your local Hermes runtime. Local runtime files such as `~/.hermes/config.yaml`, `~/.hermes/auth.json`, OpenCode auth/config, and provider keys stay local and are not managed by this repo.
+
 ## Quickstart
 
 Shortest path to a local smoke run:
@@ -18,6 +37,13 @@ Shortest path to a local smoke run:
 2. Install the Hermes `coder` profile and custom skill:
 
        ./scripts/install-coder-profile.sh
+
+   This installs:
+
+       profiles/coder/SOUL.md
+       skills/hermetic-coding-orchestrator/SKILL.md
+
+   into your local `~/.hermes/` runtime.
 
 3. Make sure OpenCode is installed and visible:
 
