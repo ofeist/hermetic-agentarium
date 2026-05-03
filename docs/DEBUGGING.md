@@ -194,21 +194,16 @@ Raw prompts, stdout/stderr, and model responses may contain sensitive informatio
 
 Do not commit local run logs by default.
 
-Use this local-only directory for temporary debug/audit artifacts:
+Local executor run artifacts should stay under:
 
     .agentops-runs/
 
-This directory is gitignored.
+This directory is gitignored and is intended for local-only debugging/audit data.
 
-Suggested local structure:
+The local run audit contract is documented in:
 
-    .agentops-runs/TASK-xxxx/
-      executor-prompt.md
-      executor-output.log
-      review-notes.md
+    docs/RUN-AUDIT.md
 
-Before storing anything there, assume logs may contain sensitive context. Do not copy secrets, auth files, provider tokens, or full request dumps into committed files.
-
-Safe summaries belong in:
+Safe committed summaries belong in:
 
     agentops/results/TASK-xxxx-result.md
