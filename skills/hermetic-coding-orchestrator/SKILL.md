@@ -181,3 +181,34 @@ Run task-specific tests/checks when applicable.
    - `blocked`
 
 10. Do not commit unless explicitly instructed.
+
+### Canonical ready task invocation prompt
+
+Add the following minimal prompt for executing AgentOps ready tasks:
+
+```text
+Execute AgentOps ready task:
+
+agentops/tasks/ready/TASK-xxxx-name.md
+
+Use the Hermes/OpenCode executor workflow from your profile/skill.
+
+Requirements:
+- create/switch to an appropriate task branch
+- do not run executor work on main
+- preserve OPENCODE_XDG_CONFIG_HOME and OPENCODE_XDG_DATA_HOME
+- use the task-specified model
+- do not fallback to another model
+- do not commit
+- independently verify the result
+
+Return:
+Plan:
+Implementation:
+Verification:
+Review:
+Changed files:
+Uncertainty:
+
+Also note: task-specific paths, verification commands, or constraints can be added below this prompt when needed
+```
