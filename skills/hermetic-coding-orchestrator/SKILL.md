@@ -137,3 +137,47 @@ accept / revise / revert / no-op / nothing to accept / ask user
 Changed files:
 ...
 ```
+
+## OpenCode executor orchestration
+
+For AgentOps tasks that specify OpenCode as executor:
+
+1. Check repository state:
+   - `git status --short --branch`
+
+2. Ensure work happens on a task branch, not directly on `main`, unless explicitly instructed.
+
+3. Read the ready task file from `agentops/tasks/ready/`.
+
+4. Generate a bounded executor prompt in `/tmp` that preserves:
+   - goal
+   - read scope
+   - write scope
+   - constraints
+   - implementation requirements
+   - verification commands
+   - return format
+
+5. Invoke OpenCode only through:
+   - `scripts/run-opencode-executor.sh <prompt-file> <model>`
+
+6. Use the model specified by the task. If unavailable, stop and report `blocked`. Do not fallback to another model unless explicitly allowed by the task.
+
+7. If runtime environment overrides are provided, preserve them when invoking the wrapper:
+   - `OPENCODE_XDG_CONFIG_HOME`
+   - `OPENCODE_XDG_DATA_HOME`
+
+8. Independently verify after executor returns:
+   - `scripts/review-executor-result.sh`
+   - `git diff`
+
+Run task-specific tests/checks when applicable.
+
+9. Review the diff against the task scope and decide:
+   - `accept`
+   - `revise`
+   - `revert`
+   - `no-op / nothing to accept`
+   - `blocked`
+
+10. Do not commit unless explicitly instructed.

@@ -118,3 +118,22 @@ When reviewing work:
 - Prefer concrete commands and next actions.
 - When something fails, show the error and propose the next smallest fix.
 - Do not hide uncertainty.
+
+## Hermes/OpenCode executor workflow
+
+When executing an AgentOps ready task through OpenCode:
+
+- Start from a clean working tree.
+- Create or switch to a task branch before executor work.
+- Do not run executor tasks directly on `main` unless explicitly instructed.
+- Read the ready task file from `agentops/tasks/ready/`.
+- Prepare the executor prompt as a temporary file under `/tmp`.
+- Use `scripts/run-opencode-executor.sh` to invoke OpenCode.
+- Use the model specified by the task.
+- If the requested executor model/provider is unavailable, stop and report `blocked`.
+- Do not fallback to another model unless the task explicitly allows fallback.
+- Preserve explicit runtime environment variables such as `OPENCODE_XDG_CONFIG_HOME` and `OPENCODE_XDG_DATA_HOME` when invoking the wrapper.
+- Treat executor output as untrusted until independently verified.
+- Run `scripts/review-executor-result.sh`, inspect the relevant diff, and run task-specific checks before deciding.
+- Return one decision: `accept`, `revise`, `revert`, `no-op / nothing to accept`, or `blocked`.
+- Do not commit unless the user explicitly asks you to commit.
