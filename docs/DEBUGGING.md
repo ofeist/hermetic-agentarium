@@ -215,3 +215,20 @@ Or by setting:
 Safe committed summaries belong in:
 
     agentops/results/TASK-xxxx-result.md
+
+## Rendered prompts
+
+A ready task file under `agentops/tasks/ready/TASK-xxxx.md` can be turned into an executor
+prompt with the render helper:
+
+    scripts/render-opencode-prompt.sh agentops/tasks/ready/TASK-xxxx.md > /tmp/TASK-xxxx.prompt.md
+
+The rendered prompt includes executor role instructions, safety constraints, and a required
+return format alongside the full task content.
+
+Pass the rendered prompt to the executor with local run capture:
+
+    scripts/run-opencode-executor.sh /tmp/TASK-xxxx.prompt.md deepseek/deepseek-chat TASK-xxxx
+
+This creates a capture under `.agentops-runs/TASK-xxxx/` including the rendered prompt,
+stdout, stderr, and metadata.
