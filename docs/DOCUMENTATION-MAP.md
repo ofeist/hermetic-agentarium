@@ -17,10 +17,11 @@ Read these in order:
 Use these documents when running or reviewing AgentOps tasks:
 
 1. `agentops/TASK-LIFECYCLE.md` — task states and decision model.
-2. `docs/OPENCODE-EXECUTOR-WORKFLOW.md` — Hermes/OpenCode execution flow.
-3. `templates/opencode-executor-task.prompt.md` — reusable bounded executor prompt template.
-4. `examples/opencode-docs-task.prompt.md` — filled example prompt.
-5. `agentops/results/` — safe result summaries for completed tasks.
+2. `agentops/USAGE.md` — practical lifecycle usage.
+3. `docs/OPENCODE-EXECUTOR-WORKFLOW.md` — Hermes/OpenCode execution flow.
+4. `templates/opencode-executor-task.prompt.md` — reusable bounded executor prompt template.
+5. `examples/opencode-docs-task.prompt.md` — filled example prompt.
+6. `agentops/results/` — safe result summaries for completed tasks.
 
 ## Maintainer path
 

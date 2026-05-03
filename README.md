@@ -81,9 +81,12 @@ Start here:
 - [Documentation Map](docs/DOCUMENTATION-MAP.md) — what to read and in which order.
 - [Install](docs/INSTALL.md) — install the Hermes profile and skill.
 - [First Run](docs/FIRST-RUN.md) — first safe smoke run.
+- [OpenCode Configuration](docs/OPENCODE-CONFIGURATION.md) — provider/model setup and runtime environment variables.
 - [OpenCode Executor Workflow](docs/OPENCODE-EXECUTOR-WORKFLOW.md) — Hermes/OpenCode execution model.
+- [Debugging](docs/DEBUGGING.md) — common failures and safe checks.
 - [POC Status](docs/POC-STATUS.md) — current validated POC status.
 - [AgentOps Task Lifecycle](agentops/TASK-LIFECYCLE.md) — task lifecycle states and decisions.
+- [AgentOps Usage Guide](agentops/USAGE.md) — practical lifecycle usage.
 - [Security](docs/SECURITY.md) — repository and secret-handling rules.
 - [DeepSeek Provider Setup](docs/DEEPSEEK_PROVIDER_SETUP.md) — configure Hermes so the parent can stay on OpenAI while delegated child agents use DeepSeek.
 
