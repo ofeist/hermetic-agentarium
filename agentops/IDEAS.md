@@ -7,20 +7,6 @@ This file is intentionally lightweight and informal.
 Items here are not ready tasks.
 Do not execute directly from this file.
 
-## Purpose
-
-Use this file when an idea is worth remembering but not yet worth turning into a planned or ready task.
-
-Good examples:
-
-- rough improvement ideas
-- bug suspicions
-- follow-ups from completed tasks
-- one-line reminders
-- maybe-later ideas
-- small workflow annoyances
-- possible documentation gaps
-
 ## Inbox
 
 - document the canonical Hermes/coder minimal execution prompt in SOUL or SKILL
@@ -31,6 +17,8 @@ Good examples:
 - later: define planned task promotion format
 - later: add ready task template
 - later: add planned task template
+- later: decide whether planned tasks need a template or only a loose format
+- later: consider whether task closeout should move ready/review files automatically or stay manual
 
 ## Promotion path
 
