@@ -56,3 +56,16 @@ pytest tests/            # or equivalent
 | **revise** | The diff needs changes; parent writes a revised prompt and re-runs. |
 | **revert** | The diff is wrong; parent discards only the executor-touched files, for example with `git restore <allowed-files>`. |
 | **no-op / nothing to accept** | Executor produced no useful changes; no action needed. |
+
+## Runtime Configuration Notes
+
+When OpenCode is run from an isolated Hermes profile, its `HOME` may differ from the user's normal shell. If OpenCode cannot see the expected provider/model configuration, pass explicit runtime homes when invoking the wrapper:
+
+```bash
+OPENCODE_XDG_CONFIG_HOME=/home/splinter/.config \
+OPENCODE_XDG_DATA_HOME=/home/splinter/.local/share \
+scripts/run-opencode-executor.sh /tmp/task-prompt.txt deepseek/deepseek-chat
+```
+
+If the requested executor model/provider is unavailable, stop and report `blocked`. Do not fallback to another model unless the task explicitly allows fallback.
+

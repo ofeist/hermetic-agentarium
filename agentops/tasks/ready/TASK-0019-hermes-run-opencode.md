@@ -32,6 +32,8 @@ The executor may only create or modify:
 - Do not touch .env files, API keys, auth files, SSH keys, tokens, credentials, or private config.
 - Do not inspect ~/.config, ~/.local/share, or any auth/config locations outside this repository.
 - Keep the diff minimal.
+- If the requested executor model/provider is unavailable, stop and report blocked. Do not fallback to another model unless explicitly allowed by the task.
+- When running OpenCode from an isolated Hermes profile, pass explicit `OPENCODE_XDG_CONFIG_HOME` and `OPENCODE_XDG_DATA_HOME` if needed.
 - Do not introduce Taskplane.
 - Do not introduce a larger framework.
 - Parent will independently verify git diff and checks.

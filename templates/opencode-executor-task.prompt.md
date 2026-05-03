@@ -25,6 +25,8 @@ You may only create or modify:
 - Do not inspect ~/.config, ~/.local/share, or any auth/config locations outside this repository.
 - Do not read other repository files unless they are explicitly listed in Read scope.
 - Keep the diff minimal.
+- If the requested executor model/provider is unavailable, stop and report blocked. Do not fallback to another model unless explicitly allowed by the task.
+- When running OpenCode from an isolated Hermes profile, pass explicit `OPENCODE_XDG_CONFIG_HOME` and `OPENCODE_XDG_DATA_HOME` if needed.
 - Parent will independently verify git diff and tests.
 
 # Implementation requirements
