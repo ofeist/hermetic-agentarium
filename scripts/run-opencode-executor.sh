@@ -14,7 +14,8 @@ if [[ ! -f "$PROMPT_FILE" ]]; then
     exit 1
 fi
 
-echo "Using model: $MODEL"
+echo "Executor harness: OpenCode"
+echo "Executor model: $MODEL"
 
 EXTRA_ENV=()
 if [[ -n "${OPENCODE_XDG_CONFIG_HOME:-}" ]]; then
