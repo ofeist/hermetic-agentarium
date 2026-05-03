@@ -68,6 +68,10 @@ Typical local setup:
 
 Set these in the shell where you start Hermes/coder.
 
+If the installer (`./scripts/install-coder-profile.sh`) has been run, these
+variables may already be populated in `~/.hermes/profiles/coder/.env` and
+manual export is optional.
+
 ## Security rules
 
 Do not print or inspect OpenCode auth files.

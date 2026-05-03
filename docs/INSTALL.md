@@ -33,6 +33,16 @@ skills/hermetic-coding-orchestrator/SKILL.md
 → ~/.hermes/skills/hermetic-coding-orchestrator/SKILL.md
 ```
 
+The installer also creates or updates the local runtime file:
+
+```text
+~/.hermes/profiles/coder/.env
+```
+
+This `.env` is local runtime config and must not be committed.
+OpenCode runtime home variables (`OPENCODE_XDG_CONFIG_HOME`, `OPENCODE_XDG_DATA_HOME`)
+are added automatically if missing.
+
 ## 4. Configure local runtime files manually
 
 Local Hermes runtime files are intentionally not stored in this repository.

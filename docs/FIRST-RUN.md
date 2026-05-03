@@ -28,6 +28,10 @@ In the shell where you start Hermes/coder, set:
     export OPENCODE_XDG_CONFIG_HOME="$HOME/.config"
     export OPENCODE_XDG_DATA_HOME="$HOME/.local/share"
 
+If `./scripts/install-coder-profile.sh` has been run, the OpenCode runtime env
+vars may already be configured in the local coder profile `.env` at
+`~/.hermes/profiles/coder/.env`. Manual export remains useful for debugging.
+
 Do not print or inspect OpenCode auth files.
 
 ## Safe smoke test

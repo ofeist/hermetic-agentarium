@@ -25,3 +25,7 @@ venv/
 
 # Local AgentOps debug/audit run artifacts
 .agentops-runs/
+
+# Safe environment templates
+!.env.example
+!profiles/coder/.env.example
