@@ -29,9 +29,17 @@ elif ! grep -q '^OPENCODE_XDG_DATA_HOME=' "$ENV_FILE" 2>/dev/null; then
   echo "OPENCODE_XDG_DATA_HOME=$HOME/.local/share" >> "$ENV_FILE"
 fi
 
-echo "Installed:"
+echo "Installed from repo:"
 echo "- $HOME/.hermes/profiles/coder/SOUL.md"
 echo "- $HOME/.hermes/skills/hermetic-coding-orchestrator/SKILL.md"
 echo
-echo "Ensured coder profile .env runtime defaults"
-echo "Note: config.yaml and auth.json are local runtime files and are not installed from this repo."
+echo "Ensured local runtime defaults:"
+echo "- Created ~/.hermes/profiles/coder/.env from .env.example if it was missing"
+echo "- Ensured OPENCODE_XDG_CONFIG_HOME default is set"
+echo "- Ensured OPENCODE_XDG_DATA_HOME default is set"
+echo
+echo "Preserved local-only runtime files:"
+echo "- ~/.hermes/config.yaml"
+echo "- ~/.hermes/auth.json"
+echo
+echo "Re-run this script after changing repo SOUL.md or SKILL.md to update your local copies."
