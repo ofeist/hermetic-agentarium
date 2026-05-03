@@ -22,3 +22,6 @@ venv/
 .DS_Store
 .idea/
 .vscode/
+
+# Local AgentOps debug/audit run artifacts
+.agentops-runs/

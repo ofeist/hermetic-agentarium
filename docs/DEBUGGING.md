@@ -194,8 +194,21 @@ Raw prompts, stdout/stderr, and model responses may contain sensitive informatio
 
 Do not commit local run logs by default.
 
-A future local-only debug directory may be used for this purpose, for example:
+Use this local-only directory for temporary debug/audit artifacts:
 
     .agentops-runs/
 
-If introduced, it should be gitignored.
+This directory is gitignored.
+
+Suggested local structure:
+
+    .agentops-runs/TASK-xxxx/
+      executor-prompt.md
+      executor-output.log
+      review-notes.md
+
+Before storing anything there, assume logs may contain sensitive context. Do not copy secrets, auth files, provider tokens, or full request dumps into committed files.
+
+Safe summaries belong in:
+
+    agentops/results/TASK-xxxx-result.md
