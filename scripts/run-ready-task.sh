@@ -8,6 +8,11 @@ usage() {
     echo "  $0 TASK-0054-ready-task-executor-helper" >&2
 }
 
+if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+    usage
+    exit 0
+fi
+
 if [[ $# -ne 1 ]]; then
     usage
     exit 1
