@@ -146,6 +146,7 @@ For AgentOps tasks that specify OpenCode as executor:
    - `git status --short --branch`
 
 2. Ensure work happens on a task branch, not directly on `main`, unless explicitly instructed.
+   - Preferred: `scripts/start-agentops-task.sh <task-id-slug>` to prepare a clean branch from `main`. If it fails, stop and report `blocked` instead of editing on `main`.
 
 3. Read the ready task file from `agentops/tasks/ready/`.
 
