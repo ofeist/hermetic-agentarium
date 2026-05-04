@@ -20,6 +20,9 @@ Before installing the coder profile, make sure you already have:
 Tested locally with:
 - Hermes Agent v0.12.0 (2026.4.30)
 - OpenCode 1.14.33
+- Node for Codex/OpenCode path: v22.14.0
+- Python used by Hermes: 3.11.15
+- OpenAI SDK used by Hermes: 2.32.0
 
 This repository does **not** install Hermes, OpenCode, provider credentials, or auth files.
 
