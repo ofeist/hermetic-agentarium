@@ -1,12 +1,21 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-USAGE="Usage: $0 <task-id-slug>"
+usage() {
+    echo "Usage: $0 <task-id-slug>" >&2
+    echo "" >&2
+    echo "Example:" >&2
+    echo "  $0 TASK-0059-dogfood-review-prompt-notes" >&2
+}
 
-# Ensure exactly one argument
-if [ $# -ne 1 ]; then
-  echo "$USAGE" >&2
-  exit 1
+if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+    usage
+    exit 0
+fi
+
+if [[ $# -ne 1 ]]; then
+    usage
+    exit 1
 fi
 
 TASK_SLUG="$1"
