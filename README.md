@@ -28,6 +28,21 @@ This repository does **not** install Hermes, OpenCode, provider credentials, or 
 
 The install script only copies the repo-managed Hermes `coder` profile and custom skill into your local Hermes runtime. Local runtime files such as `~/.hermes/config.yaml`, `~/.hermes/auth.json`, OpenCode auth/config, and provider keys stay local and are not managed by this repo.
 
+## Coder coordinator profile
+
+`hermes` and `coder` can use different Hermes runtime profiles. The `coder` wrapper uses the isolated profile under `~/.hermes/profiles/coder/`, so `hermes status` and `coder status` can show different model, provider, and auth state.
+
+For this AgentOps workflow, configure the `coder` profile, not only global `hermes`. A typical coordinator target is `gpt-5.5` with `OpenAI Codex`; the OpenCode executor can still use a different worker model, for example `deepseek/deepseek-chat`.
+
+Safe coordinator setup checks:
+
+    coder auth add openai-codex --type oauth --no-browser
+    coder model
+    coder status
+    coder -z "Reply with exactly: coder coordinator ok"
+
+Do not print or inspect auth files, especially `~/.hermes/profiles/coder/auth.json` or `~/.hermes/auth.json`.
+
 ## Quickstart
 
 Shortest path to a local smoke run:
