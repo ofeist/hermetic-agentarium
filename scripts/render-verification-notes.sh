@@ -81,4 +81,17 @@ $(git diff --stat 2>&1)
 \`\`\`
 $(git diff --name-only 2>&1)
 \`\`\`
+
+## Untracked files
+
+\`\`\`
+$(
+  untracked=$(git ls-files --others --exclude-standard 2>&1)
+  if [[ -z "$untracked" ]]; then
+    echo "No untracked files."
+  else
+    echo "$untracked"
+  fi
+)
+\`\`\`
 HEREDOC
