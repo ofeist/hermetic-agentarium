@@ -46,3 +46,16 @@ mv "$READY_FILE" "$REVIEW_FILE"
 
 # Print the moved file path
 echo "$REVIEW_FILE"
+
+# Print next-step commands for the parent/coordinator
+echo ""
+echo "=== Next steps: submit for review ==="
+echo ""
+echo "# 1. Render parent verification / context notes"
+echo "scripts/render-verification-notes.sh ${TASK_SLUG} > /tmp/${TASK_SLUG}-verification-notes.md"
+echo ""
+echo "# 2. Render review prompt (with verification notes)"
+echo "scripts/render-review-prompt.sh agentops/tasks/review/${TASK_SLUG}.md /tmp/${TASK_SLUG}-verification-notes.md > /tmp/${TASK_SLUG}-review.prompt.md"
+echo ""
+echo "# 3. Run one-shot coder reviewer"
+echo "coder -z \"\$(cat /tmp/${TASK_SLUG}-review.prompt.md)\""
