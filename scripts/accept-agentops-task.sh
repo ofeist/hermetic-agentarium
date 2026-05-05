@@ -1,15 +1,29 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-USAGE="Usage: $0 <task-id-slug> <decision-note>"
+usage() {
+    echo "Usage: $0 <task-id-slug> <decision-note>" >&2
+    echo "" >&2
+    echo "Accept a completed AgentOps review task: move from review/ to done/ and create result summary." >&2
+    echo "" >&2
+    echo "Arguments:" >&2
+    echo "  task-id-slug   Task identifier matching agentops/tasks/review/<task-id-slug>.md" >&2
+    echo "  decision-note  Short note explaining the accept decision" >&2
+    echo "" >&2
+    echo "Options:" >&2
+    echo "  -h, --help     Show this help message and exit" >&2
+    echo "" >&2
+    echo "Example:" >&2
+    echo "  $0 TASK-0055-helper-accept-task \"Accepted in TASK-0065 helper test\"" >&2
+}
 
 if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
-  echo "$USAGE"
+  usage
   exit 0
 fi
 
 if [ "$#" -ne 2 ]; then
-  echo "$USAGE" >&2
+  usage
   exit 1
 fi
 
