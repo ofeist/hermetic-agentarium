@@ -7,6 +7,16 @@ description: Use this custom Hermetic Agentarium skill for controlled coding orc
 
 Use this workflow for coding tasks that are more than a trivial one-line edit.
 
+## Auditable skill marker
+
+When this skill is invoked, the agent MUST include the following visible marker near the beginning of its Plan or final output:
+
+```text
+USING_SKILL: hermetic-coding-orchestrator
+```
+
+This enables AgentOps traces to prove the canonical custom orchestrator skill was intentionally used.
+
 ## Roles
 
 Parent agent:
@@ -185,9 +195,11 @@ Run task-specific tests/checks when applicable.
 
 ### Canonical ready task invocation prompt
 
-Add the following minimal prompt for executing AgentOps ready tasks:
+AgentOps execution prompts MUST start with `/hermetic-coding-orchestrator` so the skill is explicitly invoked and traceable.
 
 ```text
+/hermetic-coding-orchestrator
+
 Execute AgentOps ready task:
 
 agentops/tasks/ready/TASK-xxxx-name.md

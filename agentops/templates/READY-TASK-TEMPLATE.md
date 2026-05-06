@@ -32,6 +32,8 @@ Do not fallback to another model unless explicitly allowed by this task.
 
 ## Requirements
 
+- The execution prompt MUST start with `/hermetic-coding-orchestrator` to explicitly invoke the custom skill.
+- The agent MUST include `USING_SKILL: hermetic-coding-orchestrator` near the beginning of its Plan or output.
 - Keep the change minimal.
 - Do not commit.
 - Do not modify unrelated files.

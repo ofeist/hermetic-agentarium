@@ -121,7 +121,11 @@ When reviewing work:
 
 ## Hermes/OpenCode executor workflow
 
-When executing an AgentOps ready task through OpenCode:
+When executing an AgentOps ready task through OpenCode, the prompt MUST start with `/hermetic-coding-orchestrator` and the agent MUST include this marker near the beginning of its Plan or output:
+
+```text
+USING_SKILL: hermetic-coding-orchestrator
+```
 
 - Start from a clean working tree.
 - Create or switch to a task branch before executor work.
