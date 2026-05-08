@@ -4,10 +4,13 @@ set -euo pipefail
 if [ "${1:-}" = "-h" ] || [ "${1:-}" = "--help" ]; then
   echo "Usage: $(basename "$0") <task-id-slug>"
   echo
-  echo "Create and print a repo-local temporary directory for AgentOps task verification."
+  echo "Create and print a repo-local executor-safe temporary directory for AgentOps task verification."
   echo
   echo "Arguments:"
   echo "  task-id-slug   Safe task identifier (no slashes, no '..')"
+  echo
+  echo "Example:"
+  echo "  $(basename "$0") TASK-0068-some-task"
   exit 0
 fi
 
