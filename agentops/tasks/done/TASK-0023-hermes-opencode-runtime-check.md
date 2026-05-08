@@ -1,6 +1,6 @@
 # TASK-0023 — Hermes OpenCode runtime check
 
-Status: ready
+Status: done
 
 ## Goal
 

@@ -1,6 +1,6 @@
 # TASK-0019 — Hermes runs OpenCode executor
 
-Status: ready
+Status: done
 
 ## Goal
 

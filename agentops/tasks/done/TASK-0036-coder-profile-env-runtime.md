@@ -1,6 +1,6 @@
 # TASK-0036 — Verify coder profile env runtime
 
-Status: ready
+Status: done
 
 ## Goal
 

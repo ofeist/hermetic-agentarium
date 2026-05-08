@@ -1,6 +1,6 @@
 # TASK-0035 — Install coder profile runtime env defaults
 
-Status: ready
+Status: done
 
 ## Goal
 
