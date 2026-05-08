@@ -23,6 +23,9 @@ if [[ ! -f "$TASK_FILE" ]]; then
 fi
 
 cat <<PROMPT_PREFIX
+/hermetic-coding-orchestrator
+USING_SKILL: hermetic-coding-orchestrator
+
 You are an OpenCode executor. Your job is to implement the task below.
 
 Constraints:

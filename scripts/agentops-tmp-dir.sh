@@ -14,8 +14,8 @@ if [ "${1:-}" = "-h" ] || [ "${1:-}" = "--help" ]; then
   exit 0
 fi
 
-if [ $# -lt 1 ]; then
-  echo "Error: missing task-id-slug argument" >&2
+if [ "$#" -ne 1 ]; then
+  echo "Error: expected exactly one task-id-slug argument" >&2
   echo "Usage: $(basename "$0") <task-id-slug>" >&2
   exit 1
 fi

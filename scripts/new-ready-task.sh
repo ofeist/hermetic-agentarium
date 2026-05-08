@@ -3,6 +3,11 @@ set -euo pipefail
 
 USAGE="Usage: $0 <task-id-slug> <task-title>"
 
+if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+  echo "$USAGE"
+  exit 0
+fi
+
 # Ensure exactly two arguments
 if [ "$#" -ne 2 ]; then
   echo "$USAGE" >&2
