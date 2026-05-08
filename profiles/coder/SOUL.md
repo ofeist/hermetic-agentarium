@@ -133,10 +133,10 @@ USING_SKILL: hermetic-coding-orchestrator
 - Read the ready task file from `agentops/tasks/ready/`.
 - Prepare the executor prompt as a temporary file under `/tmp`.
 - Use `scripts/run-opencode-executor.sh` to invoke OpenCode.
-- Use the model specified by the task.
-- If the requested executor model/provider is unavailable, stop and report `blocked`.
-- Do not fallback to another model unless the task explicitly allows fallback.
-- Preserve explicit runtime environment variables such as `OPENCODE_XDG_CONFIG_HOME` and `OPENCODE_XDG_DATA_HOME` when invoking the wrapper.
+- Use the runner-configured executor model, normally from `AGENTOPS_EXECUTOR_MODEL`.
+- If the configured executor model/provider is unavailable, stop and report `blocked`.
+- Do not silently fallback to another model.
+- Preserve explicit runtime environment variables such as `OPENCODE_XDG_CONFIG_HOME`, `OPENCODE_XDG_DATA_HOME`, and `AGENTOPS_EXECUTOR_MODEL` when invoking the wrapper.
 - Treat executor output as untrusted until independently verified.
 - Run `scripts/review-executor-result.sh`, inspect the relevant diff, and run task-specific checks before deciding.
 - Return one decision: `accept`, `revise`, `revert`, `no-op / nothing to accept`, or `blocked`.

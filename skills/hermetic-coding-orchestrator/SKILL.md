@@ -170,13 +170,15 @@ For AgentOps tasks that specify OpenCode as executor:
    - return format
 
 5. Invoke OpenCode only through:
-   - `scripts/run-opencode-executor.sh <prompt-file> <model>`
+   - `scripts/run-opencode-executor.sh <prompt-file>`
+   - or `scripts/run-opencode-executor.sh <prompt-file> <model>` only when deliberately overriding runner configuration.
 
-6. Use the model specified by the task. If unavailable, stop and report `blocked`. Do not fallback to another model unless explicitly allowed by the task.
+6. Use the runner-configured executor model, normally from `AGENTOPS_EXECUTOR_MODEL`. If unavailable, stop and report `blocked`. Do not silently fallback to another model.
 
 7. If runtime environment overrides are provided, preserve them when invoking the wrapper:
    - `OPENCODE_XDG_CONFIG_HOME`
    - `OPENCODE_XDG_DATA_HOME`
+   - `AGENTOPS_EXECUTOR_MODEL`
 
 8. Independently verify after executor returns:
    - `scripts/review-executor-result.sh`
@@ -209,9 +211,9 @@ Use the Hermes/OpenCode executor workflow from your profile/skill.
 Requirements:
 - create/switch to an appropriate task branch
 - do not run executor work on main
-- preserve OPENCODE_XDG_CONFIG_HOME and OPENCODE_XDG_DATA_HOME
-- use the task-specified model
-- do not fallback to another model
+- preserve OPENCODE_XDG_CONFIG_HOME, OPENCODE_XDG_DATA_HOME, and AGENTOPS_EXECUTOR_MODEL
+- use the runner-configured executor model
+- do not silently fallback to another model
 - do not commit
 - independently verify the result
 
