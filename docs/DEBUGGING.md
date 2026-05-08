@@ -49,12 +49,13 @@ Set these in the shell where you start Hermes/coder:
 
     export OPENCODE_XDG_CONFIG_HOME="$HOME/.config"
     export OPENCODE_XDG_DATA_HOME="$HOME/.local/share"
+    export AGENTOPS_EXECUTOR_MODEL=deepseek/deepseek-v4-pro
 
 Then retry through the wrapper:
 
-    scripts/run-opencode-executor.sh /tmp/task-prompt.txt deepseek/deepseek-chat
+    scripts/run-opencode-executor.sh /tmp/task-prompt.txt
 
-Do not fallback to another model unless the task explicitly allows fallback.
+Do not silently fallback to another model.
 
 ## Wrong branch
 
@@ -206,7 +207,7 @@ The local run audit contract is documented in:
 
 Optional run capture can be enabled by passing a run id:
 
-    scripts/run-opencode-executor.sh /tmp/TASK-xxxx.prompt.md deepseek/deepseek-chat TASK-xxxx
+    scripts/run-opencode-executor.sh /tmp/TASK-xxxx.prompt.md "$AGENTOPS_EXECUTOR_MODEL" TASK-xxxx
 
 Or by setting:
 
@@ -228,7 +229,7 @@ return format alongside the full task content.
 
 Pass the rendered prompt to the executor with local run capture:
 
-    scripts/run-opencode-executor.sh /tmp/TASK-xxxx.prompt.md deepseek/deepseek-chat TASK-xxxx
+    AGENTOPS_RUN_ID=TASK-xxxx scripts/run-opencode-executor.sh /tmp/TASK-xxxx.prompt.md
 
 This creates a capture under `.agentops-runs/TASK-xxxx/` including the rendered prompt,
 stdout, stderr, and metadata.

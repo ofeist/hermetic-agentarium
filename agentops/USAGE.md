@@ -53,13 +53,13 @@ A ready task should include:
     - Do not commit.
     - Do not modify unrelated files.
     - Do not read or print secrets.
-    - Do not fallback to another model unless explicitly allowed.
+    - Executor model selection is controlled by runner configuration.
 
     ## Executor
 
     Harness: OpenCode
-    Model: deepseek/deepseek-chat
-    Allow fallback: false
+    Model source: runner configuration (`AGENTOPS_EXECUTOR_MODEL`)
+    Fallback: disabled
 
     ## Implementation requirements
 

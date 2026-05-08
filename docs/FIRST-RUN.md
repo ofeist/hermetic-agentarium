@@ -27,6 +27,7 @@ In the shell where you start Hermes/coder, set:
 
     export OPENCODE_XDG_CONFIG_HOME="$HOME/.config"
     export OPENCODE_XDG_DATA_HOME="$HOME/.local/share"
+    export AGENTOPS_EXECUTOR_MODEL=deepseek/deepseek-v4-pro
 
 If `./scripts/install-coder-profile.sh` has been run, the OpenCode runtime env
 vars may already be configured in the local coder profile `.env` at
@@ -44,7 +45,7 @@ Create a branch:
 
 Run the example prompt through the executor wrapper:
 
-    ./scripts/run-opencode-executor.sh examples/opencode-docs-task.prompt.md deepseek/deepseek-chat
+    ./scripts/run-opencode-executor.sh examples/opencode-docs-task.prompt.md
 
 Review the result:
 
@@ -84,4 +85,4 @@ Then return to main and delete the smoke branch if desired:
 - The executor must not commit.
 - Git diffs and tests are the source of truth.
 - Do not run executor work directly on `main` unless explicitly instructed.
-- Do not fallback to another model unless the task explicitly allows it.
+- Executor model selection is controlled by runner configuration, not task prompt text.

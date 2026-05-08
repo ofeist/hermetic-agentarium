@@ -21,7 +21,7 @@ Delegate bounded, implementation-only tasks to OpenCode running in non-interacti
 2. **`scripts/run-opencode-executor.sh` runs OpenCode non-interactively**
 
    ```bash
-   scripts/run-opencode-executor.sh /tmp/task-prompt.txt deepseek/deepseek-chat
+   scripts/run-opencode-executor.sh /tmp/task-prompt.txt
    ```
 
 3. **OpenCode/model produces a diff** — changes are written to disk but not staged or committed.
@@ -38,7 +38,7 @@ Delegate bounded, implementation-only tasks to OpenCode running in non-interacti
 
 ```bash
 # Run the executor
-scripts/run-opencode-executor.sh /tmp/task-prompt.txt deepseek/deepseek-chat
+scripts/run-opencode-executor.sh /tmp/task-prompt.txt
 
 # Review what changed
 scripts/review-executor-result.sh
@@ -64,8 +64,8 @@ When OpenCode is run from an isolated Hermes profile, its `HOME` may differ from
 ```bash
 OPENCODE_XDG_CONFIG_HOME=/home/splinter/.config \
 OPENCODE_XDG_DATA_HOME=/home/splinter/.local/share \
-scripts/run-opencode-executor.sh /tmp/task-prompt.txt deepseek/deepseek-chat
+AGENTOPS_EXECUTOR_MODEL=deepseek/deepseek-v4-pro \
+scripts/run-opencode-executor.sh /tmp/task-prompt.txt
 ```
 
-If the requested executor model/provider is unavailable, stop and report `blocked`. Do not fallback to another model unless the task explicitly allows fallback.
-
+If the configured executor model/provider is unavailable, stop and report `blocked`. Do not silently fallback to another model.

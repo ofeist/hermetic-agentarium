@@ -19,7 +19,7 @@ The wrapper calls OpenCode with:
 
 Do not call OpenCode directly for AgentOps executor tasks unless you are debugging. Use:
 
-    scripts/run-opencode-executor.sh <prompt-file> <model>
+    scripts/run-opencode-executor.sh <prompt-file> [model]
 
 ## Model naming
 
@@ -29,15 +29,16 @@ Models are passed as:
 
 Example:
 
-    deepseek/deepseek-chat
+    deepseek/deepseek-v4-pro
 
-The model should normally come from the AgentOps task file:
+The executor model is runner configuration, not task prompt content. The default
+comes from `AGENTOPS_EXECUTOR_MODEL`:
 
-    Harness: OpenCode
-    Model: deepseek/deepseek-chat
-    Allow fallback: false
+    export AGENTOPS_EXECUTOR_MODEL=deepseek/deepseek-v4-pro
 
-If the requested model/provider is unavailable, stop and report `blocked`. Do not silently fallback to another model unless the task explicitly allows fallback.
+If unset, the repo helper scripts fall back to `deepseek/deepseek-v4-pro`.
+If the requested model/provider is unavailable, stop and report `blocked`.
+Do not silently fallback to another model.
 
 ## Hermes isolated HOME
 
@@ -47,7 +48,7 @@ Symptoms include:
 
 - OpenCode works in your normal shell.
 - OpenCode fails from Hermes/coder with a model/provider not found error.
-- `deepseek/deepseek-chat` or another configured model is not visible from the Hermes run.
+- `deepseek/deepseek-v4-pro` or another configured model is not visible from the Hermes run.
 
 ## Runtime environment variables
 
@@ -55,6 +56,7 @@ The wrapper supports these optional environment variables:
 
 - `OPENCODE_XDG_CONFIG_HOME`
 - `OPENCODE_XDG_DATA_HOME`
+- `AGENTOPS_EXECUTOR_MODEL`
 
 When set, the wrapper forwards them to OpenCode as:
 
@@ -65,6 +67,7 @@ Typical local setup:
 
     export OPENCODE_XDG_CONFIG_HOME="$HOME/.config"
     export OPENCODE_XDG_DATA_HOME="$HOME/.local/share"
+    export AGENTOPS_EXECUTOR_MODEL=deepseek/deepseek-v4-pro
 
 Set these in the shell where you start Hermes/coder.
 
@@ -92,7 +95,7 @@ The repository may document paths and environment variable names, but it must no
 The executor wrapper prints the effective harness and model:
 
     Executor harness: OpenCode
-    Executor model: deepseek/deepseek-chat
+    Executor model: deepseek/deepseek-v4-pro
 
 This is intended as a small audit signal. It should not print auth contents, token values, or secret file contents.
 
@@ -119,6 +122,7 @@ If OpenCode works manually but fails from Hermes/coder:
 
        OPENCODE_XDG_CONFIG_HOME="$HOME/.config" \
        OPENCODE_XDG_DATA_HOME="$HOME/.local/share" \
-       scripts/run-opencode-executor.sh /tmp/task-prompt.txt deepseek/deepseek-chat
+       AGENTOPS_EXECUTOR_MODEL=deepseek/deepseek-v4-pro \
+       scripts/run-opencode-executor.sh /tmp/task-prompt.txt
 
 Do not inspect auth files while debugging.

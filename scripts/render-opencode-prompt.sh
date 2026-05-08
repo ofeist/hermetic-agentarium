@@ -22,6 +22,21 @@ if [[ ! -f "$TASK_FILE" ]]; then
     exit 1
 fi
 
+render_task_content() {
+    awk '
+        /^## Model[[:space:]]*$/ {
+            skip = 1
+            next
+        }
+        skip && /^## / {
+            skip = 0
+        }
+        !skip {
+            print
+        }
+    ' "$TASK_FILE"
+}
+
 cat <<PROMPT_PREFIX
 /hermetic-coding-orchestrator
 USING_SKILL: hermetic-coding-orchestrator
@@ -33,9 +48,10 @@ Constraints:
 - Do not modify unrelated files.
 - Do not read or print secrets (no .env, tokens, auth files, SSH keys, or private config).
 - Keep changes minimal. Only touch files listed in the task write scope.
+- Do not choose or change the executor model. The runner selects it outside the prompt.
 
 Task content follows:
-$(cat "$TASK_FILE")
+$(render_task_content)
 
 Return format:
 - Changed files (list each file path)

@@ -41,7 +41,8 @@ The installer also creates or updates the local runtime file:
 
 This `.env` is local runtime config and must not be committed.
 OpenCode runtime home variables (`OPENCODE_XDG_CONFIG_HOME`, `OPENCODE_XDG_DATA_HOME`)
-are added automatically if missing.
+and the executor model variable (`AGENTOPS_EXECUTOR_MODEL`) are added automatically
+if missing.
 
 ## 4. Configure local runtime files manually
 

@@ -50,7 +50,7 @@ Suggested fields:
 
     run_id=TASK-xxxx
     harness=OpenCode
-    model=deepseek/deepseek-chat
+    model=deepseek/deepseek-v4-pro
     prompt_file=/tmp/TASK-xxxx.prompt.md
     started_at=<timestamp>
     finished_at=<timestamp>

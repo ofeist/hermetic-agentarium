@@ -29,7 +29,7 @@ READY_TASK_FILE="agentops/tasks/ready/$TASK_ID_SLUG.md"
 PROMPT_FILE="/tmp/$TASK_ID_SLUG.prompt.md"
 RENDER_SCRIPT="scripts/render-opencode-prompt.sh"
 EXECUTOR_SCRIPT="scripts/run-opencode-executor.sh"
-MODEL="deepseek/deepseek-chat"
+MODEL="${AGENTOPS_EXECUTOR_MODEL:-deepseek/deepseek-v4-pro}"
 
 if [[ ! -f "$READY_TASK_FILE" ]]; then
     echo "Error: ready task file not found: $READY_TASK_FILE" >&2

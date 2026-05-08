@@ -38,7 +38,8 @@ The validated fix is to pass explicit runtime homes when needed:
 
     OPENCODE_XDG_CONFIG_HOME=/home/splinter/.config \
     OPENCODE_XDG_DATA_HOME=/home/splinter/.local/share \
-    scripts/run-opencode-executor.sh /tmp/task-prompt.txt deepseek/deepseek-chat
+    AGENTOPS_EXECUTOR_MODEL=deepseek/deepseek-v4-pro \
+    scripts/run-opencode-executor.sh /tmp/task-prompt.txt
 
 The wrapper forwards these values as `XDG_CONFIG_HOME` and `XDG_DATA_HOME` only for the OpenCode invocation.
 

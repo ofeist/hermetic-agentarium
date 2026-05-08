@@ -14,13 +14,9 @@ Explain why this task exists and what context matters.
 
 ## Executor
 
-OpenCode
-
-## Model
-
-deepseek/deepseek-chat
-
-Do not fallback to another model unless explicitly allowed by this task.
+Harness: OpenCode
+Model source: runner configuration (`AGENTOPS_EXECUTOR_MODEL`)
+Fallback: disabled
 
 ## Read scope
 
@@ -38,6 +34,7 @@ Do not fallback to another model unless explicitly allowed by this task.
 - Do not commit.
 - Do not modify unrelated files.
 - Do not read or print secrets.
+- Executor model selection is controlled by runner configuration, not by task prompt text.
 - Preserve `OPENCODE_XDG_CONFIG_HOME` and `OPENCODE_XDG_DATA_HOME` if invoking OpenCode.
 
 ## Non-goals

@@ -29,6 +29,12 @@ elif ! grep -q '^OPENCODE_XDG_DATA_HOME=' "$ENV_FILE" 2>/dev/null; then
   echo "OPENCODE_XDG_DATA_HOME=$HOME/.local/share" >> "$ENV_FILE"
 fi
 
+if grep -q '^AGENTOPS_EXECUTOR_MODEL=$' "$ENV_FILE" 2>/dev/null; then
+  sed -i "s|^AGENTOPS_EXECUTOR_MODEL=$|AGENTOPS_EXECUTOR_MODEL=deepseek/deepseek-v4-pro|" "$ENV_FILE"
+elif ! grep -q '^AGENTOPS_EXECUTOR_MODEL=' "$ENV_FILE" 2>/dev/null; then
+  echo "AGENTOPS_EXECUTOR_MODEL=deepseek/deepseek-v4-pro" >> "$ENV_FILE"
+fi
+
 echo "Installed from repo:"
 echo "- $HOME/.hermes/profiles/coder/SOUL.md"
 echo "- $HOME/.hermes/skills/hermetic-coding-orchestrator/SKILL.md"
@@ -37,6 +43,7 @@ echo "Ensured local runtime defaults:"
 echo "- Created ~/.hermes/profiles/coder/.env from .env.example if it was missing"
 echo "- Ensured OPENCODE_XDG_CONFIG_HOME default is set"
 echo "- Ensured OPENCODE_XDG_DATA_HOME default is set"
+echo "- Ensured AGENTOPS_EXECUTOR_MODEL default is set"
 echo
 echo "Preserved local-only runtime files:"
 echo "- ~/.hermes/config.yaml"

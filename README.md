@@ -15,7 +15,7 @@ Before installing the coder profile, make sure you already have:
 - Python 3
 - Hermes installed and usable locally
 - OpenCode installed and authenticated locally
-- an OpenCode provider/model configured, for example `deepseek/deepseek-chat`
+- an OpenCode provider/model configured, for example `deepseek/deepseek-v4-pro`
 
 Tested locally with:
 - Hermes Agent v0.12.0 (2026.4.30)
@@ -32,7 +32,7 @@ The install script only copies the repo-managed Hermes `coder` profile and custo
 
 `hermes` and `coder` can use different Hermes runtime profiles. The `coder` wrapper uses the isolated profile under `~/.hermes/profiles/coder/`, so `hermes status` and `coder status` can show different model, provider, and auth state.
 
-For this AgentOps workflow, configure the `coder` profile, not only global `hermes`. A typical coordinator target is `gpt-5.5` with `OpenAI Codex`; the OpenCode executor can still use a different worker model, for example `deepseek/deepseek-chat`.
+For this AgentOps workflow, configure the `coder` profile, not only global `hermes`. A typical coordinator target is `gpt-5.5` with `OpenAI Codex`; the OpenCode executor can still use a different worker model through `AGENTOPS_EXECUTOR_MODEL`, for example `deepseek/deepseek-v4-pro`.
 
 Safe coordinator setup checks:
 
@@ -72,6 +72,7 @@ Shortest path to a local smoke run:
 
        export OPENCODE_XDG_CONFIG_HOME="$HOME/.config"
        export OPENCODE_XDG_DATA_HOME="$HOME/.local/share"
+       export AGENTOPS_EXECUTOR_MODEL=deepseek/deepseek-v4-pro
 
    Do not print or inspect OpenCode auth files.
 
@@ -81,7 +82,7 @@ Shortest path to a local smoke run:
 
 6. Run or review the minimal executor workflow:
 
-       ./scripts/run-opencode-executor.sh examples/opencode-docs-task.prompt.md deepseek/deepseek-chat
+       ./scripts/run-opencode-executor.sh examples/opencode-docs-task.prompt.md
        ./scripts/review-executor-result.sh
 
 Always run executor work on a branch, not directly on `main`, unless explicitly instructed.

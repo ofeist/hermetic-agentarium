@@ -5,11 +5,11 @@ usage() {
     echo "Usage: $0 <prompt-file> [model] [run-id]" >&2
     echo "" >&2
     echo "Examples:" >&2
-    echo "  $0 /tmp/TASK-0039.prompt.md deepseek/deepseek-chat" >&2
-    echo "  $0 /tmp/TASK-0039.prompt.md deepseek/deepseek-chat TASK-0039" >&2
+    echo "  $0 /tmp/TASK-0039.prompt.md deepseek/deepseek-v4-pro" >&2
+    echo "  $0 /tmp/TASK-0039.prompt.md deepseek/deepseek-v4-pro TASK-0039" >&2
     echo "" >&2
     echo "Optional:" >&2
-    echo "  AGENTOPS_RUN_ID=TASK-0039 $0 /tmp/TASK-0039.prompt.md deepseek/deepseek-chat" >&2
+    echo "  AGENTOPS_EXECUTOR_MODEL=deepseek/deepseek-v4-pro AGENTOPS_RUN_ID=TASK-0039 $0 /tmp/TASK-0039.prompt.md" >&2
 }
 
 if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
@@ -23,7 +23,8 @@ if [[ $# -lt 1 || $# -gt 3 ]]; then
 fi
 
 PROMPT_FILE="$1"
-MODEL="${2:-deepseek/deepseek-chat}"
+DEFAULT_MODEL="${AGENTOPS_EXECUTOR_MODEL:-deepseek/deepseek-v4-pro}"
+MODEL="${2:-$DEFAULT_MODEL}"
 RUN_ID="${3:-${AGENTOPS_RUN_ID:-}}"
 
 if [[ ! -f "$PROMPT_FILE" ]]; then
