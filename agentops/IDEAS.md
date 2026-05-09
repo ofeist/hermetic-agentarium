@@ -85,6 +85,22 @@ Non-goals:
 - no dashboard
 - no prompt expansion
 
+#### Future cleanup: portable duration calculation
+
+`observability-01` / `TASK-0073` computes executor run duration with:
+
+```bash
+date -d "$STARTED_AT" +%s
+```
+
+This is GNU/Linux-specific and works fine for the current Ubuntu/Linux
+development environment.
+
+It is not a blocker now.
+
+If macOS/BSD portability becomes important later, replace or wrap the duration
+calculation with a portable helper.
+
 ### observability-02 — Add AgentOps run summary helper
 
 Goal: add a local summary command for one run.
