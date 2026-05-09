@@ -28,6 +28,19 @@ The current directories are:
 - `done/` — terminal task state after accept, revise, revert, no-op, or blocked.
 - `results/` — safe summary records for completed tasks.
 
+### Planned-to-ready promotion
+
+Promotion from `planned/` to `ready/` is a **mechanical transformation**, not a
+rewrite. Ready-shaped planned tasks should keep their existing structure and
+wording. See the full promotion policy in
+`skills/hermetic-coding-orchestrator/SKILL.md`.
+
+In short:
+- move the file, assign the next `TASK-XXXX` ID, update `Status` to `ready`
+- replace `TBD` fields and resolve open questions
+- preserve existing structure and wording
+- large unexpected diffs must be called out in review
+
 ## Minimal task file
 
 A ready task should include:

@@ -204,6 +204,49 @@ Run task-specific tests/checks when applicable.
 - After lifecycle closeout, run `scripts/check-agentops-lifecycle.sh` to detect inconsistencies.
 - Treat duplicate task IDs, done tasks still marked `ready`, and result notes pointing to missing task paths as workflow issues that must be resolved.
 
+### Planned-to-ready promotion policy
+
+Planned-to-ready promotion is a **mechanical transformation**, not a content
+rewrite. Planned tasks are now ready-shaped; promotion should only fill missing
+execution-critical fields.
+
+When promoting a planned task to ready, **preserve existing document structure
+and wording** unless a section is:
+- incomplete
+- incorrect
+- still marked `TBD`
+- explicitly planning-only (e.g. "Brainstorming notes" or "Alternatives considered")
+
+**Normal promotion edits (mechanical only):**
+
+Do only these edits during promotion:
+- move file from `agentops/tasks/planned/` to `agentops/tasks/ready/`
+- assign the next `TASK-XXXX` ID
+- update the top-level title and file path
+- change `Status` from `planned` to `ready`
+- replace remaining `TBD` fields
+- resolve or remove open questions
+- update task path references
+- add or finalize the Hermes/coder prompt only if needed
+
+**Preserve structure:**
+
+- Keep section names and order from the planned task when they already match
+  the ready-shaped template.
+- Do not rewrite, rephrase, or reorganize sections that are already valid.
+- Only add missing sections required by the ready template (e.g. `Executor`,
+  `Return format`) when absent.
+
+**Large rewrites:**
+
+- Large rewrites during promotion (many insertions/deletions, low rename
+  similarity) require an **explicit reason** stated in the commit message or
+  review.
+- Acceptable reasons: the planned task was a stub/scaffold, the user asked for
+  a rewrite, or a section was entirely `TBD`.
+- If a promotion diff is larger than expected, **call it out in the review**
+  instead of silently treating it as normal.
+
 ### Canonical ready task invocation prompt
 
 AgentOps execution prompts MUST start with `/hermetic-coding-orchestrator` so the skill is explicitly invoked and traceable.
