@@ -93,6 +93,9 @@ When ready, this task should require:
   prompts or result notes.
 - Capture stdout/stderr byte counts from local artifacts.
 - Capture start/end timestamps and duration.
+- Add or use a minimal no-network executor test path so metadata capture can be
+  verified without OpenCode, network access, API keys, paid model calls, or a
+  successful model response.
 - Preserve the executor wrapper's current behavior and exit code semantics.
 - Avoid adding observability content to model prompts by default.
 - Keep raw logs local.
@@ -106,6 +109,7 @@ When ready, this task should require:
 - No token/cost estimates.
 - No prompt expansion.
 - No unrelated executor behavior changes.
+- No broad mocking framework.
 
 ## Open questions
 
@@ -114,12 +118,20 @@ When ready, this task should require:
 - Should byte counts be measured before or after tee capture?
 - Should metadata stay plain key/value text or move to TSV/JSON in a later
   task?
-- Is there a reliable no-network dry path for verifying metadata capture?
 
-If these are resolved before promotion, write:
+Resolved:
 
-```text
-None.
+- Metadata capture should be verified through a minimal no-network executor
+  test path. If the wrapper already supports one, use it. If it does not, add
+  the smallest safe dry-run or executor-command override needed to verify
+  metadata capture without calling OpenCode.
+
+Example shape:
+
+```bash
+AGENTOPS_RUN_ID=TASK-XXXX-test \
+AGENTOPS_EXECUTOR_COMMAND='printf "executor ok\n"' \
+scripts/run-opencode-executor.sh /tmp/test.prompt.md
 ```
 
 ## Verification
@@ -130,13 +142,13 @@ Likely commands:
 
 ```bash
 bash -n scripts/run-opencode-executor.sh
+AGENTOPS_RUN_ID=TASK-XXXX-test AGENTOPS_EXECUTOR_COMMAND='printf "executor ok\n"' scripts/run-opencode-executor.sh /tmp/test.prompt.md
 git status --short --branch
 git diff --stat
 ```
 
-Add a task-specific smoke check when ready. Prefer a no-network dry path if the
-script supports one; otherwise require the executor dependency and model access
-to be available or explicitly report that verification is blocked.
+Add metadata assertions when ready, including checks for prompt size, timestamps,
+duration, exit code, stdout bytes, and stderr bytes.
 
 ## Accept criteria
 
@@ -148,6 +160,7 @@ When ready, accept criteria should include:
 - Prompt bytes and prompt lines are recorded.
 - Start/end timestamps, duration, exit code, stdout bytes, and stderr bytes are
   recorded.
+- Metadata capture can be verified through a no-network test path.
 - Existing executor exit behavior is preserved.
 - Raw logs stay local and are not pasted into prompts by default.
 - Verification commands pass or blocked checks are explicitly explained.
@@ -159,14 +172,15 @@ Decision: keep_planned
 
 Reason:
 
-This is the first observability implementation slice, but TASK-0072 should land
-first so lifecycle checker output is less noisy before observability metadata is
-made more visible.
+This is the first observability implementation slice. TASK-0072 has landed, and
+the no-network verification question is resolved in principle, but read/write
+scope and final ready-task requirements still need to be promoted explicitly.
 
 Next action:
 
-Promote after TASK-0072 is complete and the no-network verification path is
-decided.
+Promote after finalizing whether the no-network test path should be named
+`AGENTOPS_EXECUTOR_COMMAND`, `AGENTOPS_EXECUTOR_DRY_RUN`, or another minimal
+wrapper-specific interface.
 
 ## Promotion criteria
 
