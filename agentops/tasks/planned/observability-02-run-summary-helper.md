@@ -40,7 +40,8 @@ compact human-readable summary.
 Example summary:
 
 ```text
-TASK-XXXX
+run: TASK-XXXX-summary-test
+task: TASK-XXXX
 
 model: deepseek/deepseek-v4-pro
 prompt: 18.4 KB / 412 lines
@@ -48,7 +49,7 @@ duration: 94s
 stdout: 8.1 KB
 stderr: 0 KB
 exit code: 0
-artifacts: .agentops-runs/TASK-XXXX/
+artifacts: .agentops-runs/TASK-XXXX-summary-test/
 ```
 
 ## Executor
@@ -69,10 +70,6 @@ Fallback: disabled
 - `docs/RUN-AUDIT.md`, only if a short usage note is needed
 
 ## Requirements
-
-TBD
-
-When ready, this task should require:
 
 - Add `scripts/render-agentops-run-summary.sh`.
 - Read `.agentops-runs/<run-id>/metadata.txt`.
@@ -140,10 +137,6 @@ stdout/stderr logs.
 
 ## Accept criteria
 
-TBD
-
-When ready, accept criteria should include:
-
 - Summary helper exists and is executable.
 - Helper reads metadata without reading raw logs.
 - Missing metadata is handled clearly.
@@ -194,7 +187,8 @@ agentops/tasks/ready/TASK-XXXX-agentops-run-summary-helper.md
 Use the Hermes/OpenCode executor workflow from your profile/skill.
 
 Requirements:
-- create/switch to an appropriate task branch
+- use or create a task-specific worktree and branch
+- do not switch the main planning worktree away from main
 - do not run executor work on main
 - preserve OPENCODE_XDG_CONFIG_HOME, OPENCODE_XDG_DATA_HOME, and AGENTOPS_EXECUTOR_MODEL
 - use the runner-configured executor model
