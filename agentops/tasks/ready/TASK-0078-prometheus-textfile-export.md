@@ -1,8 +1,8 @@
-# observability-04 — Add Prometheus textfile export
+# TASK-0078 — Add Prometheus textfile export
 
 ## Status
 
-planned
+ready
 
 ## Goal
 
@@ -64,21 +64,13 @@ Fallback: disabled
 
 ## Read scope
 
-TBD
-
-Likely candidates:
-
 - `.agentops-runs/`
 - `scripts/run-opencode-executor.sh`
 - `scripts/render-agentops-run-summary.sh`
 - `docs/RUN-OBSERVABILITY.md`
-- `agentops/tasks/planned/observability-04-prometheus-textfile-export.md`
+- `agentops/tasks/ready/TASK-0078-prometheus-textfile-export.md`
 
 ## Write scope
-
-TBD
-
-Likely candidates:
 
 - `scripts/export-agentops-prometheus-metrics.sh`
 - `docs/RUN-OBSERVABILITY.md`, if it exists and needs export notes
@@ -161,9 +153,7 @@ Resolved:
 
 ## Verification
 
-TBD
-
-Likely commands:
+Run:
 
 ```bash
 bash -n scripts/export-agentops-prometheus-metrics.sh
@@ -207,13 +197,7 @@ git status --short --branch
 git diff --stat
 ```
 
-Add a fixture-based export smoke test when ready.
-
 ## Accept criteria
-
-TBD
-
-When ready, accept criteria should include:
 
 - Export script exists and is executable.
 - Export output is valid Prometheus textfile format for selected metrics.
@@ -233,48 +217,17 @@ When ready, accept criteria should include:
 - Verification commands pass.
 - Diff stays within write scope.
 
-## Promotion decision
-
-Decision: keep_planned
-
-Reason:
-
-This depends on stable local metadata and a clear Prometheus metric/label
-policy. The exporter should not finalize metric names or label behavior until
-the local metadata contract has landed and the textfile format rules are
-explicit.
-
-Next action:
-
-Promote only after metadata fields from observability-01 are stable, label
-policy is accepted, metric naming avoids misleading histogram/summary
-conventions, atomic textfile write is required, and skipped metadata visibility
-is included in v1.
-
-## Promotion criteria
-
-This task can be promoted to ready when:
-
-- read scope is known
-- write scope is known
-- open questions are resolved or explicitly marked as blockers
-- requirements are concrete
-- verification commands are known
-- accept criteria are concrete
-- non-goals are clear
-
 ## Hermes/coder collection prompt
 
-TBD until ready.
-
-When ready, use this shape:
+Use this prompt to collect and execute the task through the Hermes/coder
+orchestrator.
 
 ```text
 /hermetic-coding-orchestrator
 
 Start working on the ready AgentOps task:
 
-agentops/tasks/ready/TASK-XXXX-prometheus-textfile-export.md
+agentops/tasks/ready/TASK-0078-prometheus-textfile-export.md
 
 Use the Hermes/OpenCode executor workflow from your profile/skill.
 
@@ -299,9 +252,7 @@ Uncertainty:
 
 ## Return format
 
-TBD until ready.
-
-When ready, expected executor return format:
+Expected executor return format:
 
 ```text
 Plan:
