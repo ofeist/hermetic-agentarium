@@ -29,62 +29,71 @@ the problem worse.
 
 Add `docs/RUN-OBSERVABILITY.md` covering:
 
+- a compact recommended operator debugging flow as the main payload
 - metadata files and local artifacts
 - what should and should not go into prompts
-- Hermes session/log inspection
-- OpenCode stats
-- recommended debugging flow
+- Hermes session/log inspection, only where locally accurate
+- OpenCode stats, only where locally accurate
 - when to inspect full logs manually
+
+`docs/RUN-OBSERVABILITY.md` should complement, not replace,
+`docs/DEBUGGING.md`.
+
+Policy:
+
+- `docs/DEBUGGING.md` remains the general troubleshooting/debugging entry
+  point.
+- `docs/RUN-OBSERVABILITY.md` becomes the focused operator guide for AgentOps
+  run metadata, artifacts, logs, and token/time pressure.
+- If `docs/DEBUGGING.md` exists, add only a short cross-reference there.
+- Do not duplicate the same observability content across both files.
 
 ## Executor
 
-Harness: TBD
+Harness: OpenCode
 Model source: runner configuration (`AGENTOPS_EXECUTOR_MODEL`)
 Fallback: disabled
 
-Notes:
-
-- Fill this in only when the task becomes ready.
-- Keep model selection out of the task body unless there is a specific reason.
-
 ## Read scope
 
-TBD
-
-Likely candidates:
-
-- `agentops/IDEAS.md`
-- `skills/hermetic-coding-orchestrator/SKILL.md`
-- `profiles/coder/SOUL.md`
-- `docs/`
+- `docs/RUN-AUDIT.md`
+- `docs/DEBUGGING.md`, if present
+- `docs/DOCUMENTATION-MAP.md`, if present
 - `scripts/run-opencode-executor.sh`
-- `scripts/render-agentops-run-summary.sh`, if observability-02 has landed
+- `scripts/render-agentops-run-summary.sh`, if present
+- `skills/hermetic-coding-orchestrator/SKILL.md`
+- `agentops/tasks/planned/observability-03-document-observability-workflow.md`
 
 ## Write scope
 
-TBD
-
-Likely candidates:
-
 - `docs/RUN-OBSERVABILITY.md`
 - `docs/DOCUMENTATION-MAP.md`, if it exists and needs an entry
-- `docs/DEBUGGING.md`, only if the repo already uses it for this topic
+- `docs/DEBUGGING.md`, only for a short cross-reference if it exists
 
 ## Requirements
 
-TBD
-
-When ready, this task should require:
-
 - Add `docs/RUN-OBSERVABILITY.md`.
+- Make the recommended debugging flow the centerpiece.
+- Cover these operator flows:
+  - slow run: check `duration_seconds`, executor metadata, then logs only if
+    needed
+  - high token/context pressure: check `prompt_bytes`, `prompt_lines`,
+    `stdout_bytes`, `stderr_bytes`, and whether diffs/logs were pasted into
+    prompts
+  - executor failure: check `exit_code`, `stderr_bytes`, then local stderr log
+    only if needed
+  - suspicious review loop: check task/result notes, diff size, and repeated
+    revise/review rounds
 - Explain local run metadata and artifact locations.
 - Explain what should not be pasted into model prompts by default.
 - Explain how to inspect Hermes session/log information available in the local
   tooling.
 - Explain how to inspect OpenCode stats if available.
-- Explain a recommended debugging flow for slow or token-heavy runs.
 - Keep examples compact and avoid raw log dumps.
-- Link or reference the run summary helper if observability-02 has landed.
+- Link or reference `scripts/render-agentops-run-summary.sh` only if it exists.
+- If `docs/DEBUGGING.md` exists, add only a short cross-reference there.
+- Do not duplicate the same observability content across `docs/DEBUGGING.md`
+  and `docs/RUN-OBSERVABILITY.md`.
 
 ## Non-goals
 
@@ -96,18 +105,21 @@ When ready, this task should require:
 
 ## Open questions
 
-- Which Hermes commands should be documented as canonical for this repo?
-- Should the doc reference `/usage`, `/stats`, or both, given version-specific
-  Hermes behavior?
-- Should the doc wait until observability-01 and observability-02 exist?
-- Should `coder --resume` vs `hermes --resume` session behavior be documented
-  here or in a separate debugging note?
-
-If these are resolved before promotion, write:
-
-```text
 None.
-```
+
+Resolved:
+
+- `docs/RUN-OBSERVABILITY.md` complements `docs/DEBUGGING.md`; it does not
+  replace it.
+- `docs/DEBUGGING.md` remains the general troubleshooting/debugging entry
+  point.
+- `docs/RUN-OBSERVABILITY.md` is the focused operator guide for AgentOps run
+  metadata, artifacts, logs, and token/time pressure.
+- If `docs/DEBUGGING.md` exists, add only a short cross-reference there.
+- Do not duplicate the same observability content across both files.
+- This can land before the run summary helper if references to that helper are
+  conditional.
+- Do not document Hermes commands as canonical unless they are locally verified.
 
 ## Verification
 
@@ -130,28 +142,30 @@ TBD
 When ready, accept criteria should include:
 
 - `docs/RUN-OBSERVABILITY.md` exists.
+- The recommended debugging flow is the centerpiece of the doc.
 - The doc clearly states that raw logs are local by default.
 - The doc explains compact summaries, artifact paths, and metrics as the
   default prompt-safe observability payload.
-- The doc describes a practical local debugging flow.
+- The doc covers slow run, high token/context pressure, executor failure, and
+  suspicious review loop flows.
+- `docs/DEBUGGING.md` is only cross-referenced, not duplicated, if it exists.
 - The doc avoids unverified or version-specific command claims unless marked as
   such.
 - Diff stays within write scope.
 
 ## Promotion decision
 
-Decision: keep_planned
+Decision: promote_to_ready
 
 Reason:
 
-This doc can be useful before or after implementation, but the exact commands
-and metadata fields should be based on the accepted observability-01 and observability-02
-behavior where possible.
+The scope is clear and can land before the run summary helper as long as helper
+references are conditional. The doc should center the operator debugging flow
+and avoid duplicating `docs/DEBUGGING.md`.
 
 Next action:
 
-Promote after deciding whether this should follow observability-01/02 or proceed as
-a lightweight principles-first doc.
+Promote after these planning edits.
 
 ## Promotion criteria
 
@@ -181,7 +195,8 @@ agentops/tasks/ready/TASK-XXXX-document-agentops-observability.md
 Use the Hermes/OpenCode executor workflow from your profile/skill.
 
 Requirements:
-- create/switch to an appropriate task branch
+- use or create a task-specific worktree and branch
+- do not switch the main planning worktree away from main
 - do not run executor work on main
 - preserve OPENCODE_XDG_CONFIG_HOME, OPENCODE_XDG_DATA_HOME, and AGENTOPS_EXECUTOR_MODEL
 - use the runner-configured executor model
