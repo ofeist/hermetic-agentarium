@@ -13,6 +13,7 @@ Do not execute directly from this file.
 - investigate coordinator model / Codex subscription options
 - maybe add a helper for result summary creation
 - maybe add a lifecycle closeout helper for ready/review/done/result movement
+- reduce historical lifecycle warnings by adding result notes or an explicit historical-warning allowlist
 - bug? remember that untracked files do not appear in plain `git diff --stat`
 - later: define planned task promotion format
 - later: add ready task template
