@@ -54,53 +54,35 @@ explicitly planning-only.
 
 ## Executor
 
-Harness: TBD
+Harness: OpenCode
 Model source: runner configuration (`AGENTOPS_EXECUTOR_MODEL`)
 Fallback: disabled
 
-Notes:
-
-- Fill this in only when the task becomes ready.
-- Keep model selection out of the task body unless there is a specific reason.
-
 ## Read scope
 
-TBD
-
-Likely candidates:
-
-- `agentops/templates/READY-TASK-TEMPLATE.md`
-- `agentops/tasks/planned/templates-01-planned-task-template.md`
 - `agentops/tasks/planned/templates-02-planned-to-ready-promotion-policy.md`
 - `skills/hermetic-coding-orchestrator/SKILL.md`
-- `agentops/USAGE.md`
+- `agentops/templates/READY-TASK-TEMPLATE.md`, if present
+- `agentops/USAGE.md`, if present
 
 ## Write scope
 
-TBD
-
-Likely candidates:
-
-- `agentops/templates/PLANNED-TASK-TEMPLATE.md`, if it exists after
-  `templates-01`
-- `agentops/templates/READY-TASK-TEMPLATE.md`, only if a short note belongs
-  there
-- `skills/hermetic-coding-orchestrator/SKILL.md`, if the policy should become
-  agent behavior
-- `agentops/USAGE.md`, if the workflow doc should own the rule
+- `skills/hermetic-coding-orchestrator/SKILL.md`
+- `agentops/USAGE.md`, only if it already contains task lifecycle workflow
+  notes
 
 ## Requirements
-
-TBD
-
-When ready, this task should require:
 
 - Document planned-to-ready promotion as a minimal mechanical transformation.
 - State that ready-shaped planned tasks should not be rewritten wholesale during
   promotion.
 - Preserve wording and section structure unless a section is incomplete,
   incorrect, still marked `TBD`, or explicitly planning-only.
+- Prefer preserving section names and order from the planned task when they
+  already match the ready-shaped template.
 - Explain that large rewrites require an explicit reason.
+- If a promotion changes more than expected, the agent should call it out in the
+  review instead of silently treating it as normal.
 - Keep the policy short enough that agents can follow it.
 - Do not implement a promotion helper in this task unless explicitly added to
   scope.
@@ -115,18 +97,19 @@ When ready, this task should require:
 
 ## Open questions
 
-- Should this policy live first in `agentops/USAGE.md`, the planned-task
-  template, the orchestrator skill, or all of them?
-- Should this task wait for `templates-01` to create
-  `agentops/templates/PLANNED-TASK-TEMPLATE.md`?
-- Should a later task add `scripts/promote-agentops-task.sh` to enforce the
-  policy mechanically?
-
-If these are resolved before promotion, write:
-
-```text
 None.
-```
+
+Resolved:
+
+- The policy should live first in
+  `skills/hermetic-coding-orchestrator/SKILL.md`, because this is agent
+  behavior.
+- It should not wait for `templates-01`; the drift already affects current
+  promotions.
+- A later task may add `scripts/promote-agentops-task.sh` to enforce the policy
+  mechanically.
+- A later template task may mirror the same rule in
+  `agentops/templates/PLANNED-TASK-TEMPLATE.md`.
 
 ## Verification
 
@@ -137,9 +120,11 @@ Likely commands:
 ```bash
 git status --short --branch
 git diff --stat
+git diff -- skills/hermetic-coding-orchestrator/SKILL.md
 ```
 
-Add doc/template checks when ready.
+If Markdown checks exist, use them. Do not invent a new checker for this
+policy-only task.
 
 ## Accept criteria
 
@@ -152,23 +137,26 @@ When ready, accept criteria should include:
 - The policy says to preserve existing planned-task wording and structure unless
   a section is incomplete, incorrect, still marked `TBD`, or explicitly
   planning-only.
+- The policy says large unexpected promotion diffs should be called out in
+  review.
 - The policy explains when a larger rewrite is acceptable.
 - Diff stays within write scope.
 
 ## Promotion decision
 
-Decision: keep_planned
+Decision: promote_to_ready
 
 Reason:
 
-The need is clear, but the durable location should be decided before promotion.
-The strongest eventual location is likely the orchestrator skill plus the
-planned-task template, with docs only if needed.
+The workflow drift has already happened once during `observability-01`
+promotion. The policy should be added now to the durable orchestrator behavior
+before more planned tasks are promoted. This can be a small policy-only task
+limited to the skill and, optionally, existing lifecycle docs.
 
 Next action:
 
-Decide whether this should wait for `templates-01` or be promoted ahead of it
-as a small policy-only task.
+Promote as a narrow documentation/skill update task. Do not wait for
+`templates-01`.
 
 ## Promotion criteria
 
