@@ -36,11 +36,11 @@ metrics in Prometheus textfile format.
 Suggested v1 metric family:
 
 - `agentops_executor_runs`
-- `agentops_executor_prompt_bytes_total`
-- `agentops_executor_stdout_bytes_total`
-- `agentops_executor_stderr_bytes_total`
-- `agentops_executor_duration_seconds_total`
-- `agentops_executor_metadata_files_skipped_total`
+- `agentops_executor_prompt_bytes`
+- `agentops_executor_stdout_bytes`
+- `agentops_executor_stderr_bytes`
+- `agentops_executor_duration_seconds`
+- `agentops_executor_metadata_files_skipped`
 
 These should be emitted as gauges over the current exported local artifact set,
 because a textfile exporter that regenerates metrics from current
@@ -48,7 +48,9 @@ because a textfile exporter that regenerates metrics from current
 run directories are deleted, values can go down.
 
 Do not use standalone `_sum` or `_max` metric names unless implementing real
-Prometheus histogram/summary-compatible families.
+Prometheus histogram/summary-compatible families. Do not use `_total` for
+current-artifact-set values that can decrease when `.agentops-runs/` is cleaned
+up.
 
 Avoid per-run metrics such as
 `agentops_executor_prompt_bytes{run_id="TASK-0073-test"}` unless a future task
@@ -105,7 +107,7 @@ Likely candidates:
   exporter to local-only debugging.
 - Handle missing or partial metadata predictably.
 - Skip incomplete metadata files with a clear stderr warning.
-- Export `agentops_executor_metadata_files_skipped_total` in v1.
+- Export `agentops_executor_metadata_files_skipped` in v1.
 - Avoid exporting raw prompt text, stdout, stderr, or logs.
 - Document usage if `docs/RUN-OBSERVABILITY.md` exists.
 
@@ -125,9 +127,19 @@ Resolved:
 
 - Prometheus export should wait until local metadata from observability-01 /
   TASK-0073 is stable.
-- The first version should use low-cardinality labels only.
-- Do not export `run_id` as a label.
-- Do not export `task_id` as a default label for long-term metrics.
+- Prometheus export is an export layer; `.agentops-runs/<run-id>/metadata.txt`
+  remains the canonical local record.
+- Use current-artifact-set gauge metrics, not long-lived counters.
+- Do not use standalone `_sum` / `_max` metric names.
+- Do not use `_total` for metrics that can decrease when `.agentops-runs/` is
+  cleaned up.
+- Emit `# HELP` and `# TYPE` lines.
+- Use deterministic line ordering.
+- Write output atomically via temp file + rename.
+- Keep default labels low-cardinality: `harness`, `phase`, `model`,
+  `exit_code`.
+- Do not export `run_id` or `task_id` as default labels.
+- Include skipped metadata visibility in v1.
 - Keep run/task detail in `.agentops-runs/<run-id>/metadata.txt`.
 - The generated `.prom` output path should be provided explicitly as a script
   argument.
@@ -139,12 +151,9 @@ Resolved:
   `/var/lib/node_exporter/textfile_collector/agentops.prom` should be
   documentation examples only, not defaults.
 - The script should skip incomplete metadata files with a clear stderr warning.
-- Export `agentops_executor_metadata_files_skipped_total` in v1 so dashboards
+- Export `agentops_executor_metadata_files_skipped` in v1 so dashboards
   can show when metadata files are ignored.
-- Values are gauges over the current exported local artifact set, even when
-  metric names contain `_total`.
-- If `_total` feels too confusing during implementation, use names without
-  `_total` and document them as current artifact-set aggregates.
+- Values are gauges over the current exported local artifact set.
 - A durable ledger or append-only state would be required later if true
   monotonic counters are needed.
 - Token/cost metrics remain out of scope unless reliable machine-readable
@@ -190,7 +199,7 @@ grep -n "^# TYPE" /tmp/agentops-test.prom
 grep -n "agentops_executor_runs" /tmp/agentops-test.prom
 grep -n "agentops_executor_prompt_bytes" /tmp/agentops-test.prom
 grep -n "agentops_executor_duration_seconds" /tmp/agentops-test.prom
-grep -n "agentops_executor_metadata_files_skipped_total" /tmp/agentops-test.prom
+grep -n "agentops_executor_metadata_files_skipped" /tmp/agentops-test.prom
 rm -rf .agentops-runs/TASK-9999-prom-test
 rm -rf .agentops-runs/TASK-9998-prom-incomplete
 rm -f /tmp/agentops-test.prom
@@ -220,7 +229,7 @@ When ready, accept criteria should include:
   directory.
 - Missing or partial metadata behavior is clear.
 - Skipped metadata files print stderr warnings and increment
-  `agentops_executor_metadata_files_skipped_total`.
+  `agentops_executor_metadata_files_skipped`.
 - Verification commands pass.
 - Diff stays within write scope.
 
