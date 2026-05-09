@@ -1,8 +1,8 @@
-# worktree-01 — Add AgentOps worktree policy and helper
+# TASK-0075 — Add AgentOps worktree policy and helper
 
 ## Status
 
-planned
+ready
 
 ## Goal
 
@@ -73,7 +73,7 @@ Fallback: disabled
 - `skills/hermetic-coding-orchestrator/SKILL.md`
 - `agentops/USAGE.md`, if present
 - `docs/FIRST-RUN.md`, if present
-- `agentops/tasks/planned/worktree-01-agentops-worktree-policy.md`
+- `agentops/tasks/ready/TASK-0075-agentops-worktree-policy.md`
 
 ## Write scope
 
@@ -90,8 +90,8 @@ Fallback: disabled
 - Ensure the helper does not switch the main planning worktree away from
   `main`.
 - The helper should report whether the main planning worktree is dirty.
-- The helper should not block dirty planning-only files like `agentops/IDEAS.md`
-  by default.
+- The helper should report dirty state but should not block merely because the
+  planning worktree has unrelated planning-only edits.
 - The helper should refuse only if it cannot safely create the worktree.
 - The helper should run `git fetch origin`.
 - The helper should base new task branches on `origin/main` by default.
@@ -152,9 +152,7 @@ Resolved:
 
 ## Verification
 
-TBD
-
-Likely commands:
+Run:
 
 ```bash
 bash -n scripts/start-agentops-worktree.sh
@@ -163,8 +161,18 @@ git status --short --branch
 git diff --stat
 ```
 
-Add a non-destructive smoke test when ready. If the helper creates a temporary
-test worktree, verification must remove only that temporary worktree and branch.
+Run a non-destructive smoke test using a temporary task ID, then clean it up:
+
+```bash
+scripts/start-agentops-worktree.sh TASK-9999-worktree-smoke-test
+git worktree list
+git worktree remove ../hermetic-agentarium-task-9999
+git branch -D task-9999-worktree-smoke-test
+```
+
+Cleanup must only remove the temporary smoke-test worktree/branch created
+during verification. If cleanup is unsafe or the branch/worktree already
+exists, stop and report instead of deleting anything unrelated.
 
 ## Accept criteria
 
@@ -176,6 +184,8 @@ test worktree, verification must remove only that temporary worktree and branch.
   planning-only files by default.
 - The helper handles existing branch/worktree cases according to the resolved
   policy.
+- The helper prints the created/existing worktree path and suggested next
+  command.
 - The orchestrator skill tells future agents not to run executor work directly
   on `main`.
 - `scripts/start-agentops-task.sh` is not redesigned or deprecated in this
@@ -183,52 +193,23 @@ test worktree, verification must remove only that temporary worktree and branch.
 - Verification commands pass.
 - Diff stays within write scope.
 
-## Promotion decision
-
-Decision: promote_to_ready
-
-Reason:
-
-The workflow need is clear and recent TASK-0072/TASK-0073 runs showed that
-task-specific worktrees are safer than switching the planning cockpit away from
-`main`. The first ready slice should add a minimal helper and durable policy,
-without redesigning the older branch-only helper.
-
-Next action:
-
-Promote as a narrow task: add `scripts/start-agentops-worktree.sh`, document
-the policy in the orchestrator skill, and keep `scripts/start-agentops-task.sh`
-unchanged except for references if necessary.
-
-## Promotion criteria
-
-This task can be promoted to ready when:
-
-- read scope is known
-- write scope is known
-- open questions are resolved or explicitly marked as blockers
-- requirements are concrete
-- verification commands are known
-- accept criteria are concrete
-- non-goals are clear
-
 ## Hermes/coder collection prompt
 
-TBD until ready.
-
-When ready, use this shape:
+Use this prompt to collect and execute the task through the Hermes/coder
+orchestrator.
 
 ```text
 /hermetic-coding-orchestrator
 
 Start working on the ready AgentOps task:
 
-agentops/tasks/ready/TASK-XXXX-agentops-worktree-policy.md
+agentops/tasks/ready/TASK-0075-agentops-worktree-policy.md
 
 Use the Hermes/OpenCode executor workflow from your profile/skill.
 
 Requirements:
-- create/switch to an appropriate task branch
+- use or create a task-specific worktree
+- do not switch the main planning worktree away from main
 - do not run executor work on main
 - preserve OPENCODE_XDG_CONFIG_HOME, OPENCODE_XDG_DATA_HOME, and AGENTOPS_EXECUTOR_MODEL
 - use the runner-configured executor model
@@ -247,9 +228,7 @@ Uncertainty:
 
 ## Return format
 
-TBD until ready.
-
-When ready, expected executor return format:
+Expected executor return format:
 
 ```text
 Plan:
