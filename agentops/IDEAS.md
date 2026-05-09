@@ -216,6 +216,74 @@ Proposed sections:
 Planned tasks should avoid executor/model instructions and detailed verification
 until they are promoted to `ready/`.
 
+## Hermes/coder collection prompt helper idea
+
+Goal: formalize the prompt used to hand a ready AgentOps task to the
+Hermes/coder orchestrator.
+
+Problem:
+
+- ready tasks include a collection prompt, but humans still copy/paste and
+  adapt it manually
+- repeated prompt text increases the chance of drift
+- missing details can break the workflow, especially:
+  - not invoking `/hermetic-coding-orchestrator`
+  - running executor work on `main`
+  - losing `OPENCODE_XDG_CONFIG_HOME`, `OPENCODE_XDG_DATA_HOME`, or
+    `AGENTOPS_EXECUTOR_MODEL`
+  - accidentally allowing model fallback
+  - committing from the executor instead of returning results for review
+
+Possible task:
+
+- add a helper such as `scripts/render-hermes-coder-collection-prompt.sh`
+- input: `agentops/tasks/ready/TASK-xxxx-slug.md`
+- output: the canonical Hermes/coder collection prompt
+- optionally validate that the task is under `agentops/tasks/ready/`
+- optionally include task-specific extra requirements from the task body if a
+  stable marker is introduced later
+
+Initial canonical prompt shape:
+
+```text
+/hermetic-coding-orchestrator
+
+Start working on the ready AgentOps task:
+
+agentops/tasks/ready/TASK-XXXX-short-title.md
+
+Use the Hermes/OpenCode executor workflow from your profile/skill.
+
+Requirements:
+- create/switch to an appropriate task branch
+- do not run executor work on main
+- preserve OPENCODE_XDG_CONFIG_HOME, OPENCODE_XDG_DATA_HOME, and AGENTOPS_EXECUTOR_MODEL
+- use the runner-configured executor model
+- do not silently fallback to another model
+- do not commit
+- independently verify the result
+
+Return:
+Plan:
+Implementation:
+Verification:
+Review:
+Changed files:
+Uncertainty:
+```
+
+Non-goals:
+
+- no model hardcoding in prompts
+- no executor behavior changes
+- no automatic commit/push
+- no replacement for the review prompt flow
+
+Why:
+
+The collection prompt is part of the workflow contract. It should be generated
+from one canonical source instead of being manually reconstructed each time.
+
 ## Promotion path
 
 When an idea becomes actionable, promote it gradually:
