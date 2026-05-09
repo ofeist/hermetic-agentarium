@@ -1,8 +1,8 @@
-# observability-02 — Add AgentOps run summary helper
+# TASK-0076 — Add AgentOps run summary helper
 
 ## Status
 
-planned
+ready
 
 ## Goal
 
@@ -62,7 +62,7 @@ Fallback: disabled
 
 - `scripts/run-opencode-executor.sh`
 - `.agentops-runs/`, if useful for metadata examples
-- `agentops/tasks/planned/observability-02-run-summary-helper.md`
+- `agentops/tasks/ready/TASK-0076-agentops-run-summary-helper.md`
 
 ## Write scope
 
@@ -102,9 +102,7 @@ Resolved:
 
 ## Verification
 
-TBD
-
-Likely commands:
+Run:
 
 ```bash
 bash -n scripts/render-agentops-run-summary.sh
@@ -145,44 +143,17 @@ stdout/stderr logs.
 - Verification commands pass.
 - Diff stays within write scope.
 
-## Promotion decision
-
-Decision: keep_planned
-
-Reason:
-
-This depends on the finalized metadata contract from observability-01 /
-TASK-0073. The scope is clear, but it should wait until the actual metadata keys
-exist.
-
-Next action:
-
-Promote after TASK-0073 is implemented and accepted.
-
-## Promotion criteria
-
-This task can be promoted to ready when:
-
-- read scope is known
-- write scope is known
-- open questions are resolved or explicitly marked as blockers
-- requirements are concrete
-- verification commands are known
-- accept criteria are concrete
-- non-goals are clear
-
 ## Hermes/coder collection prompt
 
-TBD until ready.
-
-When ready, use this shape:
+Use this prompt to collect and execute the task through the Hermes/coder
+orchestrator.
 
 ```text
 /hermetic-coding-orchestrator
 
 Start working on the ready AgentOps task:
 
-agentops/tasks/ready/TASK-XXXX-agentops-run-summary-helper.md
+agentops/tasks/ready/TASK-0076-agentops-run-summary-helper.md
 
 Use the Hermes/OpenCode executor workflow from your profile/skill.
 
@@ -207,9 +178,7 @@ Uncertainty:
 
 ## Return format
 
-TBD until ready.
-
-When ready, expected executor return format:
+Expected executor return format:
 
 ```text
 Plan:
