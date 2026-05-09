@@ -33,7 +33,7 @@ Without this, agents may:
 
 ## Smallest useful slice
 
-Document the worktree policy and add a small helper:
+Document the worktree policy and add a minimal helper:
 
 ```bash
 scripts/start-agentops-worktree.sh TASK-0073
@@ -52,6 +52,15 @@ The policy should say:
 The helper should create or prepare a task-specific worktree and branch without
 switching the main planning worktree away from `main`.
 
+Keep this first slice focused:
+
+- add `scripts/start-agentops-worktree.sh`
+- document the policy in the orchestrator skill
+- keep `scripts/start-agentops-task.sh` unchanged except for references if
+  necessary
+- leave helper deprecation, cleanup helpers, and broader docs polish for later
+  worktree tasks
+
 ## Executor
 
 Harness: OpenCode
@@ -60,33 +69,19 @@ Fallback: disabled
 
 ## Read scope
 
-TBD
-
-Likely candidates:
-
 - `scripts/start-agentops-task.sh`
 - `skills/hermetic-coding-orchestrator/SKILL.md`
-- `agentops/USAGE.md`
-- `docs/DEBUGGING.md`
-- `docs/FIRST-RUN.md`
+- `agentops/USAGE.md`, if present
+- `docs/FIRST-RUN.md`, if present
 - `agentops/tasks/planned/worktree-01-agentops-worktree-policy.md`
 
 ## Write scope
 
-TBD
-
-Likely candidates:
-
 - `scripts/start-agentops-worktree.sh`
 - `skills/hermetic-coding-orchestrator/SKILL.md`
-- `agentops/USAGE.md`
-- docs only if needed to remove stale "executor starts on main" guidance
+- `agentops/USAGE.md`, if present and clearly relevant
 
 ## Requirements
-
-TBD
-
-When ready, this task should require:
 
 - Add `scripts/start-agentops-worktree.sh`.
 - Document that the main worktree is the planning cockpit.
@@ -94,18 +89,30 @@ When ready, this task should require:
 - Ensure one task worktree maps to one task branch.
 - Ensure the helper does not switch the main planning worktree away from
   `main`.
-- Ensure the helper refuses to proceed if the main planning worktree is dirty,
-  unless the ready task explicitly chooses a safer alternative.
-- Ensure the helper fetches/pulls `main` before creating the task worktree.
+- The helper should report whether the main planning worktree is dirty.
+- The helper should not block dirty planning-only files like `agentops/IDEAS.md`
+  by default.
+- The helper should refuse only if it cannot safely create the worktree.
+- The helper should run `git fetch origin`.
+- The helper should base new task branches on `origin/main` by default.
+- The helper should not force `git pull` in the planning worktree if local
+  planning changes exist.
 - Ensure the helper creates a task branch named from the task slug, for example
   `task-0073-agentops-executor-run-metadata-baseline`.
-- Ensure the helper creates a predictable local worktree path.
+- Ensure the helper creates a predictable sibling worktree path, for example
+  `../hermetic-agentarium-task-0073`.
 - Ensure the helper is idempotent enough to report an existing branch/worktree
   clearly instead of overwriting it.
+- If the branch exists and is already attached to a worktree, print that path
+  and exit with a clear no-op message.
+- If the branch exists but is not attached to a worktree, create the worktree
+  from that branch.
+- If the target worktree path exists, refuse unless it is already the expected
+  worktree for the expected branch.
 - Update the orchestrator skill so future Hermes/coder runs prefer the worktree
   helper over running executor work in the main worktree.
-- Update or remove stale documentation that implies executor work should start
-  directly on `main`.
+- Keep `scripts/start-agentops-task.sh` unchanged in this slice unless a
+  reference update is clearly necessary.
 
 ## Non-goals
 
@@ -116,23 +123,32 @@ When ready, this task should require:
 - No destructive cleanup.
 - No replacement for the review prompt flow.
 - No changes to model selection.
+- No deprecation or redesign of `scripts/start-agentops-task.sh`.
+- No worktree list/cleanup helpers.
+- No configurable worktree root in this first slice.
 
 ## Open questions
 
-- Should task worktrees live next to the repo root, for example
-  `../hermetic-agentarium-task-0073`, or under a configurable root?
-- Should the helper accept only `TASK-XXXX...` slugs, or also accept a full
-  ready task path and derive the slug?
-- Should an existing branch be treated as blocked, or should the helper attach a
-  worktree to it when safe?
-- Should `scripts/start-agentops-task.sh` remain as a branch-only helper or be
-  deprecated in docs?
-
-If these are resolved before promotion, write:
-
-```text
 None.
-```
+
+Resolved:
+
+- Task worktrees should live next to the main repo by default:
+  `../<repo-name>-task-XXXX`.
+- This keeps the planning cockpit and executor worktree visibly separate
+  without adding configuration.
+- The helper should accept `TASK-XXXX` or `TASK-XXXX-slug`.
+- Full ready-task path support can be added later.
+- If the branch exists and is already attached to a worktree, print the path and
+  exit with a clear no-op message.
+- If the branch exists but is not attached to a worktree, create the worktree
+  from that branch.
+- If the target worktree path exists, refuse unless it is already the expected
+  worktree for the expected branch.
+- Keep `scripts/start-agentops-task.sh` unchanged in this slice. Update
+  docs/skill to prefer `scripts/start-agentops-worktree.sh` for executor work.
+- Deprecation or replacement of the older branch-only helper can be a later
+  task.
 
 ## Verification
 
@@ -152,37 +168,37 @@ test worktree, verification must remove only that temporary worktree and branch.
 
 ## Accept criteria
 
-TBD
-
-When ready, accept criteria should include:
-
 - The worktree policy is documented in the agreed durable location.
 - `scripts/start-agentops-worktree.sh` exists and is executable.
 - The helper creates a task-specific branch and worktree without switching the
   main worktree away from `main`.
-- The helper refuses or reports clearly on dirty main worktree, existing branch,
-  or existing worktree cases.
+- The helper reports dirty planning worktree state without blocking
+  planning-only files by default.
+- The helper handles existing branch/worktree cases according to the resolved
+  policy.
 - The orchestrator skill tells future agents not to run executor work directly
   on `main`.
-- Stale docs that imply executor work starts directly on `main` are corrected or
-  called out.
+- `scripts/start-agentops-task.sh` is not redesigned or deprecated in this
+  slice.
 - Verification commands pass.
 - Diff stays within write scope.
 
 ## Promotion decision
 
-Decision: keep_planned
+Decision: promote_to_ready
 
 Reason:
 
-The workflow need is clear, but the helper behavior needs one more design
-decision: where task worktrees should live and how to handle existing
-branches/worktrees.
+The workflow need is clear and recent TASK-0072/TASK-0073 runs showed that
+task-specific worktrees are safer than switching the planning cockpit away from
+`main`. The first ready slice should add a minimal helper and durable policy,
+without redesigning the older branch-only helper.
 
 Next action:
 
-Resolve the worktree path and existing-branch behavior, then promote this to the
-next ready `TASK-XXXX` ID.
+Promote as a narrow task: add `scripts/start-agentops-worktree.sh`, document
+the policy in the orchestrator skill, and keep `scripts/start-agentops-task.sh`
+unchanged except for references if necessary.
 
 ## Promotion criteria
 
