@@ -53,34 +53,20 @@ artifacts: .agentops-runs/TASK-XXXX/
 
 ## Executor
 
-Harness: TBD
+Harness: OpenCode
 Model source: runner configuration (`AGENTOPS_EXECUTOR_MODEL`)
 Fallback: disabled
 
-Notes:
-
-- Fill this in only when the task becomes ready.
-- Keep model selection out of the task body unless there is a specific reason.
-
 ## Read scope
 
-TBD
-
-Likely candidates:
-
-- `scripts/render-agentops-run-summary.sh`, if it already exists
-- `.agentops-runs/`, for metadata shape examples if present
 - `scripts/run-opencode-executor.sh`
+- `.agentops-runs/`, if useful for metadata examples
 - `agentops/tasks/planned/observability-02-run-summary-helper.md`
 
 ## Write scope
 
-TBD
-
-Likely candidates:
-
 - `scripts/render-agentops-run-summary.sh`
-- docs only if a short note is needed
+- `docs/RUN-AUDIT.md`, only if a short usage note is needed
 
 ## Requirements
 
@@ -106,17 +92,16 @@ When ready, this task should require:
 
 ## Open questions
 
-- Should the argument be a `run_id` only, or should it also accept a task id and
-  choose the latest matching run?
-- Should missing metadata be an error or a partial summary?
-- Should summary output be stable enough for scripts, or human-readable only?
-- Should this depend strictly on observability-01 metadata fields?
-
-If these are resolved before promotion, write:
-
-```text
 None.
-```
+
+Resolved:
+
+- First version accepts only a `run_id`.
+- Choosing the latest run for a task ID is a later feature.
+- Missing `metadata.txt` is an error with a clear message.
+- Missing optional fields produce `unknown`, not failure.
+- Output is human-readable only, not a stable machine interface.
+- The helper depends on the metadata fields from observability-01 / TASK-0073.
 
 ## Verification
 
@@ -127,11 +112,31 @@ Likely commands:
 ```bash
 bash -n scripts/render-agentops-run-summary.sh
 scripts/render-agentops-run-summary.sh --help
+mkdir -p .agentops-runs/TASK-9999-summary-test
+cat > .agentops-runs/TASK-9999-summary-test/metadata.txt <<'EOF'
+run_id=TASK-9999-summary-test
+task_id=TASK-9999
+phase=executor
+harness=OpenCode
+model=deepseek/deepseek-v4-pro
+prompt_file=/tmp/TASK-9999.prompt.md
+prompt_bytes=18422
+prompt_lines=412
+started_at=2026-05-09T12:34:56Z
+finished_at=2026-05-09T12:36:30Z
+duration_seconds=94
+exit_code=0
+stdout_bytes=8120
+stderr_bytes=0
+EOF
+scripts/render-agentops-run-summary.sh TASK-9999-summary-test
+rm -rf .agentops-runs/TASK-9999-summary-test
 git status --short --branch
 git diff --stat
 ```
 
-Add a fixture or local metadata smoke test when ready.
+The helper should read only `metadata.txt` during the smoke test, not
+stdout/stderr logs.
 
 ## Accept criteria
 
@@ -153,12 +158,13 @@ Decision: keep_planned
 
 Reason:
 
-This depends on the metadata fields from observability-01, so it should remain planned
-until that metadata shape is implemented or finalized.
+This depends on the finalized metadata contract from observability-01 /
+TASK-0073. The scope is clear, but it should wait until the actual metadata keys
+exist.
 
 Next action:
 
-Promote after observability-01 lands and the accepted metadata key names are known.
+Promote after TASK-0073 is implemented and accepted.
 
 ## Promotion criteria
 
