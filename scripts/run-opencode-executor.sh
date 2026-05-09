@@ -10,6 +10,9 @@ usage() {
     echo "" >&2
     echo "Optional:" >&2
     echo "  AGENTOPS_EXECUTOR_MODEL=deepseek/deepseek-v4-pro AGENTOPS_RUN_ID=TASK-0039 $0 /tmp/TASK-0039.prompt.md" >&2
+    echo "" >&2
+    echo "Test/verification (no-network metadata capture):" >&2
+    echo "  AGENTOPS_EXECUTOR_COMMAND='printf \"executor ok\\\\n\"' AGENTOPS_RUN_ID=TASK-0073-test $0 /tmp/TASK-0073-test.prompt.md" >&2
 }
 
 if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
@@ -66,19 +69,33 @@ if [[ -n "$RUN_ID" ]]; then
     mkdir -p "$RUN_DIR"
     cp "$PROMPT_FILE" "$RUN_DIR/executor-prompt.md"
 
+    PROMPT_BYTES=$(wc -c < "$PROMPT_FILE")
+    PROMPT_LINES=$(wc -l < "$PROMPT_FILE")
+
+    TASK_ID=""
+    if [[ "$RUN_ID" =~ ^TASK-[0-9]+ ]]; then
+        TASK_ID="${BASH_REMATCH[0]}"
+    fi
+
     STARTED_AT="$(timestamp_utc)"
 
     {
         echo "run_id=$RUN_ID"
+        echo "task_id=$TASK_ID"
+        echo "phase=executor"
         echo "harness=OpenCode"
         echo "model=$MODEL"
         echo "prompt_file=$PROMPT_FILE"
+        echo "prompt_bytes=$PROMPT_BYTES"
+        echo "prompt_lines=$PROMPT_LINES"
         echo "started_at=$STARTED_AT"
     } > "$METADATA_FILE"
 fi
 
 run_opencode() {
-    if [[ ${#EXTRA_ENV[@]} -gt 0 ]]; then
+    if [[ -n "${AGENTOPS_EXECUTOR_COMMAND:-}" ]]; then
+        eval "$AGENTOPS_EXECUTOR_COMMAND"
+    elif [[ ${#EXTRA_ENV[@]} -gt 0 ]]; then
         echo "Using explicit OpenCode config/data home overrides"
         env "${EXTRA_ENV[@]}" opencode run --model "$MODEL" "$(cat "$PROMPT_FILE")"
     else
@@ -96,9 +113,19 @@ if [[ -n "$RUN_ID" ]]; then
 
     FINISHED_AT="$(timestamp_utc)"
 
+    STARTED_EPOCH=$(date -d "$STARTED_AT" +%s)
+    FINISHED_EPOCH=$(date -d "$FINISHED_AT" +%s)
+    DURATION_SECONDS=$((FINISHED_EPOCH - STARTED_EPOCH))
+
+    STDOUT_BYTES=$(wc -c < "$STDOUT_FILE")
+    STDERR_BYTES=$(wc -c < "$STDERR_FILE")
+
     {
         echo "finished_at=$FINISHED_AT"
+        echo "duration_seconds=$DURATION_SECONDS"
         echo "exit_code=$EXIT_CODE"
+        echo "stdout_bytes=$STDOUT_BYTES"
+        echo "stderr_bytes=$STDERR_BYTES"
     } >> "$METADATA_FILE"
 
     echo "Local run audit: $RUN_DIR" >&2

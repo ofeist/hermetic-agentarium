@@ -46,17 +46,50 @@ A local run directory may contain:
 
 `metadata.txt` should stay simple and human-readable.
 
-Suggested fields:
+Executor phase fields:
 
-    run_id=TASK-xxxx
+    run_id=<run-id>
+    task_id=<task-id-or-empty>
+    phase=executor
     harness=OpenCode
-    model=deepseek/deepseek-v4-pro
-    prompt_file=/tmp/TASK-xxxx.prompt.md
+    model=<model-id>
+    prompt_file=<path>
+    prompt_bytes=<number>
+    prompt_lines=<number>
     started_at=<timestamp>
     finished_at=<timestamp>
+    duration_seconds=<number>
     exit_code=<number>
+    stdout_bytes=<number>
+    stderr_bytes=<number>
 
-Do not store secrets, tokens, auth file contents, or private configuration values in metadata.
+- `task_id` is derived from `run_id` when `run_id` starts with `TASK-` followed
+  by digits (e.g. `TASK-0073` from `TASK-0073` or `TASK-0073-20260503`).
+  Otherwise it is empty.
+- `prompt_bytes` and `prompt_lines` are measured from the prompt file without
+  including prompt content in metadata or prompts.
+- `duration_seconds` is computed from `started_at` and `finished_at`.
+- `stdout_bytes` and `stderr_bytes` are measured from the captured local
+  artifact files after executor completion.
+
+Do not store secrets, tokens, auth file contents, or private configuration
+values in metadata.
+
+## Verification without network
+
+For smoke testing metadata capture without OpenCode, network access, API keys,
+or paid model calls, set the `AGENTOPS_EXECUTOR_COMMAND` environment variable:
+
+```bash
+AGENTOPS_EXECUTOR_COMMAND='printf "executor ok\n"' \
+AGENTOPS_RUN_ID=<run-id> \
+scripts/run-opencode-executor.sh <prompt-file>
+```
+
+When `AGENTOPS_EXECUTOR_COMMAND` is set, the wrapper runs the given command
+instead of `opencode run`. All metadata capture (stdout, stderr, byte counts,
+timestamps, exit code) proceeds as normal. This path is for test/verification
+only and does not change normal executor behaviour when the variable is unset.
 
 ## Safety boundary
 
@@ -96,20 +129,26 @@ It should not include raw executor logs.
 
 This design does not introduce:
 
-- wrapper implementation
-- stdout/stderr capture
-- smoke tests
 - JSON schema
 - database
 - web UI
 - lifecycle automation
-- executor abstraction
 - committed raw logs
+- Prometheus export
+- Grafana dashboard
+- token/cost estimates
+- review decision capture
+- aggregated event timeline (TSV, JSON)
 
 ## Future implementation
 
-A future implementation may add optional run capture to:
+Future slices may add:
 
-    scripts/run-opencode-executor.sh
+- review decision capture (approve/reject/rework)
+- Prometheus metrics export from executor metadata
+- Grafana dashboards for AgentOps observability
+- token/cost estimates from model provider metadata
+- aggregated event timelines for multi-run comparison
 
-That implementation should preserve existing behavior by default and only add local audit files under `.agentops-runs/`.
+Executor metadata capture is implemented in `scripts/run-opencode-executor.sh`
+as optional local run capture with the fields documented above.
