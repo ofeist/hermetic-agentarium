@@ -1,8 +1,8 @@
-# observability-03 — Document AgentOps observability workflow
+# TASK-0077 — Document AgentOps observability workflow
 
 ## Status
 
-planned
+ready
 
 ## Goal
 
@@ -62,7 +62,7 @@ Fallback: disabled
 - `scripts/run-opencode-executor.sh`
 - `scripts/render-agentops-run-summary.sh`, if present
 - `skills/hermetic-coding-orchestrator/SKILL.md`
-- `agentops/tasks/planned/observability-03-document-observability-workflow.md`
+- `agentops/tasks/ready/TASK-0077-document-agentops-observability-workflow.md`
 
 ## Write scope
 
@@ -155,47 +155,17 @@ script exists or that the reference is explicitly conditional.
   items.
 - Diff stays within write scope.
 
-## Promotion decision
-
-Decision: promote_to_ready
-
-Reason:
-
-The task is scoped as a conservative docs-only operator guide. It can land
-before the run summary helper because helper references are conditional. The
-debugging flow is the main payload, and the doc avoids duplicating
-`docs/DEBUGGING.md`.
-
-Next action:
-
-Promote to the next ready `TASK-XXXX` ID and keep implementation limited to
-`docs/RUN-OBSERVABILITY.md` plus a short cross-reference in `docs/DEBUGGING.md`
-or `docs/DOCUMENTATION-MAP.md` only if those files exist and clearly need it.
-
-## Promotion criteria
-
-This task can be promoted to ready when:
-
-- read scope is known
-- write scope is known
-- open questions are resolved or explicitly marked as blockers
-- requirements are concrete
-- verification commands are known
-- accept criteria are concrete
-- non-goals are clear
-
 ## Hermes/coder collection prompt
 
-TBD until ready.
-
-When ready, use this shape:
+Use this prompt to collect and execute the task through the Hermes/coder
+orchestrator.
 
 ```text
 /hermetic-coding-orchestrator
 
 Start working on the ready AgentOps task:
 
-agentops/tasks/ready/TASK-XXXX-document-agentops-observability.md
+agentops/tasks/ready/TASK-0077-document-agentops-observability-workflow.md
 
 Use the Hermes/OpenCode executor workflow from your profile/skill.
 
@@ -220,9 +190,7 @@ Uncertainty:
 
 ## Return format
 
-TBD until ready.
-
-When ready, expected executor return format:
+Expected executor return format:
 
 ```text
 Plan:
