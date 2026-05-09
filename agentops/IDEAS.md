@@ -216,6 +216,35 @@ Proposed sections:
 Planned tasks should avoid executor/model instructions and detailed verification
 until they are promoted to `ready/`.
 
+## Planned task naming
+
+Planned tasks do not receive `TASK-XXXX` IDs.
+
+Use soft workstream-local numbering for planned tasks instead of assigning
+`TASK-XXXX` IDs too early. This enables changing priorities while in the
+planning phase.
+
+Use:
+
+```text
+<area>-<local-sequence>-<short-slug>.md
+```
+
+Examples:
+
+- `observability-01-executor-run-metadata.md`
+- `observability-02-run-summary-helper.md`
+- `lifecycle-01-historical-warning-baseline.md`
+- `templates-01-planned-task-template.md`
+
+Rules:
+
+- `<area>` identifies the workstream.
+- `<local-sequence>` is a soft suggested order inside that workstream.
+- `<short-slug>` describes the task.
+- Planned sequence numbers do not reserve execution order.
+- Assign `TASK-XXXX` only when promoting a planned task to `ready/`.
+
 ## Hermes/coder collection prompt helper idea
 
 Goal: formalize the prompt used to hand a ready AgentOps task to the
