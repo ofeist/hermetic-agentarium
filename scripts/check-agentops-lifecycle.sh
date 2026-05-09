@@ -43,21 +43,20 @@ TASK_DIRS=(
 echo "=== AgentOps lifecycle check ==="
 echo ""
 
-# ---- 1. Detect duplicate task IDs across different lifecycle directories ----
-echo "-- Checking duplicate task IDs across directories"
-declare -A TASK_ID_DIR
-declare -A TASK_ID_SEEN_SAME_DIR
+# ---- 1. Detect duplicate task IDs across lifecycle directories ----
+echo "-- Checking duplicate task IDs"
+declare -A TASK_ID_PATH
 for dir in "${TASK_DIRS[@]}"; do
     [ -d "$dir" ] || continue
     for f in "$dir"/TASK-*.md; do
         [ -f "$f" ] || continue
         task_id=$(task_id_from_slug "$(basename "$f" .md)")
         [ -n "$task_id" ] || continue
-        if [ -n "${TASK_ID_DIR[$task_id]:-}" ] && [ "${TASK_ID_DIR[$task_id]}" != "$dir" ]; then
-            echo "ERROR: duplicate task ID $task_id in ${TASK_ID_DIR[$task_id]} and $dir (cross-directory)"
+        if [ -n "${TASK_ID_PATH[$task_id]:-}" ]; then
+            echo "ERROR: duplicate task ID $task_id in ${TASK_ID_PATH[$task_id]} and $f"
             ERRORS=$((ERRORS + 1))
         else
-            TASK_ID_DIR[$task_id]="$dir"
+            TASK_ID_PATH[$task_id]="$f"
         fi
     done
 done
@@ -94,13 +93,8 @@ for rf in agentops/results/*.md; do
         # Extract paths like agentops/tasks/<state>/TASK-NNNN-*.md
         while IFS= read -r path; do
             [ -n "$path" ] || continue
-            if [ -f "$path" ]; then
-                continue
-            fi
-            # Exact path missing, but check if the file exists anywhere under agentops/tasks/
-            fname=$(basename "$path")
-            if ! compgen -G "agentops/tasks/*/${fname}" > /dev/null 2>&1; then
-                echo "ERROR: $rf references non-existent task file: $path"
+            if [ ! -f "$path" ]; then
+                echo "ERROR: $rf references missing path: $path"
                 ERRORS=$((ERRORS + 1))
             fi
         done < <(printf '%s\n' "$line" | grep -Eo 'agentops/tasks/(planned|ready|running|review|done)/TASK-[0-9][^ )`[:space:]]*\.md' || true)

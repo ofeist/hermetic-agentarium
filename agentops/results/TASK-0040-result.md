@@ -13,7 +13,7 @@ accept
 ## Verification
 
 - bash -n scripts/render-opencode-prompt.sh
-- scripts/render-opencode-prompt.sh agentops/tasks/ready/TASK-0040-render-opencode-prompt-helper.md > /tmp/TASK-0040.prompt.md
+- scripts/render-opencode-prompt.sh agentops/tasks/done/TASK-0040-render-opencode-prompt-helper.md > /tmp/TASK-0040.prompt.md
 - grep -q "Do not commit" /tmp/TASK-0040.prompt.md
 - grep -q "TASK-0040" /tmp/TASK-0040.prompt.md
 

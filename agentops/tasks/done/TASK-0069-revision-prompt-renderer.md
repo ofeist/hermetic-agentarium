@@ -1,4 +1,4 @@
-# TASK-0067 — Add revision prompt renderer
+# TASK-0069 — Add revision prompt renderer
 
 ## Status
 

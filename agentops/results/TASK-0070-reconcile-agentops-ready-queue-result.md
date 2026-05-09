@@ -28,7 +28,7 @@ normalized `## Status` to `done` for files already under `done/`.
 - TASK-0062-accept-closeout-helper
 - TASK-0063-agentops-tmp-helper
 - TASK-0064-untracked-files-in-verification-notes
-- TASK-0067-revision-prompt-renderer
+- TASK-0069-revision-prompt-renderer
 
 ## Rationale
 
