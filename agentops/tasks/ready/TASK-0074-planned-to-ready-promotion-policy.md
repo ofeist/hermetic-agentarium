@@ -1,8 +1,8 @@
-# templates-02 — Add planned-to-ready promotion policy
+# TASK-0074 — Add planned-to-ready promotion policy
 
 ## Status
 
-planned
+ready
 
 ## Goal
 
@@ -60,7 +60,7 @@ Fallback: disabled
 
 ## Read scope
 
-- `agentops/tasks/planned/templates-02-planned-to-ready-promotion-policy.md`
+- `agentops/tasks/ready/TASK-0074-planned-to-ready-promotion-policy.md`
 - `skills/hermetic-coding-orchestrator/SKILL.md`
 - `agentops/templates/READY-TASK-TEMPLATE.md`, if present
 - `agentops/USAGE.md`, if present
@@ -113,9 +113,7 @@ Resolved:
 
 ## Verification
 
-TBD
-
-Likely commands:
+Run:
 
 ```bash
 git status --short --branch
@@ -128,10 +126,6 @@ policy-only task.
 
 ## Accept criteria
 
-TBD
-
-When ready, accept criteria should include:
-
 - The promotion policy is documented in the agreed durable location.
 - The policy explicitly prefers minimal mechanical promotion.
 - The policy says to preserve existing planned-task wording and structure unless
@@ -142,46 +136,17 @@ When ready, accept criteria should include:
 - The policy explains when a larger rewrite is acceptable.
 - Diff stays within write scope.
 
-## Promotion decision
-
-Decision: promote_to_ready
-
-Reason:
-
-The workflow drift has already happened once during `observability-01`
-promotion. The policy should be added now to the durable orchestrator behavior
-before more planned tasks are promoted. This can be a small policy-only task
-limited to the skill and, optionally, existing lifecycle docs.
-
-Next action:
-
-Promote as a narrow documentation/skill update task. Do not wait for
-`templates-01`.
-
-## Promotion criteria
-
-This task can be promoted to ready when:
-
-- read scope is known
-- write scope is known
-- open questions are resolved or explicitly marked as blockers
-- requirements are concrete
-- verification commands are known
-- accept criteria are concrete
-- non-goals are clear
-
 ## Hermes/coder collection prompt
 
-TBD until ready.
-
-When ready, use this shape:
+Use this prompt to collect and execute the task through the Hermes/coder
+orchestrator.
 
 ```text
 /hermetic-coding-orchestrator
 
 Start working on the ready AgentOps task:
 
-agentops/tasks/ready/TASK-XXXX-planned-to-ready-promotion-policy.md
+agentops/tasks/ready/TASK-0074-planned-to-ready-promotion-policy.md
 
 Use the Hermes/OpenCode executor workflow from your profile/skill.
 
@@ -205,9 +170,7 @@ Uncertainty:
 
 ## Return format
 
-TBD until ready.
-
-When ready, expected executor return format:
+Expected executor return format:
 
 ```text
 Plan:
