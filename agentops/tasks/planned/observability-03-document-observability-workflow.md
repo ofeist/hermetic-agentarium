@@ -123,23 +123,22 @@ Resolved:
 
 ## Verification
 
-TBD
-
-Likely commands:
+Run:
 
 ```bash
 test -f docs/RUN-OBSERVABILITY.md
+grep -n ".agentops-runs" docs/RUN-OBSERVABILITY.md
+grep -n "Full logs" docs/RUN-OBSERVABILITY.md
+grep -n "slow run" docs/RUN-OBSERVABILITY.md
+grep -n "high token" docs/RUN-OBSERVABILITY.md
 git status --short --branch
 git diff --stat
 ```
 
-Add command checks for any documented script names when ready.
+If the doc mentions `scripts/render-agentops-run-summary.sh`, verify that the
+script exists or that the reference is explicitly conditional.
 
 ## Accept criteria
-
-TBD
-
-When ready, accept criteria should include:
 
 - `docs/RUN-OBSERVABILITY.md` exists.
 - The recommended debugging flow is the centerpiece of the doc.
@@ -151,6 +150,9 @@ When ready, accept criteria should include:
 - `docs/DEBUGGING.md` is only cross-referenced, not duplicated, if it exists.
 - The doc avoids unverified or version-specific command claims unless marked as
   such.
+- Any Hermes/OpenCode commands mentioned are either locally verified, already
+  present in repo docs, or clearly marked as version-dependent/operator-check
+  items.
 - Diff stays within write scope.
 
 ## Promotion decision
@@ -159,13 +161,16 @@ Decision: promote_to_ready
 
 Reason:
 
-The scope is clear and can land before the run summary helper as long as helper
-references are conditional. The doc should center the operator debugging flow
-and avoid duplicating `docs/DEBUGGING.md`.
+The task is scoped as a conservative docs-only operator guide. It can land
+before the run summary helper because helper references are conditional. The
+debugging flow is the main payload, and the doc avoids duplicating
+`docs/DEBUGGING.md`.
 
 Next action:
 
-Promote after these planning edits.
+Promote to the next ready `TASK-XXXX` ID and keep implementation limited to
+`docs/RUN-OBSERVABILITY.md` plus a short cross-reference in `docs/DEBUGGING.md`
+or `docs/DOCUMENTATION-MAP.md` only if those files exist and clearly need it.
 
 ## Promotion criteria
 
