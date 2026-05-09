@@ -23,14 +23,27 @@ dashboard that answers the main operational questions.
 
 ## Smallest useful slice
 
-Add either dashboard JSON or documentation for a first dashboard with panels
-for:
+Add a docs-first Grafana dashboard specification.
+
+The spec should define dashboard panels by:
+
+- operator question
+- panel title/type
+- PromQL sketch using observability-04 metric names
+- intended interpretation
+- caveats around current-artifact-set gauge semantics
+
+Do not add Grafana JSON in this first slice.
+
+Candidate panels should cover:
 
 - executor duration
 - prompt size
 - stdout/stderr size
-- executor runs over time
+- exported executor run metadata count
 - model usage
+- exit code / failure visibility
+- skipped metadata files
 
 Candidate questions for dashboard panels:
 
@@ -38,22 +51,16 @@ Candidate questions for dashboard panels:
 - Are prompts growing over time?
 - Which runs produce large stdout/stderr?
 - Which model is used most often?
-- Are failed executor runs increasing?
+- Are executor runs failing?
+- Is the exporter skipping metadata?
 
 ## Executor
 
-Harness: TBD
+Harness: OpenCode
 Model source: runner configuration (`AGENTOPS_EXECUTOR_MODEL`)
 Fallback: disabled
 
-Notes:
-
-- Fill this in only when the task becomes ready.
-- Keep model selection out of the task body unless there is a specific reason.
-
 ## Read scope
-
-TBD
 
 Likely candidates:
 
@@ -64,23 +71,31 @@ Likely candidates:
 
 ## Write scope
 
-TBD
-
 Likely candidates:
 
-- `docs/RUN-OBSERVABILITY.md`, if documenting dashboard setup
-- `observability/grafana/agentops-dashboard.json`, if storing dashboard JSON
+- `docs/RUN-OBSERVABILITY.md`, for a short dashboard section
+- `docs/GRAFANA-AGENTOPS.md`, if the dashboard guidance deserves its own page
 
 ## Requirements
 
-TBD
-
 When ready, this task should require:
 
-- Add either dashboard JSON or clear dashboard documentation.
+- Add dashboard documentation, not Grafana JSON, unless observability-04 has
+  produced stable metrics and a local Grafana setup exists.
 - Use metric names and labels produced by observability-04.
-- Include panels for duration, prompt size, stdout/stderr size, runs over time,
-  and model usage.
+- Define panels by operator question, panel intent, and PromQL sketch.
+- Explain that first dashboards reflect the current exported local artifact set
+  unless true monotonic counters are implemented later.
+- Include panels for:
+  - executor duration
+  - prompt size
+  - stdout/stderr size
+  - exported executor run metadata count
+  - model usage
+  - exit code / failure visibility
+  - skipped metadata files
+- Include or suggest a `$model` dashboard variable if final metrics include a
+  `model` label.
 - Keep the dashboard local/dev oriented unless a shared monitoring target is
   explicitly defined.
 - Avoid adding alerting in this first slice.
@@ -91,20 +106,29 @@ When ready, this task should require:
 - No long-running exporter service.
 - No production monitoring assumptions.
 - No dashboard before metrics export exists.
+- No Grafana JSON in the first slice unless explicitly re-scoped.
 - No changes to executor behavior.
 
 ## Open questions
 
-- Should the repo store Grafana dashboard JSON or only documentation?
-- What Prometheus labels will be available after observability-04?
-- Should this remain local-only or target a shared observability stack?
-- Where should observability assets live in this repo?
-
-If these are resolved before promotion, write:
-
-```text
 None.
-```
+
+Resolved:
+
+- This task waits for observability-04 so metric names and labels are real.
+- First dashboard slice is documentation, not Grafana JSON.
+- Dashboard panels should be specified by operator question, panel intent, and
+  PromQL sketch.
+- Grafana JSON is deferred until a real local Grafana setup exists.
+- If JSON is later added, it must avoid instance-specific IDs and use a
+  datasource variable such as `${DS_PROMETHEUS}`.
+- Dashboard scope is local/dev by default.
+- Dashboard guidance must use metric names and labels from observability-04.
+- Dashboard guidance must respect observability-04 gauge/current-artifact-set
+  semantics.
+- Include failure/exit-code visibility and skipped metadata visibility.
+- Include or suggest a `$model` variable if final metrics include a `model`
+  label.
 
 ## Verification
 
@@ -113,22 +137,43 @@ TBD
 Likely commands:
 
 ```bash
+test -f docs/RUN-OBSERVABILITY.md || test -f docs/GRAFANA-AGENTOPS.md
+grep -n "Grafana" docs/RUN-OBSERVABILITY.md docs/GRAFANA-AGENTOPS.md 2>/dev/null
+grep -n "Question:" docs/RUN-OBSERVABILITY.md docs/GRAFANA-AGENTOPS.md 2>/dev/null
+grep -n "PromQL" docs/RUN-OBSERVABILITY.md docs/GRAFANA-AGENTOPS.md 2>/dev/null
+grep -n "skipped metadata" docs/RUN-OBSERVABILITY.md docs/GRAFANA-AGENTOPS.md 2>/dev/null
 git status --short --branch
 git diff --stat
 ```
 
-If dashboard JSON is added, include a JSON validity check when ready.
+After observability-04 exists, add a metric-name consistency check:
+
+```bash
+grep -ho 'agentops_[a-z_]*' docs/RUN-OBSERVABILITY.md docs/GRAFANA-AGENTOPS.md 2>/dev/null | sort -u
+grep -ho 'agentops_[a-z_]*' scripts/export-agentops-prometheus-metrics.sh | sort -u
+```
+
+If Grafana JSON is added in a later task, include a JSON validity check and
+requirements to strip dashboard UID, avoid instance-specific datasource IDs,
+use a datasource variable such as `${DS_PROMETHEUS}`, and avoid committing
+environment-specific settings where possible.
 
 ## Accept criteria
 
-TBD
-
 When ready, accept criteria should include:
 
-- Dashboard draft exists as documentation or JSON.
+- Dashboard guidance is documentation-first unless a real local Grafana setup
+  exists.
+- Panels are defined by operator question, panel intent, and PromQL sketch.
 - Draft uses the metric names and labels available from observability-04.
-- Panels cover duration, prompt size, stdout/stderr size, run count, and model
-  usage.
+- Panels cover duration, prompt size, stdout/stderr size, exported run metadata
+  count, model usage, exit code / failure visibility, and skipped metadata
+  visibility.
+- The doc explains current-artifact-set semantics and does not overclaim true
+  counter/rate behavior.
+- The doc includes or suggests a `$model` variable if the final metrics include
+  a `model` label.
+- No Grafana JSON is committed in this first slice unless explicitly re-scoped.
 - Scope remains local/dev unless otherwise decided.
 - Verification commands pass.
 - Diff stays within write scope.
@@ -139,13 +184,14 @@ Decision: keep_planned
 
 Reason:
 
-This depends on the Prometheus export task. It should remain planned until
-metric names and labels are stable.
+This depends on the Prometheus export task. The dashboard should use real
+metric names, label policy, and output shape from observability-04 instead of
+guessing. The first dashboard slice should be documentation-first, not Grafana
+JSON.
 
 Next action:
 
-Promote after observability-04 lands and the repo decides whether to store dashboard
-JSON or documentation.
+Promote after observability-04 lands and metric names/labels are known.
 
 ## Promotion criteria
 
@@ -175,7 +221,8 @@ agentops/tasks/ready/TASK-XXXX-grafana-dashboard-draft.md
 Use the Hermes/OpenCode executor workflow from your profile/skill.
 
 Requirements:
-- create/switch to an appropriate task branch
+- use or create a task-specific worktree and branch
+- do not switch the main planning worktree away from main
 - do not run executor work on main
 - preserve OPENCODE_XDG_CONFIG_HOME, OPENCODE_XDG_DATA_HOME, and AGENTOPS_EXECUTOR_MODEL
 - use the runner-configured executor model
