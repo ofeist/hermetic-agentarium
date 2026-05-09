@@ -193,6 +193,29 @@ Invariants:
 - Local `.agentops-runs/` artifacts remain the canonical run record.
 - The first implementation should be shell-script simple.
 
+## Planned task template idea
+
+Goal: add a lightweight `agentops/templates/PLANNED-TASK-TEMPLATE.md` so ideas
+can be promoted into planned tasks without pretending they are executor-ready.
+
+Proposed sections:
+
+- `# TASK-xxxx — Short planned task title`
+- `## Status`
+- `## Goal`
+- `## Background / why now`
+- `## Problem statement`
+- `## Smallest useful slice`
+- `## Non-goals`
+- `## Open questions`
+- `## Expected output`
+- `## Promotion criteria`
+- `## Candidate ready task notes`
+- `## Notes`
+
+Planned tasks should avoid executor/model instructions and detailed verification
+until they are promoted to `ready/`.
+
 ## Promotion path
 
 When an idea becomes actionable, promote it gradually:
