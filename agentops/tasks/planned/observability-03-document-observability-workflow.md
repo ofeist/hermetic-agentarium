@@ -1,4 +1,4 @@
-# TASK-0075 — Document AgentOps observability workflow
+# observability-03 — Document AgentOps observability workflow
 
 ## Status
 
@@ -58,7 +58,7 @@ Likely candidates:
 - `profiles/coder/SOUL.md`
 - `docs/`
 - `scripts/run-opencode-executor.sh`
-- `scripts/render-agentops-run-summary.sh`, if TASK-0074 has landed
+- `scripts/render-agentops-run-summary.sh`, if observability-02 has landed
 
 ## Write scope
 
@@ -84,7 +84,7 @@ When ready, this task should require:
 - Explain how to inspect OpenCode stats if available.
 - Explain a recommended debugging flow for slow or token-heavy runs.
 - Keep examples compact and avoid raw log dumps.
-- Link or reference the run summary helper if TASK-0074 has landed.
+- Link or reference the run summary helper if observability-02 has landed.
 
 ## Non-goals
 
@@ -99,7 +99,7 @@ When ready, this task should require:
 - Which Hermes commands should be documented as canonical for this repo?
 - Should the doc reference `/usage`, `/stats`, or both, given version-specific
   Hermes behavior?
-- Should the doc wait until TASK-0073 and TASK-0074 exist?
+- Should the doc wait until observability-01 and observability-02 exist?
 - Should `coder --resume` vs `hermes --resume` session behavior be documented
   here or in a separate debugging note?
 
@@ -145,12 +145,12 @@ Decision: keep_planned
 Reason:
 
 This doc can be useful before or after implementation, but the exact commands
-and metadata fields should be based on the accepted TASK-0073 and TASK-0074
+and metadata fields should be based on the accepted observability-01 and observability-02
 behavior where possible.
 
 Next action:
 
-Promote after deciding whether this should follow TASK-0073/0074 or proceed as
+Promote after deciding whether this should follow observability-01/02 or proceed as
 a lightweight principles-first doc.
 
 ## Promotion criteria
@@ -176,7 +176,7 @@ When ready, use this shape:
 
 Start working on the ready AgentOps task:
 
-agentops/tasks/ready/TASK-0075-document-agentops-observability.md
+agentops/tasks/ready/TASK-XXXX-document-agentops-observability.md
 
 Use the Hermes/OpenCode executor workflow from your profile/skill.
 

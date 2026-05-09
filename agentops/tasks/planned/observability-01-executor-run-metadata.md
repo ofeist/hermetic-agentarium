@@ -1,4 +1,4 @@
-# TASK-0073 — Add AgentOps executor run metadata baseline
+# observability-01 — Add AgentOps executor run metadata baseline
 
 ## Status
 
@@ -69,7 +69,7 @@ Likely candidates:
 - `scripts/run-opencode-executor.sh`
 - existing files under `.agentops-runs/`, if present
 - `agentops/IDEAS.md`
-- `agentops/tasks/planned/TASK-0073-agentops-executor-run-metadata-baseline.md`
+- `agentops/tasks/planned/observability-01-executor-run-metadata.md`
 
 ## Write scope
 
@@ -191,7 +191,7 @@ When ready, use this shape:
 
 Start working on the ready AgentOps task:
 
-agentops/tasks/ready/TASK-0073-agentops-executor-run-metadata-baseline.md
+agentops/tasks/ready/TASK-XXXX-agentops-executor-run-metadata-baseline.md
 
 Use the Hermes/OpenCode executor workflow from your profile/skill.
 

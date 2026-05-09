@@ -1,4 +1,4 @@
-# TASK-0077 — Add Grafana dashboard draft
+# observability-05 — Add Grafana dashboard draft
 
 ## Status
 
@@ -60,7 +60,7 @@ Likely candidates:
 - `docs/RUN-OBSERVABILITY.md`
 - `scripts/export-agentops-prometheus-metrics.sh`
 - `observability/`, if it exists
-- `agentops/tasks/planned/TASK-0077-grafana-dashboard-draft.md`
+- `agentops/tasks/planned/observability-05-grafana-dashboard-draft.md`
 
 ## Write scope
 
@@ -78,7 +78,7 @@ TBD
 When ready, this task should require:
 
 - Add either dashboard JSON or clear dashboard documentation.
-- Use metric names and labels produced by TASK-0076.
+- Use metric names and labels produced by observability-04.
 - Include panels for duration, prompt size, stdout/stderr size, runs over time,
   and model usage.
 - Keep the dashboard local/dev oriented unless a shared monitoring target is
@@ -96,7 +96,7 @@ When ready, this task should require:
 ## Open questions
 
 - Should the repo store Grafana dashboard JSON or only documentation?
-- What Prometheus labels will be available after TASK-0076?
+- What Prometheus labels will be available after observability-04?
 - Should this remain local-only or target a shared observability stack?
 - Where should observability assets live in this repo?
 
@@ -126,7 +126,7 @@ TBD
 When ready, accept criteria should include:
 
 - Dashboard draft exists as documentation or JSON.
-- Draft uses the metric names and labels available from TASK-0076.
+- Draft uses the metric names and labels available from observability-04.
 - Panels cover duration, prompt size, stdout/stderr size, run count, and model
   usage.
 - Scope remains local/dev unless otherwise decided.
@@ -144,7 +144,7 @@ metric names and labels are stable.
 
 Next action:
 
-Promote after TASK-0076 lands and the repo decides whether to store dashboard
+Promote after observability-04 lands and the repo decides whether to store dashboard
 JSON or documentation.
 
 ## Promotion criteria
@@ -170,7 +170,7 @@ When ready, use this shape:
 
 Start working on the ready AgentOps task:
 
-agentops/tasks/ready/TASK-0077-grafana-dashboard-draft.md
+agentops/tasks/ready/TASK-XXXX-grafana-dashboard-draft.md
 
 Use the Hermes/OpenCode executor workflow from your profile/skill.
 

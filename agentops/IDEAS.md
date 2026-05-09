@@ -50,7 +50,7 @@ Existing foundation:
 
 Suggested task sequence:
 
-### TASK-0072 — Add AgentOps executor run metadata baseline
+### observability-01 — Add AgentOps executor run metadata baseline
 
 Goal: extend local executor run metadata without changing prompt content.
 
@@ -85,7 +85,7 @@ Non-goals:
 - no dashboard
 - no prompt expansion
 
-### TASK-0073 — Add AgentOps run summary helper
+### observability-02 — Add AgentOps run summary helper
 
 Goal: add a local summary command for one run.
 
@@ -114,7 +114,7 @@ Non-goals:
 - no metrics exporter
 - no dashboard
 
-### TASK-0074 — Document AgentOps observability workflow
+### observability-03 — Document AgentOps observability workflow
 
 Goal: document how to inspect run metadata and avoid token-heavy debugging.
 
@@ -131,7 +131,7 @@ Core rule:
 > Full logs are for humans and local debugging. Model prompts receive only
 > compact summaries unless explicitly requested.
 
-### TASK-0075 — Add Prometheus textfile export
+### observability-04 — Add Prometheus textfile export
 
 Goal: export selected AgentOps metrics in Prometheus textfile format.
 
@@ -157,7 +157,7 @@ Notes:
 - token and cost metrics should stay estimates unless Hermes/OpenCode exposes
   reliable machine-readable usage data
 
-### TASK-0076 — Add Grafana dashboard draft
+### observability-05 — Add Grafana dashboard draft
 
 Goal: create a first Grafana dashboard for AgentOps task observability.
 
@@ -200,7 +200,7 @@ can be promoted into planned tasks without pretending they are executor-ready.
 
 Proposed sections:
 
-- `# TASK-xxxx — Short planned task title`
+- `# <area>-<local-sequence> — Short planned task title`
 - `## Status`
 - `## Goal`
 - `## Background / why now`
@@ -213,8 +213,7 @@ Proposed sections:
 - `## Candidate ready task notes`
 - `## Notes`
 
-Planned tasks should avoid executor/model instructions and detailed verification
-until they are promoted to `ready/`.
+Planned tasks should use soft workstream-local names and avoid permanent `TASK-XXXX` IDs until they are promoted to `ready/`.
 
 ## Planned task naming
 

@@ -1,4 +1,4 @@
-# TASK-0076 — Add Prometheus textfile export
+# observability-04 — Add Prometheus textfile export
 
 ## Status
 
@@ -62,7 +62,7 @@ Likely candidates:
 - `scripts/run-opencode-executor.sh`
 - `scripts/render-agentops-run-summary.sh`
 - `docs/RUN-OBSERVABILITY.md`
-- `agentops/tasks/planned/TASK-0076-prometheus-textfile-export.md`
+- `agentops/tasks/planned/observability-04-prometheus-textfile-export.md`
 
 ## Write scope
 
@@ -103,7 +103,7 @@ When ready, this task should require:
 - Where should the generated `.prom` file live?
 - Should stale or partial metadata files be skipped or exported with an error
   metric?
-- Should this wait for TASK-0073 and TASK-0074 to land?
+- Should this wait for observability-01 and observability-02 to land?
 
 If these are resolved before promotion, write:
 
@@ -151,7 +151,7 @@ codify fields too early.
 
 Next action:
 
-Promote after TASK-0073 has landed and the metric label policy is decided.
+Promote after observability-01 has landed and the metric label policy is decided.
 
 ## Promotion criteria
 
@@ -176,7 +176,7 @@ When ready, use this shape:
 
 Start working on the ready AgentOps task:
 
-agentops/tasks/ready/TASK-0076-prometheus-textfile-export.md
+agentops/tasks/ready/TASK-XXXX-prometheus-textfile-export.md
 
 Use the Hermes/OpenCode executor workflow from your profile/skill.
 

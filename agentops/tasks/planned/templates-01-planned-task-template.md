@@ -1,4 +1,4 @@
-# TASK-0078 — Add planned task template
+# templates-01 — Add planned task template
 
 ## Status
 
@@ -58,7 +58,7 @@ TBD
 Likely candidates:
 
 - `agentops/templates/READY-TASK-TEMPLATE.md`
-- `agentops/tasks/planned/TASK-0078-planned-task-template.md`
+- `agentops/tasks/planned/templates-01-planned-task-template.md`
 - `agentops/USAGE.md`
 
 ## Write scope
@@ -111,7 +111,7 @@ This keeps promotion cheap and mechanical:
 
 ---
 
-# TASK-XXXX — Short task title
+# <area>-<local-sequence> — Short task title
 
 ## Status
 
@@ -399,7 +399,7 @@ When ready, use this shape:
 
 Start working on the ready AgentOps task:
 
-agentops/tasks/ready/TASK-0078-planned-task-template.md
+agentops/tasks/ready/TASK-XXXX-planned-task-template.md
 
 Use the Hermes/OpenCode executor workflow from your profile/skill.
 
@@ -449,6 +449,4 @@ Uncertainty:
 
 ## Notes
 
-The user suggested TASK-0073, but TASK-0073 through TASK-0077 are already used
-for the observability task sequence. Keep this as TASK-0078 unless the task
-sequence is explicitly renumbered.
+This planned task uses soft workstream-local naming. Assign a `TASK-XXXX` ID only when promoting it to `ready/`.

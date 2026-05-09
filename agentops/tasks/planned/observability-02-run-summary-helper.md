@@ -1,4 +1,4 @@
-# TASK-0074 — Add AgentOps run summary helper
+# observability-02 — Add AgentOps run summary helper
 
 ## Status
 
@@ -40,7 +40,7 @@ compact human-readable summary.
 Example summary:
 
 ```text
-TASK-0073
+TASK-XXXX
 
 model: deepseek/deepseek-v4-pro
 prompt: 18.4 KB / 412 lines
@@ -48,7 +48,7 @@ duration: 94s
 stdout: 8.1 KB
 stderr: 0 KB
 exit code: 0
-artifacts: .agentops-runs/TASK-0073/
+artifacts: .agentops-runs/TASK-XXXX/
 ```
 
 ## Executor
@@ -71,7 +71,7 @@ Likely candidates:
 - `scripts/render-agentops-run-summary.sh`, if it already exists
 - `.agentops-runs/`, for metadata shape examples if present
 - `scripts/run-opencode-executor.sh`
-- `agentops/tasks/planned/TASK-0074-agentops-run-summary-helper.md`
+- `agentops/tasks/planned/observability-02-run-summary-helper.md`
 
 ## Write scope
 
@@ -110,7 +110,7 @@ When ready, this task should require:
   choose the latest matching run?
 - Should missing metadata be an error or a partial summary?
 - Should summary output be stable enough for scripts, or human-readable only?
-- Should this depend strictly on TASK-0073 metadata fields?
+- Should this depend strictly on observability-01 metadata fields?
 
 If these are resolved before promotion, write:
 
@@ -153,12 +153,12 @@ Decision: keep_planned
 
 Reason:
 
-This depends on the metadata fields from TASK-0073, so it should remain planned
+This depends on the metadata fields from observability-01, so it should remain planned
 until that metadata shape is implemented or finalized.
 
 Next action:
 
-Promote after TASK-0073 lands and the accepted metadata key names are known.
+Promote after observability-01 lands and the accepted metadata key names are known.
 
 ## Promotion criteria
 
@@ -183,7 +183,7 @@ When ready, use this shape:
 
 Start working on the ready AgentOps task:
 
-agentops/tasks/ready/TASK-0074-agentops-run-summary-helper.md
+agentops/tasks/ready/TASK-XXXX-agentops-run-summary-helper.md
 
 Use the Hermes/OpenCode executor workflow from your profile/skill.
 
