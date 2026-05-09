@@ -61,6 +61,15 @@ mkdir -p "$DONE_DIR" "$RESULT_DIR"
 
 mv "$REVIEW_FILE" "$DONE_FILE"
 
+# Rewrite task status to done for both known status styles
+awk '
+  /^Status: ready$/ { print "Status: done"; next }
+  /^## Status$/ { print; in_status=1; next }
+  in_status && /^ready$/ { print "done"; in_status=0; next }
+  in_status && /^[^[:space:]]/ { in_status=0 }
+  { print }
+' "$DONE_FILE" > "$DONE_FILE.tmp" && mv "$DONE_FILE.tmp" "$DONE_FILE"
+
 GIT_STATUS="$(git status --short --branch 2>/dev/null || echo 'N/A')"
 DIFF_STAT="$(git diff --stat 2>/dev/null || echo 'N/A')"
 

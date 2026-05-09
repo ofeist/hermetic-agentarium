@@ -195,6 +195,15 @@ Run task-specific tests/checks when applicable.
 
 10. Do not commit unless explicitly instructed.
 
+## AgentOps lifecycle ownership
+
+- `scripts/submit-agentops-task.sh` owns `ready -> review`.
+- `scripts/accept-agentops-task.sh` owns `review -> done`.
+- Do not manually move lifecycle task files unless performing an explicit reconciliation task.
+- Accepted tasks must be under `agentops/tasks/done/`, visibly marked `done`, and must have a result note under `agentops/results/`.
+- After lifecycle closeout, run `scripts/check-agentops-lifecycle.sh` to detect inconsistencies.
+- Treat duplicate task IDs, done tasks still marked `ready`, and result notes pointing to missing task paths as workflow issues that must be resolved.
+
 ### Canonical ready task invocation prompt
 
 AgentOps execution prompts MUST start with `/hermetic-coding-orchestrator` so the skill is explicitly invoked and traceable.

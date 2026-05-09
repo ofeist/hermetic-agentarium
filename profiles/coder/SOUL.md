@@ -141,3 +141,6 @@ USING_SKILL: hermetic-coding-orchestrator
 - Run `scripts/review-executor-result.sh`, inspect the relevant diff, and run task-specific checks before deciding.
 - Return one decision: `accept`, `revise`, `revert`, `no-op / nothing to accept`, or `blocked`.
 - Do not commit unless the user explicitly asks you to commit.
+- Preserve AgentOps lifecycle ownership: do not manually move lifecycle task files except in explicit reconciliation tasks.
+- Accepted tasks must be visibly marked `done`.
+- When the lifecycle checker exists (`scripts/check-agentops-lifecycle.sh`), run it to verify consistency after lifecycle changes.
