@@ -51,14 +51,9 @@ Target fields:
 
 ## Executor
 
-Harness: TBD
+Harness: OpenCode
 Model source: runner configuration (`AGENTOPS_EXECUTOR_MODEL`)
 Fallback: disabled
-
-Notes:
-
-- Fill this in only when the task becomes ready.
-- Keep model selection out of the task body unless there is a specific reason.
 
 ## Read scope
 
@@ -67,8 +62,8 @@ TBD
 Likely candidates:
 
 - `scripts/run-opencode-executor.sh`
-- existing files under `.agentops-runs/`, if present
-- `agentops/IDEAS.md`
+- `.agentops-runs/`, if useful for understanding current artifact shape
+- `docs/RUN-AUDIT.md`
 - `agentops/tasks/planned/observability-01-executor-run-metadata.md`
 
 ## Write scope
@@ -78,7 +73,7 @@ TBD
 Likely candidates:
 
 - `scripts/run-opencode-executor.sh`
-- docs only if a short note is needed
+- `docs/RUN-AUDIT.md`
 
 ## Requirements
 
@@ -93,9 +88,13 @@ When ready, this task should require:
   prompts or result notes.
 - Capture stdout/stderr byte counts from local artifacts.
 - Capture start/end timestamps and duration.
-- Add or use a minimal no-network executor test path so metadata capture can be
-  verified without OpenCode, network access, API keys, paid model calls, or a
-  successful model response.
+- Add or use `AGENTOPS_EXECUTOR_COMMAND` as a minimal no-network executor
+  override so metadata capture can be verified without OpenCode, network
+  access, API keys, paid model calls, or a successful model response.
+- Ensure `AGENTOPS_EXECUTOR_COMMAND` is for test/verification only and does not
+  change normal executor behavior when unset.
+- Measure `stdout_bytes` and `stderr_bytes` from the captured local artifact
+  files after executor completion.
 - Preserve the executor wrapper's current behavior and exit code semantics.
 - Avoid adding observability content to model prompts by default.
 - Keep raw logs local.
@@ -113,18 +112,18 @@ When ready, this task should require:
 
 ## Open questions
 
-- Should `task_id` be derived from `run_id`, prompt filename, or left empty
-  unless unambiguous?
-- Should byte counts be measured before or after tee capture?
-- Should metadata stay plain key/value text or move to TSV/JSON in a later
-  task?
+None.
 
 Resolved:
 
-- Metadata capture should be verified through a minimal no-network executor
-  test path. If the wrapper already supports one, use it. If it does not, add
-  the smallest safe dry-run or executor-command override needed to verify
-  metadata capture without calling OpenCode.
+- `task_id` should be derived from `run_id` only when unambiguous; otherwise
+  leave it empty or omit it.
+- Metadata stays plain key/value text for this slice.
+- TSV, JSON, and event timelines are later tasks.
+- `stdout_bytes` and `stderr_bytes` should be measured from captured local
+  artifact files after executor completion.
+- Metadata capture should be verified through `AGENTOPS_EXECUTOR_COMMAND`,
+  not a dry-run flag, so the wrapper still exercises the real capture path.
 
 Example shape:
 
@@ -161,6 +160,8 @@ When ready, accept criteria should include:
 - Start/end timestamps, duration, exit code, stdout bytes, and stderr bytes are
   recorded.
 - Metadata capture can be verified through a no-network test path.
+- `AGENTOPS_EXECUTOR_COMMAND` does not change normal executor behavior when
+  unset.
 - Existing executor exit behavior is preserved.
 - Raw logs stay local and are not pasted into prompts by default.
 - Verification commands pass or blocked checks are explicitly explained.
@@ -168,19 +169,18 @@ When ready, accept criteria should include:
 
 ## Promotion decision
 
-Decision: keep_planned
+Decision: promote_to_ready
 
 Reason:
 
-This is the first observability implementation slice. TASK-0072 has landed, and
-the no-network verification question is resolved in principle, but read/write
-scope and final ready-task requirements still need to be promoted explicitly.
+TASK-0072 has landed, the lifecycle checker is quieter, and the observability
+slice is narrow. The metadata format, no-network verification approach, byte
+count source, and scope are now clear enough to write the ready task.
 
 Next action:
 
-Promote after finalizing whether the no-network test path should be named
-`AGENTOPS_EXECUTOR_COMMAND`, `AGENTOPS_EXECUTOR_DRY_RUN`, or another minimal
-wrapper-specific interface.
+Promote to the next ready `TASK-XXXX` ID, using `AGENTOPS_EXECUTOR_COMMAND` as
+the minimal no-network executor override.
 
 ## Promotion criteria
 
