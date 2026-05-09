@@ -244,6 +244,40 @@ Rules:
 - Planned sequence numbers do not reserve execution order.
 - Assign `TASK-XXXX` only when promoting a planned task to `ready/`.
 
+## Task ID allocation tracking
+
+Goal: make the next `TASK-XXXX` ID explicit when a planned task is promoted to
+`ready/`.
+
+Problem:
+
+- planned tasks intentionally use soft workstream-local names
+- the exact `TASK-XXXX` ID is assigned only at promotion time
+- without a small tracking mechanism, agents must infer the next ID by scanning
+  lifecycle folders
+- inference can race with concurrent work or miss a task in another lifecycle
+  directory
+
+Possible task:
+
+- add a small task ID allocation helper or ledger
+- determine the next available `TASK-XXXX` across lifecycle folders
+- reserve or assign the ID during planned-to-ready promotion
+- make collisions explicit instead of relying on filename guessing
+
+Possible shapes:
+
+- `scripts/next-agentops-task-id.sh`
+- `scripts/promote-agentops-task.sh <planned-file>`
+- `agentops/task-id-ledger.txt`
+
+Policy:
+
+- planned tasks keep soft names
+- `TASK-XXXX` IDs become authoritative only in `ready/` and later lifecycle
+  states
+- promotion should be the moment where the ID is assigned and recorded
+
 ## Hermes/coder collection prompt helper idea
 
 Goal: formalize the prompt used to hand a ready AgentOps task to the
