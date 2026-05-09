@@ -27,6 +27,7 @@ fi
 
 ERRORS=0
 WARNINGS=0
+BASELINED=0
 
 task_id_from_slug() {
     printf '%s\n' "$1" | sed -n 's/^\(TASK-[0-9][0-9]*\).*/\1/p'
@@ -102,6 +103,17 @@ for rf in agentops/results/*.md; do
 done
 
 # ---- 4. Done tasks without result notes (warn only) ----
+# Load historical baseline of known missing-result done tasks
+declare -A HISTORICAL_BASELINE
+BASELINE_FILE="agentops/lifecycle/historical-baseline.txt"
+if [ -f "$BASELINE_FILE" ]; then
+    while IFS= read -r line || [ -n "$line" ]; do
+        [[ "$line" =~ ^[[:space:]]*# ]] && continue
+        [[ "$line" =~ ^[[:space:]]*$ ]] && continue
+        HISTORICAL_BASELINE["$line"]=1
+    done < "$BASELINE_FILE"
+fi
+
 echo "-- Checking done tasks for result notes"
 for f in agentops/tasks/done/TASK-*.md; do
     [ -f "$f" ] || continue
@@ -117,12 +129,19 @@ for f in agentops/tasks/done/TASK-*.md; do
         fi
     done
     if [ "$result_found" -eq 0 ]; then
-        echo "WARN: $f has no result note"
-        WARNINGS=$((WARNINGS + 1))
+        if [ -n "${HISTORICAL_BASELINE[$f]:-}" ]; then
+            BASELINED=$((BASELINED + 1))
+        else
+            echo "WARN: $f has no result note"
+            WARNINGS=$((WARNINGS + 1))
+        fi
     fi
 done
 
 echo ""
+if [ "$BASELINED" -gt 0 ]; then
+    echo "Historical baseline entries tolerated: $BASELINED"
+fi
 echo "Errors: $ERRORS"
 echo "Warnings: $WARNINGS"
 

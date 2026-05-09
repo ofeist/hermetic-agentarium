@@ -1,0 +1,27 @@
+# Historical lifecycle baseline — known missing result notes
+#
+# The done tasks listed below were completed before consistent result-note
+# creation was enforced.  They are tolerated as historical drift only.
+#
+# Policy:
+#   - New done tasks MUST NOT be added to this baseline without explicit
+#     review.  Missing result notes for done tasks not listed here will
+#     produce a warning from scripts/check-agentops-lifecycle.sh.
+#
+# Format: one done task file path per line (comments start with #)
+#
+# Last updated: 2026-05-09
+
+agentops/tasks/done/TASK-0019-hermes-run-opencode.md
+agentops/tasks/done/TASK-0035-coder-profile-env-defaults.md
+agentops/tasks/done/TASK-0055-dogfood-run-ready-task.md
+agentops/tasks/done/TASK-0056-review-prompt-renderer.md
+agentops/tasks/done/TASK-0057-dogfood-ds-to-gpt-review.md
+agentops/tasks/done/TASK-0058-review-prompt-verification-notes.md
+agentops/tasks/done/TASK-0059-dogfood-review-prompt-notes.md
+agentops/tasks/done/TASK-0060-verification-notes-helper.md
+agentops/tasks/done/TASK-0061-submit-task-to-review-helper.md
+agentops/tasks/done/TASK-0062-accept-closeout-helper.md
+agentops/tasks/done/TASK-0063-agentops-tmp-helper.md
+agentops/tasks/done/TASK-0064-untracked-files-in-verification-notes.md
+agentops/tasks/done/TASK-0069-revision-prompt-renderer.md
