@@ -35,9 +35,37 @@ AgentOps needs the existing review-handoff helper to preserve its current move-a
 
 The helper must not pretend the work is accepted or done.
 
-## Rough scope
+## Smallest useful slice
 
-- Refine existing `scripts/submit-agentops-task.sh`; do not add a parallel helper unless inspection proves the existing helper is unsuitable.
+Refine `scripts/submit-agentops-task.sh` to update the moved file's `## Status` from `ready` to `review`, while preserving the existing move, collision-protection, next-step-printing, no-done, and no-commit behavior.
+
+## Executor
+
+Harness: TBD.
+Model source: runner configuration (`AGENTOPS_EXECUTOR_MODEL`).
+Fallback: disabled.
+
+## Read scope
+
+- `scripts/submit-agentops-task.sh`
+- `scripts/render-verification-notes.sh` if present
+- `scripts/agentops-tmp-dir.sh` if present
+- `agentops/tasks/ready/`
+- `agentops/tasks/review/`
+- `agentops/results/`
+- existing lifecycle helper scripts
+- AgentOps workflow documentation
+
+## Write scope
+
+- `scripts/submit-agentops-task.sh`
+- one minimal test or fixture-style shell check, if the repository already has a suitable pattern
+- minimal docs update if current docs describe handoff behavior
+- `agentops/results/` behavior only if explicitly scoped in before promotion
+
+## Requirements
+
+- Refine the existing `scripts/submit-agentops-task.sh`; do not add a parallel helper unless inspection proves the existing helper is unsuitable.
 - Preserve current behavior:
   - move `agentops/tasks/ready/<slug>.md` to `agentops/tasks/review/<slug>.md`
   - refuse to overwrite an existing review file
@@ -51,20 +79,6 @@ The helper must not pretend the work is accepted or done.
   - do not duplicate the existing ready-to-review move logic in a new script unless there is a clear reason
   - do not create a second review checklist artifact if an existing verification-notes flow should own that responsibility
 
-## Decide before promotion
-
-- Run-id binding: yes / no / defer
-  - If yes, define how `.agentops-runs/<run-id>/` maps to the task and result artifact.
-  - If no, keep `submit-agentops-task.sh` decoupled from local raw run logs.
-
-- Result/review artifact: yes / no / defer
-  - If yes, define whether this is a minimal result stub, a review checklist, or output from an existing verification-notes helper.
-  - Avoid creating a competing artifact unless intentionally separate.
-
-- Commit support: defer
-  - Commit behavior is out of scope for this slice.
-  - The helper must not commit.
-
 ## Non-goals
 
 - Do not implement automatic acceptance.
@@ -75,38 +89,16 @@ The helper must not pretend the work is accepted or done.
 - Do not solve the whole lifecycle state machine in this slice.
 - Do not add commit support in this slice.
 
-## Promotion criteria
+## Open questions
 
-Promote to `ready` when the following are decided:
+- Run-id binding: yes / no / defer
+  - If yes, define how `.agentops-runs/<run-id>/` maps to the task and result artifact.
+  - If no, keep `submit-agentops-task.sh` decoupled from local raw run logs.
+- Result/review artifact: yes / no / defer
+  - If yes, define whether this is a minimal result stub, a review checklist, or output from an existing verification-notes helper.
+  - Avoid creating a competing artifact unless intentionally separate.
 
-- exact helper name: likely `scripts/submit-agentops-task.sh`
-- allowed files
-- run-id binding: yes / no / defer
-- result/review artifact behavior: yes / no / defer
-- expected lifecycle behavior after handoff
-- fixture-style verification expectations
-
-## Suggested ready-task execution fields
-
-### Read scope
-
-- `scripts/submit-agentops-task.sh`
-- `scripts/render-verification-notes.sh` if present
-- `scripts/agentops-tmp-dir.sh` if present
-- `agentops/tasks/ready/`
-- `agentops/tasks/review/`
-- `agentops/results/`
-- existing lifecycle helper scripts
-- AgentOps workflow documentation
-
-### Write scope
-
-- `scripts/submit-agentops-task.sh`
-- one minimal test or fixture-style shell check, if the repository already has a suitable pattern
-- minimal docs update if current docs describe handoff behavior
-- `agentops/results/` behavior only if explicitly scoped in before promotion
-
-### Verification
+## Verification
 
 ```bash
 git status --short --branch
@@ -124,6 +116,39 @@ assert in-file ## Status changed from ready to review
 assert existing review-file collision behavior is preserved
 assert result/review artifact behavior matches the promoted scope
 ```
+
+## Accept criteria
+
+TBD.
+
+## Promotion decision
+
+Decision: keep_planned.
+
+Reason:
+The two open questions — run-id binding and result/review artifact behavior — are real blockers. Promoting now would lock in implicit answers.
+
+Next action:
+Decide both open questions, then promote.
+
+## Promotion criteria
+
+Promote to `ready` when the following are decided:
+
+- confirm no parallel helper is created unless the existing helper is proven unsuitable
+- allowed files
+- run-id binding: yes / no / defer
+- result/review artifact behavior: yes / no / defer
+- expected lifecycle behavior after handoff
+- fixture-style verification expectations
+
+## Hermes/coder collection prompt
+
+TBD.
+
+## Return format
+
+TBD.
 
 ## Notes
 
