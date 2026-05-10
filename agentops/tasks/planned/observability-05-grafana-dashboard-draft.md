@@ -10,8 +10,10 @@ Create a first Grafana dashboard draft for AgentOps run observability.
 
 ## Background / why now
 
-Once Prometheus textfile export exists, a dashboard can make run trends visible:
-executor duration, prompt size, output size, result ratios, and model usage.
+Once the Prometheus textfile export task (TASK-0078, IDEAS slug
+observability-04) exists, a dashboard can make executor duration, prompt size,
+output size, result ratios, and model usage visible while run artifacts remain
+on disk.
 
 This is intentionally later than the local metadata and export tasks because
 the dashboard should reflect real metric names and labels.
@@ -29,7 +31,8 @@ The spec should define dashboard panels by:
 
 - operator question
 - panel title/type
-- PromQL sketch using observability-04 metric names
+- PromQL sketch using Prometheus textfile export task (TASK-0078, IDEAS slug
+  observability-04) metric names
 - intended interpretation
 - caveats around current-artifact-set gauge semantics
 
@@ -47,8 +50,8 @@ Candidate panels should cover:
 
 Candidate questions for dashboard panels:
 
-- Which tasks are slow?
-- Are prompts growing over time?
+- Which exported task metadata is slow?
+- Are prompt sizes growing while artifacts remain on disk?
 - Which runs produce large stdout/stderr?
 - Which model is used most often?
 - Are executor runs failing?
@@ -65,6 +68,7 @@ Fallback: disabled
 Likely candidates:
 
 - `docs/RUN-OBSERVABILITY.md`
+- `docs/GRAFANA-AGENTOPS.md`, if it exists
 - `scripts/export-agentops-prometheus-metrics.sh`
 - `observability/`, if it exists
 - `agentops/tasks/planned/observability-05-grafana-dashboard-draft.md`
@@ -73,16 +77,20 @@ Likely candidates:
 
 Likely candidates:
 
-- `docs/RUN-OBSERVABILITY.md`, for a short dashboard section
-- `docs/GRAFANA-AGENTOPS.md`, if the dashboard guidance deserves its own page
+- `docs/GRAFANA-AGENTOPS.md`
+- `docs/RUN-OBSERVABILITY.md`, only for a short cross-link if needed
 
 ## Requirements
 
 When ready, this task should require:
 
-- Add dashboard documentation, not Grafana JSON, unless observability-04 has
-  produced stable metrics and a local Grafana setup exists.
-- Use metric names and labels produced by observability-04.
+- Add dashboard documentation, not Grafana JSON, unless the Prometheus textfile
+  export task (TASK-0078, IDEAS slug observability-04) has produced stable
+  metrics and a local Grafana setup exists.
+- Put the main dashboard specification in `docs/GRAFANA-AGENTOPS.md`.
+- Add only a short cross-link in `docs/RUN-OBSERVABILITY.md` if needed.
+- Use metric names and labels produced by the Prometheus textfile export task
+  (TASK-0078, IDEAS slug observability-04).
 - Define panels by operator question, panel intent, and PromQL sketch.
 - Explain that first dashboards reflect the current exported local artifact set
   unless true monotonic counters are implemented later.
@@ -90,6 +98,11 @@ When ready, this task should require:
   emits true monotonic counters.
 - Avoid wording like "runs over time" or "failed runs increasing" unless backed
   by true counters.
+- Use panel titles like "Currently exported executor run metadata" or
+  "Executor run metadata currently on disk" instead of "Total runs".
+- V1 dashboard docs must only reference metrics emitted by the exporter.
+- Future metrics belong in prose without `agentops_...` metric names, or in a
+  clearly separate future section that is excluded from verification.
 - Include panels for:
   - executor duration
   - prompt size
@@ -99,6 +112,9 @@ When ready, this task should require:
   - exit code / failure visibility
   - skipped metadata files
 - Include or suggest a `$model` dashboard variable if final metrics include a
+  `model` label.
+- Provide fallback PromQL without `model`, for example
+  `sum(agentops_executor_prompt_bytes)`, if the exporter does not emit a
   `model` label.
 - Keep the dashboard local/dev oriented unless a shared monitoring target is
   explicitly defined.
@@ -119,26 +135,35 @@ None.
 
 Resolved:
 
-- This task waits for observability-04 so metric names and labels are real.
+- This task waits for the Prometheus textfile export task (TASK-0078, IDEAS
+  slug observability-04) so metric names and labels are real.
 - First dashboard slice is documentation, not Grafana JSON.
+- The main dashboard specification lives in `docs/GRAFANA-AGENTOPS.md`.
+- `docs/RUN-OBSERVABILITY.md` gets only a short cross-link if needed.
 - Dashboard panels should be specified by operator question, panel intent, and
   PromQL sketch.
 - Grafana JSON is deferred until a real local Grafana setup exists.
 - If JSON is later added, it must avoid instance-specific IDs and use a
   datasource variable such as `${DS_PROMETHEUS}`.
 - Dashboard scope is local/dev by default.
-- Dashboard guidance must use metric names and labels from observability-04.
-- Dashboard guidance must respect observability-04 gauge/current-artifact-set
-  semantics.
+- Dashboard guidance must use metric names and labels from the Prometheus
+  textfile export task (TASK-0078, IDEAS slug observability-04).
+- Dashboard guidance must respect Prometheus textfile export task (TASK-0078,
+  IDEAS slug observability-04) gauge/current-artifact-set semantics.
 - Do not use `rate()` or `increase()` until the exporter emits true monotonic
   counters.
 - Until then, dashboard panels reflect the current exported local artifact set,
   not historical event counts.
 - Wording like "runs over time" or "failed runs increasing" should be avoided
   unless backed by true counters.
+- V1 dashboard docs must only reference metrics emitted by the exporter.
+- Future metrics belong in prose without `agentops_...` metric names, or in a
+  clearly separate future section excluded from verification.
 - Include failure/exit-code visibility and skipped metadata visibility.
 - Include or suggest a `$model` variable if final metrics include a `model`
   label.
+- Provide fallback PromQL without `model` when the exporter does not emit a
+  `model` label.
 
 ## Verification
 
@@ -147,27 +172,38 @@ TBD
 Likely commands:
 
 ```bash
-test -f docs/RUN-OBSERVABILITY.md || test -f docs/GRAFANA-AGENTOPS.md
-grep -n "Grafana" docs/RUN-OBSERVABILITY.md docs/GRAFANA-AGENTOPS.md 2>/dev/null
-grep -n "Question:" docs/RUN-OBSERVABILITY.md docs/GRAFANA-AGENTOPS.md 2>/dev/null
-grep -n "PromQL" docs/RUN-OBSERVABILITY.md docs/GRAFANA-AGENTOPS.md 2>/dev/null
-grep -n "skipped metadata" docs/RUN-OBSERVABILITY.md docs/GRAFANA-AGENTOPS.md 2>/dev/null
+test -f docs/GRAFANA-AGENTOPS.md
+grep -n "Grafana" docs/GRAFANA-AGENTOPS.md
+grep -n "Question:" docs/GRAFANA-AGENTOPS.md
+grep -n "Intent:" docs/GRAFANA-AGENTOPS.md
+grep -n "PromQL" docs/GRAFANA-AGENTOPS.md
+grep -n "skipped metadata" docs/GRAFANA-AGENTOPS.md
+! grep -nE 'rate\(|increase\(' docs/GRAFANA-AGENTOPS.md
+! grep -nE 'agentops_[a-z_]*_total' docs/GRAFANA-AGENTOPS.md
 git status --short --branch
 git diff --stat
 ```
 
-After observability-04 exists, add a metric-name consistency check:
+Verify the panel structure:
+
+```bash
+test "$(grep -c '^### Question:' docs/GRAFANA-AGENTOPS.md)" = "$(grep -c '^Intent:' docs/GRAFANA-AGENTOPS.md)"
+test "$(grep -c '^### Question:' docs/GRAFANA-AGENTOPS.md)" = "$(grep -c '^PromQL' docs/GRAFANA-AGENTOPS.md)"
+```
+
+After the Prometheus textfile export task (TASK-0078, IDEAS slug
+observability-04) exists, add a metric-name consistency check:
 
 ```bash
 diff \
-  <(grep -ho 'agentops_[a-z_]*' docs/RUN-OBSERVABILITY.md docs/GRAFANA-AGENTOPS.md 2>/dev/null | sort -u) \
+  <(grep -ho 'agentops_[a-z_]*' docs/GRAFANA-AGENTOPS.md | sort -u) \
   <(grep -ho 'agentops_[a-z_]*' scripts/export-agentops-prometheus-metrics.sh | sort -u)
 ```
 
 Expected result: empty diff. Dashboard docs must not reference metrics that
-the exporter does not emit. If dashboard docs intentionally mention future
-metrics, those must be clearly marked as future/non-v1 and excluded from the
-hard check or handled by a separate allowlist.
+the exporter does not emit. Future metric ideas must avoid `agentops_...`
+metric names, or live in a clearly separate future section excluded from the
+hard check.
 
 If Grafana JSON is added in a later task, include a JSON validity check and
 requirements to strip dashboard UID, avoid instance-specific datasource IDs,
@@ -181,22 +217,31 @@ When ready, accept criteria should include:
 - Dashboard guidance is documentation-first unless a real local Grafana setup
   exists.
 - Panels are defined by operator question, panel intent, and PromQL sketch.
-- Draft uses the metric names and labels available from observability-04.
+- Main dashboard spec lives in `docs/GRAFANA-AGENTOPS.md`.
+- `docs/RUN-OBSERVABILITY.md` gets only a short cross-link if needed.
+- Draft uses the metric names and labels available from the Prometheus textfile
+  export task (TASK-0078, IDEAS slug observability-04).
 - Panels cover duration, prompt size, stdout/stderr size, exported run metadata
   count, model usage, exit code / failure visibility, and skipped metadata
   visibility.
 - The doc explains current-artifact-set semantics and does not overclaim true
   counter/rate behavior.
-- Dashboard PromQL does not use `rate()` or `increase()` unless
-  observability-04 emits true monotonic counters.
+- Dashboard PromQL does not use `rate()` or `increase()` unless the Prometheus
+  textfile export task (TASK-0078, IDEAS slug observability-04) emits true
+  monotonic counters.
 - Dashboard wording clearly says panels reflect the current exported local
   artifact set.
 - Metric names referenced in dashboard docs are verified against
   `scripts/export-agentops-prometheus-metrics.sh`.
-- Any future/non-v1 metric references are clearly marked and excluded from the
-  hard consistency check.
+- V1 dashboard docs reference only metrics emitted by the exporter.
+- Future metric ideas avoid `agentops_...` metric names, or are in a clearly
+  separate future section excluded from the hard consistency check.
 - The doc includes or suggests a `$model` variable if the final metrics include
   a `model` label.
+- The doc provides fallback PromQL without `model` if the exporter does not
+  emit a `model` label.
+- Panel structure verification confirms the same number of question, intent,
+  and PromQL entries.
 - No Grafana JSON is committed in this first slice unless explicitly re-scoped.
 - Scope remains local/dev unless otherwise decided.
 - Verification commands pass.
@@ -208,14 +253,15 @@ Decision: keep_planned
 
 Reason:
 
-This depends on the Prometheus export task. The dashboard should use real
-metric names, label policy, and output shape from observability-04 instead of
-guessing. The first dashboard slice should be documentation-first, not Grafana
-JSON.
+This depends on the Prometheus textfile export task (TASK-0078, IDEAS slug
+observability-04). The dashboard should use real metric names, label policy,
+and output shape from that task instead of guessing. The first dashboard slice
+should be documentation-first, not Grafana JSON.
 
 Next action:
 
-Promote after observability-04 lands and metric names/labels are known.
+Promote after TASK-0078 lands and metric names/labels are reconciled against
+the actual exporter.
 
 ## Promotion criteria
 
@@ -231,9 +277,7 @@ This task can be promoted to ready when:
 
 ## Hermes/coder collection prompt
 
-TBD until ready.
-
-When ready, use this shape:
+Use this draft shape when the task is promoted to ready:
 
 ```text
 /hermetic-coding-orchestrator
@@ -265,9 +309,7 @@ Uncertainty:
 
 ## Return format
 
-TBD until ready.
-
-When ready, expected executor return format:
+Expected executor return format when ready:
 
 ```text
 Plan:
@@ -291,5 +333,6 @@ Uncertainty:
 
 ## Notes
 
-This task should not start until Prometheus export exists, otherwise the
-dashboard will be speculative.
+This task should not start until the Prometheus textfile export task
+(TASK-0078, IDEAS slug observability-04) exists, otherwise the dashboard will
+be speculative.
