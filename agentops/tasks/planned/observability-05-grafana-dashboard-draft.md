@@ -86,6 +86,10 @@ When ready, this task should require:
 - Define panels by operator question, panel intent, and PromQL sketch.
 - Explain that first dashboards reflect the current exported local artifact set
   unless true monotonic counters are implemented later.
+- Do not use `rate()` or `increase()` in dashboard PromQL until the exporter
+  emits true monotonic counters.
+- Avoid wording like "runs over time" or "failed runs increasing" unless backed
+  by true counters.
 - Include panels for:
   - executor duration
   - prompt size
@@ -126,6 +130,12 @@ Resolved:
 - Dashboard guidance must use metric names and labels from observability-04.
 - Dashboard guidance must respect observability-04 gauge/current-artifact-set
   semantics.
+- Do not use `rate()` or `increase()` until the exporter emits true monotonic
+  counters.
+- Until then, dashboard panels reflect the current exported local artifact set,
+  not historical event counts.
+- Wording like "runs over time" or "failed runs increasing" should be avoided
+  unless backed by true counters.
 - Include failure/exit-code visibility and skipped metadata visibility.
 - Include or suggest a `$model` variable if final metrics include a `model`
   label.
@@ -149,9 +159,15 @@ git diff --stat
 After observability-04 exists, add a metric-name consistency check:
 
 ```bash
-grep -ho 'agentops_[a-z_]*' docs/RUN-OBSERVABILITY.md docs/GRAFANA-AGENTOPS.md 2>/dev/null | sort -u
-grep -ho 'agentops_[a-z_]*' scripts/export-agentops-prometheus-metrics.sh | sort -u
+diff \
+  <(grep -ho 'agentops_[a-z_]*' docs/RUN-OBSERVABILITY.md docs/GRAFANA-AGENTOPS.md 2>/dev/null | sort -u) \
+  <(grep -ho 'agentops_[a-z_]*' scripts/export-agentops-prometheus-metrics.sh | sort -u)
 ```
+
+Expected result: empty diff. Dashboard docs must not reference metrics that
+the exporter does not emit. If dashboard docs intentionally mention future
+metrics, those must be clearly marked as future/non-v1 and excluded from the
+hard check or handled by a separate allowlist.
 
 If Grafana JSON is added in a later task, include a JSON validity check and
 requirements to strip dashboard UID, avoid instance-specific datasource IDs,
@@ -171,6 +187,14 @@ When ready, accept criteria should include:
   visibility.
 - The doc explains current-artifact-set semantics and does not overclaim true
   counter/rate behavior.
+- Dashboard PromQL does not use `rate()` or `increase()` unless
+  observability-04 emits true monotonic counters.
+- Dashboard wording clearly says panels reflect the current exported local
+  artifact set.
+- Metric names referenced in dashboard docs are verified against
+  `scripts/export-agentops-prometheus-metrics.sh`.
+- Any future/non-v1 metric references are clearly marked and excluded from the
+  hard consistency check.
 - The doc includes or suggests a `$model` variable if the final metrics include
   a `model` label.
 - No Grafana JSON is committed in this first slice unless explicitly re-scoped.
