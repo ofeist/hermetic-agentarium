@@ -147,6 +147,59 @@ Core rule:
 > Full logs are for humans and local debugging. Model prompts receive only
 > compact summaries unless explicitly requested.
 
+
+### observability-next — Add AgentOps run outcome metadata
+
+Goal: connect executor run cost signals with the value of the result.
+
+Idea:
+
+- record a small outcome file or extend run metadata after review
+- capture fields such as `decision`, `changed_files_count`, `diff_bytes`,
+  `diff_stat_lines`, and `verification_exit_code`
+- make it possible to distinguish useful accepted runs from no-op, blocked,
+  revise, or revert outcomes
+
+Why:
+
+Prompt size, duration, stdout/stderr size, and exit code show activity. Outcome
+metadata shows whether that activity produced useful value. This is the first
+step toward detecting waste such as large prompts that lead to no diff, repeated
+revise loops, or successful executor runs that are later rejected.
+
+Non-goals:
+
+- no dashboard
+- no token accounting
+- no raw log parsing
+- no automatic judgment beyond recording review outcome
+
+### observability-next — Add prompt hash to executor metadata
+
+Goal: detect repeated or duplicated executor prompts without reading full prompt
+files.
+
+Idea:
+
+- add `prompt_sha256` to `.agentops-runs/<run-id>/metadata.txt`
+- keep existing `prompt_bytes` and `prompt_lines` fields
+- later, add an aggregate helper that can show duplicate prompt hashes across
+  runs and tasks
+
+Why:
+
+If the same prompt is sent multiple times, especially after failed or no-op
+runs, the workflow may be wasting model calls without changing the input. A
+prompt hash makes duplicate detection cheap and safe because summaries can show
+hashes and counts instead of pasting prompt content.
+
+Non-goals:
+
+- no semantic prompt diffing
+- no prompt content export
+- no model-token calculation
+- no automatic rerun prevention
+
 ### observability-04 — Add Prometheus textfile export
 
 Goal: export selected AgentOps metrics in Prometheus textfile format.
