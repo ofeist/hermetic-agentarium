@@ -205,6 +205,29 @@ When available, OpenCode stats are prompt-safe in compact form:
 Do **not** paste raw OpenCode session dumps or token-by-token traces
 into model prompts.
 
+## Prometheus textfile export
+
+For trend-oriented local dashboards, export aggregate metrics from run metadata:
+
+```bash
+scripts/export-agentops-prometheus-metrics.sh <output.prom>
+```
+
+The exporter reads `.agentops-runs/*/metadata.txt` and writes Prometheus
+textfile collector output to the explicit path you provide. It exports only
+aggregate metadata-derived gauges for the current local artifact set; it does
+not export raw prompts, stdout, stderr, logs, `run_id`, or `task_id` labels.
+
+Example local paths:
+
+```bash
+scripts/export-agentops-prometheus-metrics.sh .agentops-runs/agentops.prom
+scripts/export-agentops-prometheus-metrics.sh /tmp/agentops.prom
+```
+
+Use system Node Exporter collector paths only when your local Prometheus setup
+expects them; the script does not assume or hardcode those paths.
+
 ## When to inspect full logs manually
 
 Inspect full logs manually when:
