@@ -98,11 +98,11 @@ orchestrator.
 
 Start working on the ready AgentOps task:
 
-agentops/tasks/ready/TASK-xxxx-short-title.md
+agentops/tasks/ready/TASK-xxxx-short-slug.md
 
 Use the Hermes/OpenCode executor workflow from your profile/skill.
 
-Requirements:
+Workflow requirements:
 - use or create a task-specific worktree and branch
 - do not switch the main planning worktree away from main
 - do not run executor work on main
@@ -116,7 +116,7 @@ Return:
 Plan:
 Implementation:
 Verification:
-Review:
+Review: accept / revise / revert / no-op / blocked
 Changed files:
 Uncertainty:
 ```

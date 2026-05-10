@@ -50,7 +50,7 @@ whole system.
 
 ## Executor
 
-Harness: TBD
+Harness: TBD (default in this repo: OpenCode)
 Model source: runner configuration (`AGENTOPS_EXECUTOR_MODEL`)
 Fallback: disabled
 
@@ -153,7 +153,7 @@ agentops/tasks/ready/TASK-XXXX-short-slug.md
 
 Use the Hermes/OpenCode executor workflow from your profile/skill.
 
-Requirements:
+Workflow requirements:
 - use or create a task-specific worktree and branch
 - do not switch the main planning worktree away from main
 - do not run executor work on main
@@ -167,7 +167,7 @@ Return:
 Plan:
 Implementation:
 Verification:
-Review:
+Review: accept / revise / revert / no-op / blocked
 Changed files:
 Uncertainty:
 ```
