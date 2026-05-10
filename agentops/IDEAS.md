@@ -435,3 +435,149 @@ Meaning:
 - `done/` + `results/` = reviewed outcome
 
 Keep this simple. Do not turn this file into a Jira clone.
+
+## Cost-aware AgentOps model routing
+
+Goal: reduce expensive model usage while keeping review quality available when
+it actually matters.
+
+Idea:
+
+- Use a cheaper/default Hermes coordinator model for normal orchestration, for
+  example GPT-5.3.
+- Use OpenCode plus the configured coder model for implementation work, for
+  example DeepSeek Pro 4.
+- Use a fast/cheap helper model for small mechanical helper work, for example
+  DeepSeek Flash.
+- Keep GPT-5.5 available as an explicit senior reviewer, not as an always-on
+  default step.
+
+Important distinction:
+
+- Do not try to classify tasks as "small" or "large" too early.
+- The deterministic workflow should be lifecycle-based, not model-guess based.
+- Every task should go through the same basic states:
+  `ready/ -> running/ -> review/ -> done/`.
+- Expensive senior review should be an explicit operator action or a
+  repo-specific policy decision, not hidden magic.
+
+Possible future shape:
+
+```text
+Default:
+- orchestrator: GPT-5.3
+- coder: OpenCode + DeepSeek Pro 4
+- helper runner: DeepSeek Flash
+- senior reviewer: GPT-5.5 on demand
+```
+
+Principle:
+
+> cheap models do work, scripts verify reality, expensive models review
+> compressed evidence only when explicitly requested or when policy requires it.
+
+Open questions:
+
+- How should the operator request senior review?
+- Should senior review be triggered by a helper script, a rendered prompt, or a
+  Hermes command?
+- Should the task file include `senior_review_required: true` later?
+- Should this routing live in repo policy, Hermes profile config, or task
+  metadata?
+
+## Review-folder lifecycle after executor completion
+
+Goal: make the post-coder handoff explicit by moving completed executor tasks
+into `agentops/tasks/review/` before final acceptance.
+
+Idea:
+
+- When a coder/executor finishes a ready task, the task should move from
+  `ready/` or `running/` into `review/`.
+- `review/` becomes the canonical place for human/parent/reviewer inspection.
+- Acceptance then moves the task from `review/` to `done/`.
+- This should reduce ambiguity around tasks that have implementation output but
+  have not yet been accepted.
+
+Open questions:
+
+- Should moving to `review/` happen before or after local verification?
+- Should failed executor runs also move to `review/`, or stay in `running/`
+  with a blocked status?
+- Should `review/` include a generated review packet or summary file?
+
+## Commit boundary after task enters review
+
+Goal: explore whether there should be an optional commit boundary after a coder
+task is ready for review.
+
+Idea:
+
+- After executor/coder work is complete and the task is moved to `review/`,
+  optionally create a local commit containing the implementation diff.
+- The review then happens against a stable commit instead of a loose worktree
+  diff.
+- Final acceptance can merge, squash, cherry-pick, or rework that commit
+  depending on the chosen workflow.
+
+Why:
+
+- A commit can make review cleaner and easier to revert.
+- It can preserve executor output before reviewer edits.
+- It may help separate "implementation produced by coder" from "review fixes by
+  parent/operator".
+
+Open questions:
+
+- Should this be optional or mandatory?
+- Should the commit be local-only until accepted?
+- Should the commit message include the task id?
+- Should the parent be allowed to amend the executor commit, or should review
+  fixes become a second commit?
+
+## Branches vs worktrees for AgentOps execution
+
+Goal: evaluate whether AgentOps should standardize on normal git branches, git
+worktrees, or support both.
+
+Idea:
+
+- Current thinking around per-worktree execution may make isolation cleaner, but
+  it can also make merging back to main more confusing.
+- Normal branches may be simpler as the default:
+  - create/switch task branch
+  - run executor
+  - review diff
+  - merge/squash into main after acceptance
+- Worktrees may still be useful for parallel executor runs, large repos, or when
+  the operator wants multiple tasks open at once.
+
+Open questions:
+
+- Is branch-only enough for the MVP workflow?
+- When is a worktree actually worth the added complexity?
+- How should a task branch map to a task id?
+- If the repo is large, do worktrees save time or create operational friction?
+- What is the cleanest path from reviewed task branch back to main?
+
+## Helper scripts for workflow improvements
+
+Goal: identify small helper scripts that make the AgentOps lifecycle more
+deterministic without overbuilding a full task platform.
+
+Candidate helpers:
+
+- move task to `review/`
+- render review packet from task + diff + verification output
+- request senior review with an explicit model
+- check lifecycle consistency across `ready/`, `running/`, `review/`, and
+  `done/`
+- summarize executor run artifacts without exposing raw logs/secrets
+- prepare merge/accept checklist for a reviewed task
+- optionally create a local review commit after executor completion
+
+Principle:
+
+- helpers should automate boring mechanical steps
+- helpers should not hide review decisions
+- parent/operator remains responsible for accept/revise/revert/no-op/blocked
