@@ -11,6 +11,7 @@ Read these in order:
 3. `docs/OPENCODE-CONFIGURATION.md` — configure OpenCode and runtime environment variables.
 4. `docs/FIRST-RUN.md` — run the first safe smoke test.
 5. `docs/DEBUGGING.md` — troubleshoot common setup and execution issues.
+6. `docs/RUN-OBSERVABILITY.md` — inspect run metadata, artifacts, and token/time pressure.
 
 ## Operator path
 
@@ -21,7 +22,8 @@ Use these documents when running or reviewing AgentOps tasks:
 3. `docs/OPENCODE-EXECUTOR-WORKFLOW.md` — Hermes/OpenCode execution flow.
 4. `templates/opencode-executor-task.prompt.md` — reusable bounded executor prompt template.
 5. `examples/opencode-docs-task.prompt.md` — filled example prompt.
-6. `agentops/results/` — safe result summaries for completed tasks.
+6. `docs/RUN-OBSERVABILITY.md` — inspect run metadata, artifacts, and token/time pressure.
+7. `agentops/results/` — safe result summaries for completed tasks.
 
 ## Maintainer path
 

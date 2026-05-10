@@ -178,6 +178,11 @@ Check:
 
 Fix the local OpenCode installation or shell PATH before retrying.
 
+## Run observability
+
+For inspecting run metadata, local artifacts, token/time pressure, and
+operator-first debugging flows, see `docs/RUN-OBSERVABILITY.md`.
+
 ## Audit signal
 
 The executor wrapper prints:
