@@ -50,7 +50,7 @@ whole system.
 
 ## Executor
 
-Harness: OpenCode
+Harness: TBD
 Model source: runner configuration (`AGENTOPS_EXECUTOR_MODEL`)
 Fallback: disabled
 
@@ -114,6 +114,9 @@ Add task-specific checks below this base set.
 
 ## Accept criteria
 
+Default accept criteria. Replace or extend during promotion if the task needs
+more specific checks.
+
 - Change is limited to write scope.
 - Verification commands pass.
 - Existing behavior is preserved unless explicitly changed.
@@ -146,7 +149,7 @@ This task can be promoted to ready when:
 
 Start working on the ready AgentOps task:
 
-agentops/tasks/ready/TASK-XXXX-short-title.md
+agentops/tasks/ready/TASK-XXXX-short-slug.md
 
 Use the Hermes/OpenCode executor workflow from your profile/skill.
 
