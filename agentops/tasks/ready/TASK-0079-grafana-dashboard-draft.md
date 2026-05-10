@@ -1,8 +1,8 @@
-# observability-05 — Add Grafana dashboard draft
+# TASK-0079 — Add Grafana dashboard draft
 
 ## Status
 
-planned
+ready
 
 ## Goal
 
@@ -65,24 +65,18 @@ Fallback: disabled
 
 ## Read scope
 
-Likely candidates:
-
 - `docs/RUN-OBSERVABILITY.md`
 - `docs/GRAFANA-AGENTOPS.md`, if it exists
 - `scripts/export-agentops-prometheus-metrics.sh`
 - `observability/`, if it exists
-- `agentops/tasks/planned/observability-05-grafana-dashboard-draft.md`
+- `agentops/tasks/ready/TASK-0079-grafana-dashboard-draft.md`
 
 ## Write scope
-
-Likely candidates:
 
 - `docs/GRAFANA-AGENTOPS.md`
 - `docs/RUN-OBSERVABILITY.md`, only for a short cross-link if needed
 
 ## Requirements
-
-When ready, this task should require:
 
 - Add dashboard documentation, not Grafana JSON, unless the Prometheus textfile
   export task (TASK-0078, IDEAS slug observability-04) has produced stable
@@ -176,9 +170,7 @@ Resolved:
 
 ## Verification
 
-TBD
-
-Likely commands:
+Run:
 
 ```bash
 test -f docs/GRAFANA-AGENTOPS.md
@@ -222,8 +214,6 @@ environment-specific settings where possible.
 
 ## Accept criteria
 
-When ready, accept criteria should include:
-
 - Dashboard guidance is documentation-first unless a real local Grafana setup
   exists.
 - Panels are defined by operator question, panel intent, and PromQL sketch.
@@ -261,44 +251,17 @@ When ready, accept criteria should include:
 - Verification commands pass.
 - Diff stays within write scope.
 
-## Promotion decision
-
-Decision: keep_planned
-
-Reason:
-
-This depends on the Prometheus textfile export task (TASK-0078, IDEAS slug
-observability-04). The dashboard should use real metric names, label policy,
-and output shape from that task instead of guessing. The first dashboard slice
-should be documentation-first, not Grafana JSON.
-
-Next action:
-
-Promote after TASK-0078 lands and metric names/labels are reconciled against
-the actual exporter.
-
-## Promotion criteria
-
-This task can be promoted to ready when:
-
-- read scope is known
-- write scope is known
-- open questions are resolved or explicitly marked as blockers
-- requirements are concrete
-- verification commands are known
-- accept criteria are concrete
-- non-goals are clear
-
 ## Hermes/coder collection prompt
 
-Use this draft shape when the task is promoted to ready:
+Use this prompt to collect and execute the task through the Hermes/coder
+orchestrator.
 
 ```text
 /hermetic-coding-orchestrator
 
 Start working on the ready AgentOps task:
 
-agentops/tasks/ready/TASK-XXXX-grafana-dashboard-draft.md
+agentops/tasks/ready/TASK-0079-grafana-dashboard-draft.md
 
 Use the Hermes/OpenCode executor workflow from your profile/skill.
 
@@ -323,7 +286,7 @@ Uncertainty:
 
 ## Return format
 
-Expected executor return format when ready:
+Expected executor return format:
 
 ```text
 Plan:
