@@ -1,8 +1,8 @@
-# templates-01 — Add planned task template
+# TASK-0080 — Add planned task template
 
 ## Status
 
-planned
+ready
 
 ## Goal
 
@@ -39,42 +39,29 @@ The template should document that promotion is mechanical:
 - resolve or remove open questions
 - fill the Hermes/coder collection prompt only when ready
 - move the file from `agentops/tasks/planned/` to `agentops/tasks/ready/`
+- assign a `TASK-XXXX` ID only when promoting to `ready/`
 
 ## Executor
 
-Harness: TBD
+Harness: OpenCode
 Model source: runner configuration (`AGENTOPS_EXECUTOR_MODEL`)
 Fallback: disabled
 
-Notes:
-
-- Fill this in only when the task becomes ready.
-- Keep model selection out of the task body unless there is a specific reason.
-
 ## Read scope
 
-TBD
-
-Likely candidates:
-
 - `agentops/templates/READY-TASK-TEMPLATE.md`
-- `agentops/tasks/planned/templates-01-planned-task-template.md`
-- `agentops/USAGE.md`
+- `agentops/tasks/ready/TASK-0080-planned-task-template.md`
+- `agentops/USAGE.md`, if present
+- `skills/hermetic-coding-orchestrator/SKILL.md`, only if needed for existing
+  promotion wording
 
 ## Write scope
 
-TBD
-
-Likely candidates:
-
 - `agentops/templates/PLANNED-TASK-TEMPLATE.md`
-- `agentops/USAGE.md` only if a short note is needed
+- `agentops/USAGE.md`, only if it exists and already documents task lifecycle
+  or promotion flow
 
 ## Requirements
-
-TBD
-
-When ready, this task should require:
 
 - Add `agentops/templates/PLANNED-TASK-TEMPLATE.md`.
 - Use the planned/ready structure below.
@@ -84,6 +71,11 @@ When ready, this task should require:
 - Include a Hermes/coder collection prompt section that remains `TBD` until
   ready.
 - Include a ready-state return format section that remains `TBD` until ready.
+- Use worktree-aware Hermes/coder prompt wording.
+- Do not encode old branch-only workflow guidance.
+- Keep the template reusable for multiple workstreams using soft planned names
+  like `<area>-<local-sequence>-<slug>.md`.
+- Document that `TASK-XXXX` assignment happens only when promoting to `ready/`.
 - Avoid changing lifecycle behavior.
 - Avoid promoting existing planned tasks.
 
@@ -108,10 +100,11 @@ This keeps promotion cheap and mechanical:
 - resolve or remove open questions
 - fill the Hermes/coder collection prompt only when ready
 - move the file from `agentops/tasks/planned/` to `agentops/tasks/ready/`
+- assign a `TASK-XXXX` ID only when promoting to `ready/`
 
 ---
 
-# <area>-<local-sequence> — Short task title
+# <area>-<local-sequence>-<short-slug> — Short task title
 
 ## Status
 
@@ -263,7 +256,8 @@ agentops/tasks/ready/TASK-XXXX-short-title.md
 Use the Hermes/OpenCode executor workflow from your profile/skill.
 
 Requirements:
-- create/switch to an appropriate task branch
+- use or create a task-specific worktree and branch
+- do not switch the main planning worktree away from main
 - do not run executor work on main
 - preserve OPENCODE_XDG_CONFIG_HOME, OPENCODE_XDG_DATA_HOME, and AGENTOPS_EXECUTOR_MODEL
 - use the runner-configured executor model
@@ -309,6 +303,8 @@ Uncertainty:
 ## Notes
 
 Free-form notes, links, related task IDs, or reasoning that should not be lost.
+
+Assign a TASK-XXXX ID only when promoting to `ready/`.
 ````
 
 ## Non-goals
@@ -323,88 +319,70 @@ Free-form notes, links, related task IDs, or reasoning that should not be lost.
 
 ## Open questions
 
-- Should `agentops/USAGE.md` get a short note about the planned/ready promotion
-  rule, or is the template enough for the first slice?
-- Should a future helper create planned tasks from this template?
-
-If these are resolved before promotion, write:
-
-```text
 None.
-```
+
+Resolved:
+
+- `agentops/USAGE.md` should get only a short note if it already documents task
+  lifecycle or promotion flow.
+- The main durable artifact for this slice is
+  `agentops/templates/PLANNED-TASK-TEMPLATE.md`.
+- A future helper may create planned tasks from this template, but that is out
+  of scope for this task.
 
 ## Verification
 
-TBD
-
-Likely commands:
+Run:
 
 ```bash
 git status --short --branch
 git diff --stat
 test -f agentops/templates/PLANNED-TASK-TEMPLATE.md
+grep -n "planned = same structure as ready" agentops/templates/PLANNED-TASK-TEMPLATE.md
+grep -n "use or create a task-specific worktree and branch" agentops/templates/PLANNED-TASK-TEMPLATE.md
+grep -n "Assign a TASK-XXXX ID only when promoting" agentops/templates/PLANNED-TASK-TEMPLATE.md
 ```
 
-Add markdown/rendering inspection if needed.
+If `agentops/USAGE.md` is touched:
+
+```bash
+grep -n "planned" agentops/USAGE.md
+```
 
 ## Accept criteria
-
-TBD
-
-When ready, accept criteria should include:
 
 - `agentops/templates/PLANNED-TASK-TEMPLATE.md` exists.
 - The planned template uses the same core structure as ready tasks.
 - Execution-critical fields may remain `TBD` only while status is `planned`.
 - Promotion mechanics are documented.
 - The Hermes/coder collection prompt is present but marked `TBD until ready`.
+- The template uses worktree-aware collection prompt wording.
+- The template does not instruct agents to switch the main planning worktree
+  away from `main`.
+- Planned tasks use soft workstream-local names and do not reserve `TASK-XXXX`
+  IDs.
+- `TASK-XXXX` assignment is documented as happening only during promotion to
+  `ready/`.
 - Existing ready-task behavior is unchanged.
 - Diff stays within write scope.
 
-## Promotion decision
-
-Decision: keep_planned
-
-Reason:
-
-The task now has a concrete proposed template, but read/write scope,
-verification, and accept criteria should be finalized before it becomes
-executor-ready.
-
-Next action:
-
-Promote this task to ready after deciding whether `agentops/USAGE.md` should be
-included in write scope.
-
-## Promotion criteria
-
-This task can be promoted to ready when:
-
-- read scope is known
-- write scope is known
-- open questions are resolved or explicitly marked as blockers
-- requirements are concrete
-- verification commands are known
-- accept criteria are concrete
-- non-goals are clear
-
 ## Hermes/coder collection prompt
 
-TBD until ready.
-
-When ready, use this shape:
+Use this prompt to collect and execute the task through the Hermes/coder
+orchestrator.
 
 ```text
 /hermetic-coding-orchestrator
 
 Start working on the ready AgentOps task:
 
-agentops/tasks/ready/TASK-XXXX-planned-task-template.md
+agentops/tasks/ready/TASK-0080-planned-task-template.md
 
 Use the Hermes/OpenCode executor workflow from your profile/skill.
 
 Requirements:
-- create/switch to an appropriate task branch
+- use or create a task-specific worktree and branch
+- do not switch the main planning worktree away from main
 - do not run executor work on main
 - preserve OPENCODE_XDG_CONFIG_HOME, OPENCODE_XDG_DATA_HOME, and AGENTOPS_EXECUTOR_MODEL
 - use the runner-configured executor model
@@ -423,9 +401,7 @@ Uncertainty:
 
 ## Return format
 
-TBD until ready.
-
-When ready, expected executor return format:
+Expected executor return format:
 
 ```text
 Plan:
