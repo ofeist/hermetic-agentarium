@@ -183,8 +183,6 @@ Likely commands:
 ```bash
 test -f docs/GRAFANA-AGENTOPS.md
 grep -n "Grafana" docs/GRAFANA-AGENTOPS.md
-grep -n "Question:" docs/GRAFANA-AGENTOPS.md
-grep -n "Intent:" docs/GRAFANA-AGENTOPS.md
 grep -n "^PromQL:" docs/GRAFANA-AGENTOPS.md
 grep -n "skipped metadata" docs/GRAFANA-AGENTOPS.md
 ! grep -nE 'rate\(|increase\(' docs/GRAFANA-AGENTOPS.md
