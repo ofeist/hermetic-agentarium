@@ -20,13 +20,41 @@ Task ID allocation is currently implicit. That makes promotion fragile once more
 
 ## Smallest useful slice
 
-Add one small helper, probably:
+Add one small helper that scans AgentOps lifecycle folders and prints the next available `TASK-XXXX` ID.
 
-```bash
-scripts/next-agentops-task-id.sh
-```
+## Executor
 
-It should scan all lifecycle folders:
+Harness: TBD.
+Model source: runner configuration (`AGENTOPS_EXECUTOR_MODEL`).
+Fallback: disabled.
+
+## Read scope
+
+- `agentops/tasks/ready/`
+- `agentops/tasks/running/`
+- `agentops/tasks/review/`
+- `agentops/tasks/done/`
+- optionally `agentops/tasks/planned/` if the promotion behavior decides planned should be scanned defensively
+- existing task lifecycle helper scripts
+- relevant AgentOps workflow documentation
+
+## Write scope
+
+- one helper script, likely `scripts/next-agentops-task-id.sh`
+- minimal docs update only if needed to document task ID allocation
+- minimal tests or shell syntax checks if present
+
+## Requirements
+
+The helper should:
+
+- scan all authoritative lifecycle folders that can contain `TASK-XXXX` files
+- identify existing task IDs by filename
+- print the next available `TASK-XXXX` ID
+- avoid modifying files
+- avoid reserving or allocating the ID persistently in this slice unless explicitly promoted that way
+
+Initial lifecycle folders to scan:
 
 ```text
 agentops/tasks/ready/
@@ -35,14 +63,13 @@ agentops/tasks/review/
 agentops/tasks/done/
 ```
 
-and print the next available `TASK-XXXX` ID.
-
 ## Non-goals
 
-- no full ledger yet unless scanning proves insufficient
-- no automatic promotion yet
-- no locking across machines
-- no Jira-like task database
+- Do not add a full ledger unless scanning is explicitly judged insufficient.
+- Do not implement automatic planned-to-ready promotion.
+- Do not implement locking across machines.
+- Do not introduce a Jira-like task database.
+- Do not rename existing tasks.
 
 ## Open questions
 
@@ -50,13 +77,49 @@ and print the next available `TASK-XXXX` ID.
 - Should a later `promote-agentops-task.sh` reserve the ID atomically?
 - Is a simple text ledger worth it for single-user use?
 
-## Promotion criteria
-
-Promote to ready when the lifecycle directories and filename matching rule are confirmed.
-
-## Suggested verification
+## Verification
 
 ```bash
+git status --short --branch
 bash -n scripts/next-agentops-task-id.sh
 scripts/next-agentops-task-id.sh
+git diff --stat
 ```
+
+When promoted, add a small fixture test if the repo already has a suitable temporary directory helper.
+
+## Accept criteria
+
+TBD during promotion.
+
+## Promotion decision
+
+Decision: keep_planned.
+
+Reason:
+The lifecycle directories and filename matching rule are not yet fully confirmed, especially whether `planned/` should be scanned defensively.
+
+Next action:
+Decide the scan set and matching rule, then promote.
+
+## Promotion criteria
+
+Promote to `ready` when:
+
+- the lifecycle directories to scan are confirmed
+- the filename matching rule is confirmed
+- the helper name is confirmed
+- behavior for an empty lifecycle is defined
+- read/write scope is confirmed
+
+## Hermes/coder collection prompt
+
+TBD during promotion.
+
+## Return format
+
+TBD during promotion.
+
+## Notes
+
+Keep this read-only first. ID reservation and promotion automation can be follow-up tasks if scanning proves insufficient.

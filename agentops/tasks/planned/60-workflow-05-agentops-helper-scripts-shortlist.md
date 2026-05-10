@@ -20,7 +20,28 @@ Without a shortlist, helper development can become a grab bag. The next scripts 
 
 ## Smallest useful slice
 
-Create a planning note or update workflow documentation with the first 3 helper priorities.
+Create a planning note or update workflow documentation with the first three helper priorities and a short contract for each helper.
+
+## Executor
+
+Harness: TBD.
+Model source: runner configuration (`AGENTOPS_EXECUTOR_MODEL`).
+Fallback: disabled.
+
+## Read scope
+
+- `IDEAS.md`
+- AgentOps workflow documentation
+- `scripts/`
+- existing lifecycle helper scripts
+- existing run summary/review helper scripts, if present
+
+## Write scope
+
+- one planning note or workflow documentation file
+- no implementation of the helper scripts in this slice unless explicitly promoted that way
+
+## Requirements
 
 Suggested initial order:
 
@@ -37,25 +58,64 @@ For each helper, document:
 - whether it is read-only or mutating
 - verification command
 
+The shortlist should prefer lifecycle correctness and observability over platform complexity.
+
 ## Non-goals
 
-- no implementation of all helpers in one task
-- no background scheduler
-- no hidden review decisions
-- no dashboard
+- Do not implement all helpers in one task.
+- Do not add a background scheduler.
+- Do not add hidden review decisions.
+- Do not build a dashboard.
+- Do not introduce a large wrapper framework unless explicitly chosen later.
 
 ## Open questions
 
 - Should helpers live as separate scripts or subcommands under one `agentops` wrapper?
 - Which helper should own moving to `review/`?
 - Should review packet generation be required before acceptance?
+- Should the first-three helper list be exactly the suggested order or adjusted after inspecting existing scripts?
+
+## Verification
+
+```bash
+git status --short --branch
+grep -R "check-agentops-lifecycle\|render-review-packet\|review" docs agentops scripts || true
+git diff --stat
+```
+
+If scripts are touched during promotion, also run the relevant `bash -n` checks.
+
+## Accept criteria
+
+TBD during promotion.
+
+## Promotion decision
+
+Decision: keep_planned.
+
+Reason:
+The target documentation file and final first-three helper list are not yet selected.
+
+Next action:
+Choose the target doc file and confirm the first-three helper list, then promote.
 
 ## Promotion criteria
 
-Promote to ready when the target doc file and final first-three helper list are chosen.
+Promote to `ready` when:
 
-## Suggested verification
+- the target doc file is chosen
+- the final first-three helper list is chosen
+- the output format for each helper contract is confirmed
+- read/write scope is confirmed
 
-```bash
-grep -R "check-agentops-lifecycle\|render-review-packet\|review" docs agentops scripts || true
-```
+## Hermes/coder collection prompt
+
+TBD during promotion.
+
+## Return format
+
+TBD during promotion.
+
+## Notes
+
+This is a planning task, not an implementation batch. The output should make future helper tasks smaller and more deterministic.
