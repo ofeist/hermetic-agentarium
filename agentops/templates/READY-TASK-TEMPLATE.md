@@ -70,6 +70,27 @@ Add task-specific requirements below.
 
 None.
 
+## Promotion decision
+
+Decision: already_ready
+
+Reason:
+This template is for ready tasks.
+
+Next action:
+Execute through the Hermes/coder collection prompt.
+
+## Promotion criteria
+
+Already satisfied for this template.
+
+For concrete ready tasks, this section may record the promotion source or be
+left as:
+
+```text
+Already promoted to ready.
+```
+
 ## Verification
 
 Run:
