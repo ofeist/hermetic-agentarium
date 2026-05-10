@@ -30,6 +30,9 @@ The current directories are:
 
 ### Planned-to-ready promotion
 
+New planned tasks should start from `agentops/templates/PLANNED-TASK-TEMPLATE.md`.
+Ready tasks should start from `agentops/templates/READY-TASK-TEMPLATE.md`.
+
 Promotion from `planned/` to `ready/` is a **mechanical transformation**, not a
 rewrite. Ready-shaped planned tasks should keep their existing structure and
 wording. See the full promotion policy in
