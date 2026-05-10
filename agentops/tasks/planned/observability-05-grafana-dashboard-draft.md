@@ -101,8 +101,13 @@ When ready, this task should require:
 - Use panel titles like "Currently exported executor run metadata" or
   "Executor run metadata currently on disk" instead of "Total runs".
 - V1 dashboard docs must only reference metrics emitted by the exporter.
-- Future metrics belong in prose without `agentops_...` metric names, or in a
-  clearly separate future section that is excluded from verification.
+- Future metric ideas must not use `agentops_...` metric names. Describe them
+  in prose only, or add them later after the exporter emits them.
+- Each panel block must use these literal line prefixes so verification can
+  check structure:
+  - `### Question:`
+  - `Intent:`
+  - `PromQL:`
 - Include panels for:
   - executor duration
   - prompt size
@@ -116,6 +121,8 @@ When ready, this task should require:
 - Provide fallback PromQL without `model`, for example
   `sum(agentops_executor_prompt_bytes)`, if the exporter does not emit a
   `model` label.
+- If the exporter does not emit a `model` label, omit the model-usage panel and
+  add a short note explaining that model breakdown is unavailable.
 - Keep the dashboard local/dev oriented unless a shared monitoring target is
   explicitly defined.
 - Avoid adding alerting in this first slice.
@@ -157,13 +164,15 @@ Resolved:
 - Wording like "runs over time" or "failed runs increasing" should be avoided
   unless backed by true counters.
 - V1 dashboard docs must only reference metrics emitted by the exporter.
-- Future metrics belong in prose without `agentops_...` metric names, or in a
-  clearly separate future section excluded from verification.
+- Future metric ideas must not use `agentops_...` metric names. Describe them
+  in prose only, or add them later after the exporter emits them.
 - Include failure/exit-code visibility and skipped metadata visibility.
 - Include or suggest a `$model` variable if final metrics include a `model`
   label.
 - Provide fallback PromQL without `model` when the exporter does not emit a
   `model` label.
+- If the exporter does not emit a `model` label, omit the model-usage panel and
+  add a short note explaining that model breakdown is unavailable.
 
 ## Verification
 
@@ -176,7 +185,7 @@ test -f docs/GRAFANA-AGENTOPS.md
 grep -n "Grafana" docs/GRAFANA-AGENTOPS.md
 grep -n "Question:" docs/GRAFANA-AGENTOPS.md
 grep -n "Intent:" docs/GRAFANA-AGENTOPS.md
-grep -n "PromQL" docs/GRAFANA-AGENTOPS.md
+grep -n "^PromQL:" docs/GRAFANA-AGENTOPS.md
 grep -n "skipped metadata" docs/GRAFANA-AGENTOPS.md
 ! grep -nE 'rate\(|increase\(' docs/GRAFANA-AGENTOPS.md
 ! grep -nE 'agentops_[a-z_]*_total' docs/GRAFANA-AGENTOPS.md
@@ -187,8 +196,12 @@ git diff --stat
 Verify the panel structure:
 
 ```bash
-test "$(grep -c '^### Question:' docs/GRAFANA-AGENTOPS.md)" = "$(grep -c '^Intent:' docs/GRAFANA-AGENTOPS.md)"
-test "$(grep -c '^### Question:' docs/GRAFANA-AGENTOPS.md)" = "$(grep -c '^PromQL' docs/GRAFANA-AGENTOPS.md)"
+question_count="$(grep -c '^### Question:' docs/GRAFANA-AGENTOPS.md)"
+intent_count="$(grep -c '^Intent:' docs/GRAFANA-AGENTOPS.md)"
+promql_count="$(grep -c '^PromQL:' docs/GRAFANA-AGENTOPS.md)"
+test "$question_count" -gt 0
+test "$question_count" = "$intent_count"
+test "$question_count" = "$promql_count"
 ```
 
 After the Prometheus textfile export task (TASK-0078, IDEAS slug
@@ -201,9 +214,8 @@ diff \
 ```
 
 Expected result: empty diff. Dashboard docs must not reference metrics that
-the exporter does not emit. Future metric ideas must avoid `agentops_...`
-metric names, or live in a clearly separate future section excluded from the
-hard check.
+the exporter does not emit. Future metric ideas must not use `agentops_...`
+metric names unless those metrics are emitted by the exporter.
 
 If Grafana JSON is added in a later task, include a JSON validity check and
 requirements to strip dashboard UID, avoid instance-specific datasource IDs,
@@ -234,14 +246,18 @@ When ready, accept criteria should include:
 - Metric names referenced in dashboard docs are verified against
   `scripts/export-agentops-prometheus-metrics.sh`.
 - V1 dashboard docs reference only metrics emitted by the exporter.
-- Future metric ideas avoid `agentops_...` metric names, or are in a clearly
-  separate future section excluded from the hard consistency check.
+- Future metric ideas do not use `agentops_...` metric names unless those
+  metrics are emitted by the exporter.
 - The doc includes or suggests a `$model` variable if the final metrics include
   a `model` label.
 - The doc provides fallback PromQL without `model` if the exporter does not
   emit a `model` label.
-- Panel structure verification confirms the same number of question, intent,
-  and PromQL entries.
+- If the exporter does not emit a `model` label, the model-usage panel is
+  omitted with a note instead of replaced by a meaningless scalar.
+- Each panel block uses the literal prefixes `### Question:`, `Intent:`, and
+  `PromQL:`.
+- Panel structure verification requires at least one panel and equal counts of
+  question, intent, and PromQL blocks.
 - No Grafana JSON is committed in this first slice unless explicitly re-scoped.
 - Scope remains local/dev unless otherwise decided.
 - Verification commands pass.
