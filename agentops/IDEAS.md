@@ -10,6 +10,12 @@ Do not execute directly from this file.
 ## Inbox
 
 - investigate coordinator model / Codex subscription options
+- reconcile `agentops/USAGE.md` lines 47–94 ("Minimal task file") with the
+  templates. The inline sketch uses section names (`Constraints`,
+  `Implementation requirements`, `Decision states`) that don't match either
+  `PLANNED-TASK-TEMPLATE.md` or `READY-TASK-TEMPLATE.md`. Replace the
+  duplicated skeleton with a pointer to the templates so there is one source
+  of truth for ready-task structure.
 
 ## Commit boundary after task enters review
 
