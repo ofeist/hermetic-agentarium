@@ -163,6 +163,7 @@ First keep the lifecycle simple and explicit:
 
 - one task file
 - one task branch
+- one task worktree (executor work must not run directly on `main`)
 - one executor run
 - one parent review
 - one result record

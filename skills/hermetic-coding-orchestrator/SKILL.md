@@ -148,6 +148,15 @@ Changed files:
 ...
 ```
 
+## AgentOps worktree policy
+
+- The `main` worktree is the **planning cockpit**. Keep it on `main` at all times.
+- Executor work must happen in a **task-specific git worktree**, never directly on the main worktree.
+- One task worktree maps to one task branch.
+- Do not run OpenCode executor work directly on `main`.
+- Do not edit the same task file from the planning worktree and task worktree at the same time.
+- After a task branch is merged, update the main worktree with `git pull`.
+
 ## OpenCode executor orchestration
 
 For AgentOps tasks that specify OpenCode as executor:
@@ -155,8 +164,9 @@ For AgentOps tasks that specify OpenCode as executor:
 1. Check repository state:
    - `git status --short --branch`
 
-2. Ensure work happens on a task branch, not directly on `main`, unless explicitly instructed.
-   - Preferred: `scripts/start-agentops-task.sh <task-id-slug>` to prepare a clean branch from `main`. If it fails, stop and report `blocked` instead of editing on `main`.
+2. Ensure executor work happens in a task-specific worktree, not directly on `main`.
+   - Preferred: `scripts/start-agentops-worktree.sh <TASK-XXXX[-slug]>` to create or prepare a task-specific branch and sibling worktree from `origin/main`. If it fails, stop and report `blocked` instead of editing on `main`.
+   - Fallback: `scripts/start-agentops-task.sh <task-id-slug>` may still be used when a worktree is not desired, but prefer the worktree helper for all executor work.
 
 3. Read the ready task file from `agentops/tasks/ready/`.
 
