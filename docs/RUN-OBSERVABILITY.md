@@ -252,3 +252,5 @@ When inspecting full logs:
 - `docs/RUN-AUDIT.md` — local run audit contract, metadata field
   definitions, safety boundary.
 - `docs/HERMES-OPENCODE-RUNTIME.md` — Hermes/OpenCode runtime env setup.
+- `docs/GRAFANA-AGENTOPS.md` — Grafana dashboard specification for
+  executor run observability using Prometheus textfile metrics.
