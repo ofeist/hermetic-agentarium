@@ -1,8 +1,8 @@
-# workflow-01 — Refine review handoff helper
+# TASK-0081 — Refine review handoff helper
 
 ## Status
 
-planned
+ready
 
 ## Goal
 
@@ -41,9 +41,9 @@ Refine `scripts/submit-agentops-task.sh` to update the moved file's `## Status` 
 
 ## Executor
 
-Harness: TBD.
-Model source: runner configuration (`AGENTOPS_EXECUTOR_MODEL`).
-Fallback: disabled.
+Harness: OpenCode
+Model source: runner configuration (`AGENTOPS_EXECUTOR_MODEL`)
+Fallback: disabled
 
 ## Read scope
 
@@ -91,12 +91,13 @@ Fallback: disabled.
 
 ## Open questions
 
-- Run-id binding: yes / no / defer
-  - If yes, define how `.agentops-runs/<run-id>/` maps to the task and result artifact.
-  - If no, keep `submit-agentops-task.sh` decoupled from local raw run logs.
-- Result/review artifact: yes / no / defer
-  - If yes, define whether this is a minimal result stub, a review checklist, or output from an existing verification-notes helper.
-  - Avoid creating a competing artifact unless intentionally separate.
+None.
+
+Resolved:
+- Run-id binding: no for this slice. Keep `submit-agentops-task.sh` decoupled
+  from local raw run logs.
+- Result/review artifact: defer for this task. Do not add new artifact creation
+  behavior in `submit-agentops-task.sh`; keep existing review-note workflow.
 
 ## Verification
 
@@ -106,7 +107,7 @@ bash -n scripts/*.sh
 git diff --stat
 ```
 
-When promoted, add a small tmpdir-based lifecycle fixture test, preferably using `scripts/agentops-tmp-dir.sh` if suitable:
+Add a small tmpdir-based lifecycle fixture test, preferably using `scripts/agentops-tmp-dir.sh` if suitable:
 
 ```text
 prepare fake agentops/tasks/ready/TEST-X.md
@@ -119,17 +120,22 @@ assert result/review artifact behavior matches the promoted scope
 
 ## Accept criteria
 
-TBD.
+- `scripts/submit-agentops-task.sh` still moves only `ready/ -> review/`.
+- Existing review-file collision protection remains intact.
+- The moved task file status is rewritten from `ready` to `review`.
+- The helper still does not mark task `done` and does not commit.
+- Changes stay within write scope.
 
 ## Promotion decision
 
-Decision: keep_planned.
+Decision: promote_to_ready.
 
 Reason:
-The two open questions — run-id binding and result/review artifact behavior — are real blockers. Promoting now would lock in implicit answers.
+Open questions are now resolved with a minimal scope: no run-id coupling and no
+new artifact behavior in this slice.
 
 Next action:
-Decide both open questions, then promote.
+Implement and verify status rewrite behavior in `scripts/submit-agentops-task.sh`.
 
 ## Promotion criteria
 
@@ -144,11 +150,40 @@ Promote to `ready` when the following are decided:
 
 ## Hermes/coder collection prompt
 
-TBD.
+/hermetic-coding-orchestrator
+
+Start working on the ready AgentOps task:
+
+agentops/tasks/ready/TASK-0081-review-handoff-helper.md
+
+Use the Hermes/OpenCode executor workflow from your profile/skill.
+
+Requirements:
+- use or create a task-specific worktree and branch
+- do not switch the main planning worktree away from main
+- do not run executor work on main
+- preserve OPENCODE_XDG_CONFIG_HOME, OPENCODE_XDG_DATA_HOME, and AGENTOPS_EXECUTOR_MODEL
+- use the runner-configured executor model
+- do not silently fallback to another model
+- do not commit
+- independently verify the result
+
+Return:
+Plan:
+Implementation:
+Verification:
+Review:
+Changed files:
+Uncertainty:
 
 ## Return format
 
-TBD.
+Plan:
+Implementation:
+Verification:
+Review: accept / revise / revert / no-op / blocked
+Changed files:
+Uncertainty:
 
 ## Notes
 
