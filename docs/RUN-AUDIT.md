@@ -91,6 +91,17 @@ instead of `opencode run`. All metadata capture (stdout, stderr, byte counts,
 timestamps, exit code) proceeds as normal. This path is for test/verification
 only and does not change normal executor behaviour when the variable is unset.
 
+## Quick inspection
+
+To inspect a run without reading raw logs, use the summary helper:
+
+```bash
+scripts/render-agentops-run-summary.sh <run-id>
+```
+
+The helper reads only `metadata.txt` and prints a compact summary (model,
+prompt size, duration, output size, exit code, artifact path).
+
 ## Safety boundary
 
 Raw prompts, stdout/stderr, and model responses may contain sensitive context.
