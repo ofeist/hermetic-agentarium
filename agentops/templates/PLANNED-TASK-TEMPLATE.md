@@ -12,9 +12,8 @@ ready = same structure, all execution-critical fields filled
 This keeps promotion cheap and mechanical:
 
 - change `Status` from `planned` to `ready`
-- replace `TBD` sections with concrete values
+- replace only real-unknown `TBD` sections with concrete values
 - resolve or remove open questions
-- fill the Hermes/coder collection prompt only when ready
 - move the file from `agentops/tasks/planned/` to `agentops/tasks/ready/`
 - assign a `TASK-XXXX` ID only when promoting to `ready/`
 
@@ -51,14 +50,9 @@ whole system.
 
 ## Executor
 
-Harness: TBD
+Harness: OpenCode
 Model source: runner configuration (`AGENTOPS_EXECUTOR_MODEL`)
 Fallback: disabled
-
-Notes:
-
-- Fill this in only when the task becomes ready.
-- Keep model selection out of the task body unless there is a specific reason.
 
 ## Read scope
 
@@ -111,25 +105,14 @@ None.
 
 ## Verification
 
-TBD
-
-Likely commands:
-
 ```bash
 git status --short --branch
 git diff --stat
 ```
 
-Add task-specific checks later.
+Add task-specific checks below this base set.
 
 ## Accept criteria
-
-TBD
-
-When ready, this section should state exactly what must be true to accept the
-result.
-
-Example:
 
 - Change is limited to write scope.
 - Verification commands pass.
@@ -157,10 +140,6 @@ This task can be promoted to ready when:
 - non-goals are clear
 
 ## Hermes/coder collection prompt
-
-TBD until ready.
-
-When ready, use this shape:
 
 ```text
 /hermetic-coding-orchestrator
@@ -192,28 +171,13 @@ Uncertainty:
 
 ## Return format
 
-TBD until ready.
-
-When ready, expected executor return format:
-
 ```text
 Plan:
-...
-
 Implementation:
-...
-
 Verification:
-...
-
-Review:
-accept / revise / revert / no-op / blocked
-
+Review: accept / revise / revert / no-op / blocked
 Changed files:
-...
-
 Uncertainty:
-...
 ```
 
 ## Notes
