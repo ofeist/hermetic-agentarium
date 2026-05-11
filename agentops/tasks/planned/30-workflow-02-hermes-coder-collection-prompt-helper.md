@@ -1,4 +1,4 @@
-# workflow-03 — Add Hermes/coder collection prompt helper
+# workflow-02 — Add Hermes/coder collection prompt helper
 
 ## Status
 
@@ -11,6 +11,8 @@ Add a helper that renders the canonical Hermes/coder collection prompt for a rea
 ## Background / why now
 
 Ready tasks include enough information to start work, but the operator still manually copy/pastes the handoff prompt. `IDEAS.md` notes that repeated prompt text can drift and miss details such as skill invocation, branch safety, environment preservation, model fallback rules, and no-commit behavior.
+
+This helper renders the **collection/handoff** prompt — the text a human pastes into Hermes/coder to start the parent orchestrator. It is distinct from `scripts/render-opencode-prompt.sh`, which renders the **executor** prompt that the parent then feeds into the OpenCode child. The two layers must not be merged into a single helper.
 
 ## Problem statement
 
@@ -31,12 +33,12 @@ Fallback: disabled.
 - canonical Hermes/coder execution prompt source, once chosen
 - `agentops/tasks/ready/`
 - existing AgentOps ready task files that already contain collection prompts
-- `scripts/`
+- `scripts/`, especially `scripts/render-opencode-prompt.sh` to confirm role separation between collection and executor prompts
 - relevant workflow/profile/skill documentation
 
 ## Write scope
 
-- one helper script, likely `scripts/render-hermes-coder-collection-prompt.sh`
+- one helper script, likely `scripts/render-collection-prompt.sh` (shorter form chosen to fit the existing `render-*.sh` family; final name confirmed at promotion)
 - minimal docs update only if needed to document the helper
 - minimal tests or shell syntax checks if present
 
@@ -47,10 +49,10 @@ The helper should:
 - accept one ready task path, for example:
 
   ```bash
-  scripts/render-hermes-coder-collection-prompt.sh agentops/tasks/ready/TASK-XXXX-slug.md
+  scripts/render-collection-prompt.sh agentops/tasks/ready/TASK-XXXX-slug.md
   ```
 
-- require the input path to be under `agentops/tasks/ready/`
+- require the input path to be under `agentops/tasks/ready/` and reject paths outside that directory with a non-zero exit code
 - render `/hermetic-coding-orchestrator`
 - include the ready task path
 - include branch or worktree safety requirements
@@ -78,12 +80,21 @@ The helper should:
 
 ```bash
 git status --short --branch
-bash -n scripts/render-hermes-coder-collection-prompt.sh
-scripts/render-hermes-coder-collection-prompt.sh agentops/tasks/ready/TASK-0000-example.md || true
+bash -n scripts/render-collection-prompt.sh
 git diff --stat
 ```
 
-Adjust the example ready task path to a real fixture or existing ready task when promoted.
+When promoted, replace the path placeholder with a real ready-task fixture and add both a positive and a negative path-validation check, e.g.:
+
+```bash
+# happy path: helper renders prompt to stdout and exits 0
+scripts/render-collection-prompt.sh agentops/tasks/ready/<real-or-fixture>.md > /dev/null
+
+# negative path: helper rejects paths outside agentops/tasks/ready/
+! scripts/render-collection-prompt.sh agentops/tasks/done/whatever.md 2>/dev/null
+```
+
+Do not use `|| true` to mask failures.
 
 ## Accept criteria
 
