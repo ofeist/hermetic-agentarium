@@ -103,25 +103,6 @@ If there are no open questions, write:
 None.
 ```
 
-## Verification
-
-```bash
-git status --short --branch
-git diff --stat
-```
-
-Add task-specific checks below this base set.
-
-## Accept criteria
-
-Default accept criteria. Replace or extend during promotion if the task needs
-more specific checks.
-
-- Change is limited to write scope.
-- Verification commands pass.
-- Existing behavior is preserved unless explicitly changed.
-- The new behavior is documented or covered by a check.
-
 ## Promotion decision
 
 Decision: promote_to_ready / keep_planned / blocked / discard
@@ -141,6 +122,25 @@ This task can be promoted to ready when:
 - verification commands are known
 - accept criteria are concrete
 - non-goals are clear
+
+## Verification
+
+```bash
+git status --short --branch
+git diff --stat
+```
+
+Add task-specific checks below this base set.
+
+## Accept criteria
+
+Default accept criteria. Replace or extend during promotion if the task needs
+more specific checks.
+
+- Change is limited to write scope.
+- Verification commands pass.
+- Existing behavior is preserved unless explicitly changed.
+- The new behavior is documented or covered by a check.
 
 ## Hermes/coder collection prompt
 
