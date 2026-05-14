@@ -1,8 +1,8 @@
-# observability-01 — Add AgentOps run outcome metadata
+# TASK-0089 — Add AgentOps run outcome metadata
 
 ## Status
 
-planned
+ready
 
 ## Goal
 
@@ -53,9 +53,9 @@ revert/no-op/blocked lifecycle helpers.
 
 ## Executor
 
-Harness: TBD (default in this repo: OpenCode).
-Model source: runner configuration (`AGENTOPS_EXECUTOR_MODEL`).
-Fallback: disabled.
+Harness: OpenCode
+Model source: runner configuration (`AGENTOPS_EXECUTOR_MODEL`)
+Fallback: disabled
 
 ## Read scope
 
@@ -260,15 +260,7 @@ Promote to ready and execute through the Hermes/coder collection prompt.
 
 ## Promotion criteria
 
-Promote to `ready` when:
-
-- ownership shape is locked (done — single writer helper)
-- the revert/no-op/blocked coverage decision is made (done — no new
-  lifecycle helpers; writer covers all decisions)
-- the run-id resolution rule is locked (done — explicit `<run-id>` arg)
-- the decision-note handling is decided (done — not in v1)
-- write scope is concrete (done — single new file
-  `scripts/record-agentops-outcome.sh`)
+Already promoted to ready.
 
 ## Verification
 
@@ -335,24 +327,72 @@ Do not use `|| true` to mask failures.
 
 ## Hermes/coder collection prompt
 
-TBD during promotion.
-
-When ready, use the canonical Hermes/coder collection prompt shape from the
-planned/ready task template, with the concrete ready task path.
-
-## Return format
-
-TBD during promotion.
-
-When ready, use the standard AgentOps return format:
+Use this prompt to collect and execute the task through the Hermes/coder
+orchestrator.
 
 ```text
+/hermetic-coding-orchestrator
+
+Start working on the ready AgentOps task:
+
+agentops/tasks/ready/TASK-0089-run-outcome-metadata.md
+
+Use the Hermes/OpenCode executor workflow from your profile/skill.
+
+Workflow requirements:
+- use or create a task-specific worktree and branch
+- do not switch the main planning worktree away from main
+- do not run executor work on main
+- preserve OPENCODE_XDG_CONFIG_HOME, OPENCODE_XDG_DATA_HOME, and AGENTOPS_EXECUTOR_MODEL
+- use the runner-configured executor model
+- do not silently fallback to another model
+- do not commit
+- independently verify the result
+
+Scope:
+- create only scripts/record-agentops-outcome.sh
+- writer takes <run-id> <decision> <changed_files_count> <diff_bytes> <diff_stat_lines> <verification_exit_code>
+- decision is one of: accept | revise | revert | no-op | blocked
+- verification_exit_code is a non-negative integer or the literal string "unknown"
+- writes .agentops-runs/<run-id>/outcome.txt in the locked key=value format (atomically via tmp + mv)
+- requires .agentops-runs/<run-id>/ to already exist; refuses with non-zero exit otherwise
+- validates run-id (no slashes, no "..")
+- does not modify metadata.txt
+- does not commit, push, or modify git state
+- do not modify scripts/accept-agentops-task.sh, scripts/revise-agentops-task.sh, or scripts/run-opencode-executor.sh
+- do not add lifecycle helpers for revert / no-op / blocked
+
+Return:
 Plan:
 Implementation:
 Verification:
 Review: accept / revise / revert / no-op / blocked
 Changed files:
 Uncertainty:
+```
+
+## Return format
+
+Expected executor return format:
+
+```text
+Plan:
+...
+
+Implementation:
+...
+
+Verification:
+...
+
+Review:
+accept / revise / revert / no-op / blocked
+
+Changed files:
+...
+
+Uncertainty:
+...
 ```
 
 ## Notes
