@@ -244,18 +244,19 @@ Do not use `|| true` to mask failures.
 
 ## Accept criteria
 
-TBD during promotion.
-
-Expected direction:
-
-- The output identifies the next three helper priorities.
+- `docs/AGENTOPS-HELPERS.md` is created.
+- The document identifies the next three helper priorities.
+- Each helper entry uses the locked per-helper contract format.
 - Each helper entry includes purpose, input, output, lifecycle state touched,
   mutating/read-only behavior, and verification command.
-- The shortlist accounts for already-promoted helper tasks (TASK-0081,
-  TASK-0083, TASK-0084) and does not duplicate them.
+- The document records an explicit decision for the review-packet question:
+  new composing helper, or existing render helpers cover the use case.
+- The shortlist accounts for TASK-0081, TASK-0083, and TASK-0084 and does
+  not duplicate them.
 - The shortlist does not propose helpers that already exist in `scripts/`.
-- The output stays documentation/planning-only unless this task is
-  explicitly promoted otherwise.
+- The output remains documentation/planning-only.
+- No helper scripts are implemented.
+- Verification commands pass or failures are explained.
 
 ## Hermes/coder collection prompt
 
