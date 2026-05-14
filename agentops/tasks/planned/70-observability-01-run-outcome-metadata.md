@@ -45,10 +45,11 @@ this — it does not know the final decision.
 
 ## Smallest useful slice
 
-Extend the review/decision flow to write a small local
-`.agentops-runs/<run-id>/outcome.txt` for one executor run after the
-decision is known, without parsing raw logs or judging quality
-automatically.
+Add a single small writer helper, `scripts/record-agentops-outcome.sh`,
+that writes `.agentops-runs/<run-id>/outcome.txt` in the locked format for
+one executor run after the decision is known. No accept/revise integration
+in v1. No log parsing. No automatic quality judgment. No new
+revert/no-op/blocked lifecycle helpers.
 
 ## Executor
 
@@ -72,13 +73,16 @@ Fallback: disabled.
 
 ## Write scope
 
-- the selected decision-owner script(s), once chosen
-- optional: a small new helper (e.g. `scripts/record-agentops-outcome.sh`)
-  if the chosen design routes through a single writer
-- optional docs update for the outcome metadata contract in
-  `docs/RUN-AUDIT.md` or `docs/RUN-OBSERVABILITY.md`
+- `scripts/record-agentops-outcome.sh` (new)
+- optional minimal docs update for the outcome metadata contract in
+  `docs/RUN-AUDIT.md` or `docs/RUN-OBSERVABILITY.md` if needed to reference
+  the new helper
 - runtime side effect only: writes `.agentops-runs/<run-id>/outcome.txt`
   (gitignored; not committed)
+
+Do not modify `scripts/accept-agentops-task.sh`,
+`scripts/revise-agentops-task.sh`, `scripts/run-opencode-executor.sh`, or
+any other existing decision/execution helper in this slice.
 
 ## Requirements
 
@@ -94,6 +98,43 @@ Locked decisions:
 - `verification_exit_code` uses the explicit string `unknown` when
   verification was not run or its exit code is unavailable. Do not use
   fake numeric sentinels like `-1`.
+- Single writer: outcome is written by one helper
+  (`scripts/record-agentops-outcome.sh`). Existing decision helpers
+  (`accept-agentops-task.sh`, `revise-agentops-task.sh`) are **not**
+  modified in this slice. They may be wired to call the writer in a
+  follow-up task.
+- Run-id resolution: the writer takes an explicit `<run-id>` argument.
+  No "most-recent `<task-id>-*`" guessing.
+- Decision notes are **not** stored in `outcome.txt` in v1. The format
+  stays small and machine-readable; free-text notes are out of scope.
+- `revert`, `no-op`, and `blocked` are representable in the writer, but
+  dedicated lifecycle helpers for those decisions are deferred to a later
+  task.
+
+Helper signature:
+
+```text
+scripts/record-agentops-outcome.sh \
+  <run-id> \
+  <decision: accept|revise|revert|no-op|blocked> \
+  <changed_files_count> \
+  <diff_bytes> \
+  <diff_stat_lines> \
+  <verification_exit_code: <n>|unknown>
+```
+
+Behavior:
+
+- validate `<run-id>` (no slashes, no `..`)
+- validate `<decision>` against the locked set
+- validate numeric fields as non-negative integers (except
+  `verification_exit_code` which may be `unknown`)
+- ensure `.agentops-runs/<run-id>/` exists; refuse with non-zero exit if
+  not (do not create the run dir)
+- write `.agentops-runs/<run-id>/outcome.txt` atomically (e.g. write to
+  temp file then `mv`)
+- exit non-zero on any validation failure with a clear stderr message
+- do not commit, do not modify git state, do not touch `metadata.txt`
 
 Locked file format (key=value, one per line, no header):
 
@@ -176,82 +217,120 @@ Workflow requirements:
 
 ## Open questions
 
-- Ownership shape: should a single new small helper
-  (`scripts/record-agentops-outcome.sh`) be the sole writer, called by
-  `accept-agentops-task.sh`, `revise-agentops-task.sh`, and (future)
-  revert/no-op/blocked helpers — or should each decision-helper write
-  `outcome.txt` inline?
-- Coverage gap: `decision=revert`, `decision=no-op`, and `decision=blocked`
-  have no current owner script. Should this task add minimal helpers for
-  those decisions, or accept that those cases require manual `outcome.txt`
-  entry in this slice?
-- Run-id resolution: the decision-helpers take a `<task-slug>` but
-  `.agentops-runs/<run-id>/` may use `<task-id>` only (e.g. `TASK-0040`)
-  or `<task-id>-<extra-slug>` (e.g. `TASK-0055-dogfood-run-ready-task`).
-  How should the writer locate the run dir — exact match on task-slug,
-  most-recent `<task-id>-*` match, or an explicit `<run-id>` argument?
-- Should `accept-agentops-task.sh`'s `<decision-note>` be appended to
-  `outcome.txt` (e.g. `decision_note=...`) or kept separate?
+None.
+
+Resolved:
+
+- Ownership shape: single writer helper
+  `scripts/record-agentops-outcome.sh`. Reason: do not duplicate
+  outcome-writing / key=value formatting logic across accept / revise /
+  future decision helpers.
+- Coverage gap: do not add `revert` / `no-op` / `blocked` lifecycle
+  helpers in this slice. The writer must be capable of all five decisions;
+  manual or future callers can use the writer until proper helpers exist.
+  Reason: adding lifecycle helpers would expand the task into lifecycle
+  tooling.
+- Run-id resolution: writer takes an explicit `<run-id>` argument. No
+  "most-recent `<task-id>-*`" guessing. Reason: implicit run-id lookup is
+  non-deterministic and can write to the wrong run dir; a separate lookup
+  helper can be added later if needed.
+- Decision note: not stored in `outcome.txt` in v1. Reason: the locked
+  format is deliberately small and machine-readable; free-text escaping
+  is out of scope. Notes can stay in existing decision-helper behavior
+  or a later safe summary helper.
+- v1 slice: standalone writer helper only. No modifications to
+  `accept-agentops-task.sh` / `revise-agentops-task.sh` / executor
+  wrapper. Reason: minimal-risk first slice; integration can land in a
+  follow-up task once the writer contract is in use.
 
 ## Promotion decision
 
-Decision: keep_planned.
+Decision: promote_to_ready.
 
 Reason:
-Format, file location, blocked/no-op representation, and the rule that the
-executor wrapper does not write outcome are locked. Real blockers remain:
-ownership shape (single writer vs each-helper-inline), the coverage gap
-for revert/no-op/blocked decisions, and run-id resolution between task-slug
-and `.agentops-runs/<run-id>/`.
+All blockers are resolved: ownership shape (single writer
+`scripts/record-agentops-outcome.sh`), coverage gap (no new lifecycle
+helpers in this slice; writer covers all five decisions), run-id
+resolution (explicit `<run-id>` argument), decision-note handling (not in
+v1), and v1 scope (standalone writer only — no accept/revise/wrapper
+modifications). Helper signature is locked.
 
 Next action:
-Decide ownership shape, decide whether to add minimal revert/no-op/blocked
-helpers in this slice or defer them, and lock the run-id resolution rule —
-then promote.
+Promote to ready and execute through the Hermes/coder collection prompt.
 
 ## Promotion criteria
 
 Promote to `ready` when:
 
-- ownership shape is locked (single writer helper, or each-helper-inline)
-- the revert/no-op/blocked coverage decision is made (add minimal helpers
-  here, or defer)
-- the run-id resolution rule is locked
-- the decision-note handling is decided (in `outcome.txt` or not)
-- write scope is concrete (which exact scripts get modified)
+- ownership shape is locked (done — single writer helper)
+- the revert/no-op/blocked coverage decision is made (done — no new
+  lifecycle helpers; writer covers all decisions)
+- the run-id resolution rule is locked (done — explicit `<run-id>` arg)
+- the decision-note handling is decided (done — not in v1)
+- write scope is concrete (done — single new file
+  `scripts/record-agentops-outcome.sh`)
 
 ## Verification
 
 ```bash
 git status --short --branch
+bash -n scripts/record-agentops-outcome.sh
 git diff --stat
 ```
 
-When promoted, also:
+Happy path — verify the writer in a disposable run dir:
 
 ```bash
-bash -n scripts/<changed-script>.sh
-# happy path: after accept, .agentops-runs/<run-id>/outcome.txt exists and
-# matches the locked key=value format
-# blocked path: outcome.txt with decision=blocked, verification_exit_code=unknown
+RUN_ID=outcome-helper-smoke
+mkdir -p ".agentops-runs/${RUN_ID}"
+scripts/record-agentops-outcome.sh "${RUN_ID}" accept 3 1234 5 0
+cat ".agentops-runs/${RUN_ID}/outcome.txt"
+# expect: decision=accept, changed_files_count=3, diff_bytes=1234,
+#         diff_stat_lines=5, verification_exit_code=0
+```
+
+Blocked-path representation:
+
+```bash
+RUN_ID=outcome-helper-blocked
+mkdir -p ".agentops-runs/${RUN_ID}"
+scripts/record-agentops-outcome.sh "${RUN_ID}" blocked 0 0 0 unknown
+grep -q '^decision=blocked$' ".agentops-runs/${RUN_ID}/outcome.txt"
+grep -q '^verification_exit_code=unknown$' ".agentops-runs/${RUN_ID}/outcome.txt"
+```
+
+Negative paths:
+
+```bash
+# refuses missing run dir
+! scripts/record-agentops-outcome.sh nonexistent-run accept 0 0 0 0 2>/dev/null
+# rejects unknown decision
+! scripts/record-agentops-outcome.sh "${RUN_ID}" totally-not-a-decision 0 0 0 0 2>/dev/null
+# rejects unsafe run-id
+! scripts/record-agentops-outcome.sh "../escape" accept 0 0 0 0 2>/dev/null
 ```
 
 Do not use `|| true` to mask failures.
 
 ## Accept criteria
 
-TBD during promotion.
-
-Expected direction:
-
-- Outcome metadata is written only after a review decision is available.
-- Outcome metadata lives in `.agentops-runs/<run-id>/outcome.txt` (separate
-  from `metadata.txt`).
-- `accept`, `revise`, `revert`, `no-op`, and `blocked` runs are all
-  representable using the locked format.
-- The executor wrapper does not write `outcome.txt`.
-- Raw `.agentops-runs/` logs are not committed.
-- Existing run-capture metadata behavior is preserved.
+- Change is limited to write scope.
+- `scripts/record-agentops-outcome.sh` exists and is executable.
+- The helper writes `.agentops-runs/<run-id>/outcome.txt` in the locked
+  key=value format.
+- `accept`, `revise`, `revert`, `no-op`, and `blocked` are all accepted as
+  valid `<decision>` values.
+- The helper rejects unknown decisions, unsafe run-ids (slashes / `..`),
+  non-existent run dirs, and non-numeric / non-`unknown`
+  `verification_exit_code` values with non-zero exit and a clear stderr
+  message.
+- The helper does not create the run dir; it requires
+  `.agentops-runs/<run-id>/` to already exist.
+- The helper does not modify `metadata.txt`.
+- The helper does not commit, push, or modify git state.
+- `scripts/accept-agentops-task.sh`, `scripts/revise-agentops-task.sh`,
+  `scripts/run-opencode-executor.sh`, and other existing helpers are not
+  modified.
 - Verification commands pass or failures are explained.
 
 ## Hermes/coder collection prompt
