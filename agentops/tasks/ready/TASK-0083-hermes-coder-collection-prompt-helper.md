@@ -157,6 +157,10 @@ Do not use `|| true` to mask failures.
 
 ## Hermes/coder collection prompt
 
+Use this prompt to collect and execute the task through the Hermes/coder
+orchestrator.
+
+```text
 /hermetic-coding-orchestrator
 
 Start working on the ready AgentOps task:
@@ -165,7 +169,7 @@ agentops/tasks/ready/TASK-0083-hermes-coder-collection-prompt-helper.md
 
 Use the Hermes/OpenCode executor workflow from your profile/skill.
 
-Requirements:
+Workflow requirements:
 - use or create a task-specific worktree and branch
 - do not switch the main planning worktree away from main
 - do not run executor work on main
@@ -179,18 +183,34 @@ Return:
 Plan:
 Implementation:
 Verification:
-Review:
-Changed files:
-Uncertainty:
-
-## Return format
-
-Plan:
-Implementation:
-Verification:
 Review: accept / revise / revert / no-op / blocked
 Changed files:
 Uncertainty:
+```
+
+## Return format
+
+Expected executor return format:
+
+```text
+Plan:
+...
+
+Implementation:
+...
+
+Verification:
+...
+
+Review:
+accept / revise / revert / no-op / blocked
+
+Changed files:
+...
+
+Uncertainty:
+...
+```
 
 ## Notes
 
