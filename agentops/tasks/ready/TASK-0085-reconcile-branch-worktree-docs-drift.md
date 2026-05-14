@@ -1,8 +1,8 @@
-# workflow-04 — Reconcile branch-vs-worktree documentation drift
+# TASK-0085 — Reconcile branch-vs-worktree documentation drift
 
 ## Status
 
-planned
+ready
 
 ## Goal
 
@@ -95,9 +95,9 @@ describe the existing worktree-first policy.
 
 ## Executor
 
-Harness: TBD (default in this repo: OpenCode).
-Model source: runner configuration (`AGENTOPS_EXECUTOR_MODEL`).
-Fallback: disabled.
+Harness: OpenCode
+Model source: runner configuration (`AGENTOPS_EXECUTOR_MODEL`)
+Fallback: disabled
 
 ## Read scope
 
@@ -138,6 +138,21 @@ The updated documentation should make clear that:
 - `scripts/start-agentops-worktree.sh` is the preferred helper for starting executor work
 - `scripts/start-agentops-task.sh` may remain documented as a fallback if already described that way, but should not be promoted as the default
 
+Workflow requirements:
+
+- The execution prompt MUST start with `/hermetic-coding-orchestrator` to
+  explicitly invoke the custom skill.
+- The agent MUST include `USING_SKILL: hermetic-coding-orchestrator` near the
+  beginning of its Plan or output.
+- Keep the change minimal.
+- Do not commit.
+- Do not modify unrelated files.
+- Do not read or print secrets.
+- Executor model selection is controlled by runner configuration, not by task
+  prompt text.
+- Preserve `OPENCODE_XDG_CONFIG_HOME` and `OPENCODE_XDG_DATA_HOME` if invoking
+  OpenCode.
+
 ## Non-goals
 
 - Do not change the worktree policy.
@@ -153,9 +168,9 @@ The updated documentation should make clear that:
 
 ## Open questions
 
-None for this slice.
+None.
 
-Resolved assumptions:
+Resolved:
 
 - Worktree-first policy already exists.
 - The canonical execution policy lives in `skills/hermetic-coding-orchestrator/SKILL.md`.
@@ -172,16 +187,11 @@ reconciliation against a canonical source that already exists. Read/write
 scope, requirements, non-goals, and accept criteria are all concrete.
 
 Next action:
-Promote to ready and execute through the Hermes/coder collection prompt.
+Execute through the Hermes/coder collection prompt.
 
 ## Promotion criteria
 
-Promote to `ready` when:
-
-- the canonical source location is confirmed (done: `SKILL.md`)
-- the read/write scope is confirmed (done)
-- the wording-change rule is concrete (done: replace branch-only executor wording with worktree-and-branch wording)
-- accept criteria are concrete (done)
+Already promoted to ready.
 
 ## Verification
 
@@ -194,7 +204,7 @@ Search for stale executor-location wording:
 
 ```bash
 grep -RIn "create/switch to.*task branch\|task branch before executor\|executor work on a branch\|Parent creates a task branch" \
-  README.md profiles/coder/SOUL.md skills/hermetic-coding-orchestrator/SKILL.md docs agentops || true
+  README.md profiles/coder/SOUL.md skills/hermetic-coding-orchestrator/SKILL.md docs agentops
 ```
 
 If no scripts are changed, script syntax checks are not required.
@@ -211,8 +221,11 @@ Run lifecycle checker if available:
 scripts/check-agentops-lifecycle.sh
 ```
 
+Do not use `|| true` to mask failures.
+
 ## Accept criteria
 
+- Change is limited to write scope.
 - README, SOUL.md, FIRST-RUN, DEBUGGING, POC-STATUS, and the relevant SKILL.md prompt/executor sections no longer describe branch-only executor execution as the default.
 - Executor work is consistently described as running in a task-specific worktree on a task branch.
 - `main` is consistently described as the planning/control checkout.
@@ -224,74 +237,36 @@ scripts/check-agentops-lifecycle.sh
 
 ## Hermes/coder collection prompt
 
-TBD during promotion.
-
-When ready, use the canonical Hermes/coder collection prompt shape from the
-planned/ready task template, with the concrete ready task path.
-
-Suggested prompt body for promotion:
+Use this prompt to collect and execute the task through the Hermes/coder
+orchestrator.
 
 ```text
-Goal:
-Reconcile branch-vs-worktree documentation drift with the already decided
-AgentOps worktree-first policy.
+/hermetic-coding-orchestrator
 
-Context:
-TASK-0075 already established that the main checkout is the planning/control
-cockpit and executor work should happen in task-specific worktrees. Each
-task worktree uses its own task branch. Executor work must not run directly
-on main.
+Start working on the ready AgentOps task:
+
+agentops/tasks/ready/TASK-0085-reconcile-branch-worktree-docs-drift.md
+
+Use the Hermes/OpenCode executor workflow from your profile/skill.
+
+Workflow requirements:
+- use or create a task-specific worktree and branch
+- do not switch the main planning worktree away from main
+- do not run executor work on main
+- preserve OPENCODE_XDG_CONFIG_HOME, OPENCODE_XDG_DATA_HOME, and AGENTOPS_EXECUTOR_MODEL
+- use the runner-configured executor model
+- do not silently fallback to another model
+- do not commit
+- independently verify the result
 
 Scope:
-Docs-only update.
-
-Read:
-- skills/hermetic-coding-orchestrator/SKILL.md
-- README.md
-- profiles/coder/SOUL.md
-- docs/FIRST-RUN.md
-- docs/DEBUGGING.md
-- docs/POC-STATUS.md
-- agentops/USAGE.md
-
-Write:
-- README.md
-- profiles/coder/SOUL.md
-- skills/hermetic-coding-orchestrator/SKILL.md
-- docs/FIRST-RUN.md
-- docs/DEBUGGING.md
-- docs/POC-STATUS.md
-
-Constraints:
-- Do not change scripts.
-- Do not create a new ADR.
-- Do not change the policy.
-- Do not implement worktree automation.
-- Do not change lifecycle directories.
-- Only replace branch-only executor-location wording with worktree-and-branch wording.
-- Keep the change minimal.
-
-Verification:
-- git status --short --branch
-- git diff --stat
-- grep for stale branch-only executor wording
-- scripts/check-agentops-lifecycle.sh if available
+- docs-only reconciliation
+- do not change scripts
+- do not change the worktree policy
+- do not create a new ADR or decision record
+- only replace branch-only executor-location wording with worktree-and-branch wording
 
 Return:
-- changed files
-- summary of updated wording
-- remaining stale wording, if any
-- verification commands and results
-- uncertainty
-```
-
-## Return format
-
-TBD during promotion.
-
-When ready, use the standard AgentOps return format:
-
-```text
 Plan:
 Implementation:
 Verification:
@@ -300,9 +275,41 @@ Changed files:
 Uncertainty:
 ```
 
+## Return format
+
+Expected executor return format:
+
+```text
+Plan:
+...
+
+Implementation:
+...
+
+Verification:
+...
+
+Review:
+accept / revise / revert / no-op / blocked
+
+Changed files:
+...
+
+Uncertainty:
+...
+```
+
 ## Notes
 
 This task replaces the older "decide branch vs worktree execution strategy"
 framing. The decision has already been made. The useful work now is to remove
 drift and make the documentation match the existing worktree-first execution
 model.
+
+Related: TASK-0075 (worktree policy, done) established the canonical policy.
+Follow-up planned tasks cover the script side:
+- `agentops/tasks/planned/51-workflow-06-executor-on-main-guard.md` —
+  add an on-main guard to `scripts/run-opencode-executor.sh`.
+- `agentops/tasks/planned/52-workflow-07-legacy-marker-start-agentops-task.md` —
+  mark `scripts/start-agentops-task.sh` as legacy/fallback in its own
+  usage/runtime output.
