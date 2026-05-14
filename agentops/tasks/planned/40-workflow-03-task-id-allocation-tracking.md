@@ -1,4 +1,4 @@
-# workflow-04 — Add task ID allocation tracking
+# workflow-03 — Add task ID allocation tracking
 
 ## Status
 
@@ -24,7 +24,7 @@ Add one small helper that scans AgentOps lifecycle folders and prints the next a
 
 ## Executor
 
-Harness: TBD.
+Harness: TBD (default in this repo: OpenCode).
 Model source: runner configuration (`AGENTOPS_EXECUTOR_MODEL`).
 Fallback: disabled.
 
@@ -34,7 +34,7 @@ Fallback: disabled.
 - `agentops/tasks/running/`
 - `agentops/tasks/review/`
 - `agentops/tasks/done/`
-- optionally `agentops/tasks/planned/` if the promotion behavior decides planned should be scanned defensively
+- `agentops/tasks/planned/` (scanned defensively for accidental `TASK-XXXX-*.md` files; soft-named planned files do not allocate IDs)
 - existing task lifecycle helper scripts
 - relevant AgentOps workflow documentation
 
@@ -49,6 +49,7 @@ Fallback: disabled.
 The helper should:
 
 - scan all authoritative lifecycle folders that can contain `TASK-XXXX` files
+- also scan `agentops/tasks/planned/` defensively for accidental `TASK-XXXX-*.md` files, while treating soft-named planned files (`<area>-<sequence>-<slug>.md`) as non-authoritative for ID allocation
 - identify existing task IDs by filename
 - print the next available `TASK-XXXX` ID
 - avoid modifying files
@@ -61,6 +62,7 @@ agentops/tasks/ready/
 agentops/tasks/running/
 agentops/tasks/review/
 agentops/tasks/done/
+agentops/tasks/planned/   # defensive only
 ```
 
 ## Non-goals
@@ -73,34 +75,22 @@ agentops/tasks/done/
 
 ## Open questions
 
-- Should `planned/` also be scanned for accidental `TASK-XXXX` files?
-- Should a later `promote-agentops-task.sh` reserve the ID atomically?
-- Is a simple text ledger worth it for single-user use?
+Resolved:
+- `planned/` will be scanned defensively for accidental `TASK-XXXX-*.md` files. Soft-named planned files such as `<area>-<sequence>-<slug>.md` do not allocate task IDs. This reduces collision risk without changing the meaning of planned/.
 
-## Verification
-
-```bash
-git status --short --branch
-bash -n scripts/next-agentops-task-id.sh
-scripts/next-agentops-task-id.sh
-git diff --stat
-```
-
-When promoted, add a small fixture test if the repo already has a suitable temporary directory helper.
-
-## Accept criteria
-
-TBD during promotion.
+Deferred:
+- Atomic reservation belongs in a later promotion helper task.
+- Ledger is out of scope unless scanning proves insufficient.
 
 ## Promotion decision
 
 Decision: keep_planned.
 
 Reason:
-The lifecycle directories and filename matching rule are not yet fully confirmed, especially whether `planned/` should be scanned defensively.
+Lifecycle directories to scan are now decided (including defensive planned/ scan). Remaining blockers: confirm the filename matching rule, lock the helper name, and define behavior for an empty lifecycle.
 
 Next action:
-Decide the scan set and matching rule, then promote.
+Lock the filename matching rule, confirm the helper name, define empty-lifecycle behavior, then promote.
 
 ## Promotion criteria
 
@@ -112,13 +102,42 @@ Promote to `ready` when:
 - behavior for an empty lifecycle is defined
 - read/write scope is confirmed
 
+## Verification
+
+```bash
+git status --short --branch
+bash -n scripts/next-agentops-task-id.sh
+scripts/next-agentops-task-id.sh
+[[ "$(scripts/next-agentops-task-id.sh)" =~ ^TASK-[0-9]{4}$ ]]
+git diff --stat
+```
+
+When promoted, add a small fixture test if the repo already has a suitable temporary directory helper.
+
+## Accept criteria
+
+TBD during promotion.
+
 ## Hermes/coder collection prompt
 
 TBD during promotion.
 
+When ready, use the canonical Hermes/coder collection prompt shape from the planned/ready task template, with the concrete ready task path.
+
 ## Return format
 
 TBD during promotion.
+
+When ready, use the standard AgentOps return format:
+
+```text
+Plan:
+Implementation:
+Verification:
+Review: accept / revise / revert / no-op / blocked
+Changed files:
+Uncertainty:
+```
 
 ## Notes
 
