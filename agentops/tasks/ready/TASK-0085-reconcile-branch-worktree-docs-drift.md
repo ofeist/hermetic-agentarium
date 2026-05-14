@@ -308,7 +308,7 @@ model.
 
 Related: TASK-0075 (worktree policy, done) established the canonical policy.
 Follow-up planned tasks cover the script side:
-- `agentops/tasks/planned/51-workflow-06-executor-on-main-guard.md` —
+- `agentops/tasks/ready/TASK-0086-executor-on-main-guard.md` —
   add an on-main guard to `scripts/run-opencode-executor.sh`.
 - `agentops/tasks/planned/52-workflow-07-legacy-marker-start-agentops-task.md` —
   mark `scripts/start-agentops-task.sh` as legacy/fallback in its own
