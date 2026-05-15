@@ -44,6 +44,15 @@ mkdir -p "$REVIEW_DIR"
 # Move file
 mv "$READY_FILE" "$REVIEW_FILE"
 
+# Rewrite task status from ready to review for both known status styles
+awk '
+  /^Status: ready$/ { print "Status: review"; next }
+  /^## Status$/ { print; in_status=1; next }
+  in_status && /^ready$/ { print "review"; in_status=0; next }
+  in_status && /^[^[:space:]]/ { in_status=0 }
+  { print }
+' "$REVIEW_FILE" > "$REVIEW_FILE.tmp" && mv "$REVIEW_FILE.tmp" "$REVIEW_FILE"
+
 # Print the moved file path
 echo "$REVIEW_FILE"
 
