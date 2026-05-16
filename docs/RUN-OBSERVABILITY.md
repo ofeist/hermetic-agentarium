@@ -53,6 +53,7 @@ All local run artifacts live under `.agentops-runs/<run-id>/` (gitignored).
 | `executor-prompt.md` | Copy of the prompt sent to the executor | No — may be large |
 | `executor-stdout.log` | Stdout from the executor process | No — may be large |
 | `executor-stderr.log` | Stderr from the executor process | No — may be large |
+| `outcome.txt` | Post-review outcome metadata (decision, diff stats, verification exit code) | Yes — always safe |
 | `review-notes.md` | Optional parent review notes | Conditional — inspect first |
 
 ### Metadata fields (from `metadata.txt`)

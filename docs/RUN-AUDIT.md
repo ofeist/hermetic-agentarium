@@ -151,11 +151,30 @@ This design does not introduce:
 - review decision capture
 - aggregated event timeline (TSV, JSON)
 
+## Outcome metadata
+
+Post-review outcome metadata is written by `scripts/record-agentops-outcome.sh`
+into `.agentops-runs/<run-id>/outcome.txt`. This is separate from the
+run-capture metadata in `metadata.txt` — the executor wrapper knows run
+activity, but the review flow knows the final decision.
+
+`outcome.txt` format (key=value, one per line):
+
+    decision=accept|revise|revert|no-op|blocked
+    changed_files_count=<n>
+    diff_bytes=<n>
+    diff_stat_lines=<n>
+    verification_exit_code=<n>|unknown
+
+This file is local-only (gitignored) and is written by the decision flow
+after the review is complete. The executor wrapper does not write it.
+
 ## Future implementation
 
 Future slices may add:
 
-- review decision capture (approve/reject/rework)
+- integration of `record-agentops-outcome.sh` into accept/revise decision helpers
+- dedicated lifecycle helpers for revert / no-op / blocked
 - Prometheus metrics export from executor metadata
 - Grafana dashboards for AgentOps observability
 - token/cost estimates from model provider metadata
