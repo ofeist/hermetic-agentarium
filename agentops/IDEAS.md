@@ -10,9 +10,16 @@ Do not execute directly from this file.
 ## Inbox
 
 - investigate coordinator model / Codex subscription options
-- make `skills/hermetic-coding-orchestrator/` a proper Hermes-native skill
-  package aligned with Hermes Agent skill conventions (layout, metadata, and
-  invocation flow), rather than only a repo-local instruction document
+- package `skills/hermetic-coding-orchestrator/` as a proper Hermes-native
+  skill and include AgentOps observability as an optional install component:
+  - install skill instructions plus optional support files for safe local run
+    inspection
+  - possible components: `.agentops-runs/` contract docs, run metadata capture
+    helpers, run summary helper, prompt-hash metadata support, outcome metadata
+    writer, optional Prometheus exporter, future Grafana example
+  - guardrails: observability remains optional, do not export raw prompts, do
+    not commit raw logs, prefer metadata/hashes/counts/sizes/summaries, keep
+    Prometheus/Grafana as an optional later layer
 - reconcile `agentops/USAGE.md` lines 47–94 ("Minimal task file") with the
   templates. The inline sketch uses section names (`Constraints`,
   `Implementation requirements`, `Decision states`) that don't match either
