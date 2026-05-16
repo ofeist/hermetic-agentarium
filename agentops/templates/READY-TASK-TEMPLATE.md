@@ -111,13 +111,18 @@ Add task-specific checks here.
 
 ## Hermes/coder collection prompt
 
-Use this prompt to collect and execute the task through the Hermes/coder
-orchestrator.
+Synchronized copy policy:
+- This block is an ergonomics copy of the canonical prompt in
+  `skills/hermetic-coding-orchestrator/SKILL.md`
+  (`### Canonical ready task invocation prompt`).
+- Keep wording aligned with the canonical SKILL prompt and rendered helper output
+  (`scripts/render-collection-prompt.sh`).
+- Replace `TASK-xxxx-short-slug.md` with the actual ready task path.
 
 ```text
 /hermetic-coding-orchestrator
 
-Start working on the ready AgentOps task:
+Execute AgentOps ready task:
 
 agentops/tasks/ready/TASK-xxxx-short-slug.md
 
@@ -140,6 +145,8 @@ Verification:
 Review: accept / revise / revert / no-op / blocked
 Changed files:
 Uncertainty:
+
+Also note: task-specific paths, verification commands, or constraints can be added below this prompt when needed
 ```
 
 ## Return format

@@ -266,12 +266,13 @@ AgentOps execution prompts MUST start with `/hermetic-coding-orchestrator` so th
 
 Execute AgentOps ready task:
 
-agentops/tasks/ready/TASK-xxxx-name.md
+agentops/tasks/ready/TASK-xxxx-short-slug.md
 
 Use the Hermes/OpenCode executor workflow from your profile/skill.
 
-Requirements:
-- create/switch to an appropriate task branch
+Workflow requirements:
+- use or create a task-specific worktree and branch
+- do not switch the main planning worktree away from main
 - do not run executor work on main
 - preserve OPENCODE_XDG_CONFIG_HOME, OPENCODE_XDG_DATA_HOME, and AGENTOPS_EXECUTOR_MODEL
 - use the runner-configured executor model
@@ -283,7 +284,7 @@ Return:
 Plan:
 Implementation:
 Verification:
-Review:
+Review: accept / revise / revert / no-op / blocked
 Changed files:
 Uncertainty:
 
