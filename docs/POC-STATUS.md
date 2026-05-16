@@ -9,7 +9,7 @@ The minimal Hermes AgentOps executor loop has been validated. Hermes/coder can a
 ## Validated flow
 
 1. Parent/Hermes prepares or reads a bounded task.
-2. Parent creates a task branch before executor work.
+2. Parent creates a task-specific worktree on a task branch before executor work.
 3. Parent prepares an executor prompt under `/tmp`.
 4. `scripts/run-opencode-executor.sh` invokes OpenCode non-interactively.
 5. OpenCode uses the requested model/provider and produces a scoped diff.

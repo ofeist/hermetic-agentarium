@@ -85,7 +85,7 @@ Shortest path to a local smoke run:
        ./scripts/run-opencode-executor.sh examples/opencode-docs-task.prompt.md
        ./scripts/review-executor-result.sh
 
-Always run executor work on a branch, not directly on `main`, unless explicitly instructed.
+Always run executor work in a task-specific worktree on a task branch. `main` is the planning/control checkout — never run executor work directly on `main`. Branches remain the unit of change/review; worktrees provide execution isolation. Prefer `scripts/start-agentops-worktree.sh`; `scripts/start-agentops-task.sh` remains a fallback.
 
 ## Includes
 

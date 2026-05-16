@@ -37,11 +37,13 @@ Do not print or inspect OpenCode auth files.
 
 ## Safe smoke test
 
-Create a branch:
+Create a task-specific worktree on a task branch:
 
     git checkout main
     git pull --ff-only
-    git checkout -b first-run-smoke
+    ./scripts/start-agentops-worktree.sh first-run-smoke
+
+`main` stays as the planning/control checkout. The worktree isolates executor work from `main`. `scripts/start-agentops-task.sh` remains a fallback.
 
 Run the example prompt through the executor wrapper:
 
@@ -84,5 +86,5 @@ Then return to main and delete the smoke branch if desired:
 
 - The executor must not commit.
 - Git diffs and tests are the source of truth.
-- Do not run executor work directly on `main` unless explicitly instructed.
+- Do not run executor work on `main`. Executor work belongs in a task-specific worktree on a task branch.
 - Executor model selection is controlled by runner configuration, not task prompt text.

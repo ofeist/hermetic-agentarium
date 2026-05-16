@@ -66,13 +66,13 @@ Symptom:
 
 Fix:
 
-Stop before running the executor and create a task branch:
+Stop before running the executor. `main` is the planning/control checkout — do not run executor work on `main`. Create a task-specific worktree:
 
     git checkout main
     git pull --ff-only
-    git checkout -b task-xxxx-short-description
+    ./scripts/start-agentops-worktree.sh task-xxxx-short-description
 
-If changes already happened on `main`, inspect carefully before moving or committing them.
+If changes already happened on `main`, inspect carefully before moving or committing them. `scripts/start-agentops-task.sh` remains a fallback when a worktree is not desired.
 
 ## Dirty working tree
 
