@@ -56,6 +56,7 @@ Executor phase fields:
     prompt_file=<path>
     prompt_bytes=<number>
     prompt_lines=<number>
+    prompt_sha256=<64 lowercase hex>
     started_at=<timestamp>
     finished_at=<timestamp>
     duration_seconds=<number>
@@ -68,6 +69,9 @@ Executor phase fields:
   Otherwise it is empty.
 - `prompt_bytes` and `prompt_lines` are measured from the prompt file without
   including prompt content in metadata or prompts.
+- `prompt_sha256` is the SHA-256 hash of the on-disk prompt file (64 lowercase
+  hex characters). It enables cheap detection of repeated prompts without
+  exporting full prompt content.
 - `duration_seconds` is computed from `started_at` and `finished_at`.
 - `stdout_bytes` and `stderr_bytes` are measured from the captured local
   artifact files after executor completion.

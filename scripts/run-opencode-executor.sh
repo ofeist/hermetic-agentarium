@@ -96,6 +96,15 @@ if [[ -n "$RUN_ID" ]]; then
     PROMPT_BYTES=$(wc -c < "$PROMPT_FILE")
     PROMPT_LINES=$(wc -l < "$PROMPT_FILE")
 
+    if command -v sha256sum &>/dev/null; then
+        PROMPT_SHA256=$(sha256sum "$PROMPT_FILE" | awk '{print $1}')
+    elif command -v shasum &>/dev/null; then
+        PROMPT_SHA256=$(shasum -a 256 "$PROMPT_FILE" | awk '{print $1}')
+    else
+        echo "Error: neither sha256sum nor shasum is available; prompt hash cannot be computed" >&2
+        exit 1
+    fi
+
     TASK_ID=""
     if [[ "$RUN_ID" =~ ^TASK-[0-9]+ ]]; then
         TASK_ID="${BASH_REMATCH[0]}"
@@ -112,6 +121,7 @@ if [[ -n "$RUN_ID" ]]; then
         echo "prompt_file=$PROMPT_FILE"
         echo "prompt_bytes=$PROMPT_BYTES"
         echo "prompt_lines=$PROMPT_LINES"
+        echo "prompt_sha256=$PROMPT_SHA256"
         echo "started_at=$STARTED_AT"
     } > "$METADATA_FILE"
 fi
