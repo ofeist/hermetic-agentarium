@@ -1,8 +1,8 @@
-# workflow-06-accept-helper-done-status — Fix accept helper to update done task status
+# TASK-0091 — Fix accept helper to update done task status
 
 ## Status
 
-planned
+ready
 
 ## Goal
 
@@ -141,7 +141,7 @@ Synchronized copy policy:
 
 Execute AgentOps ready task:
 
-agentops/tasks/ready/TASK-xxxx-short-slug.md
+agentops/tasks/ready/TASK-0091-accept-helper-done-status.md
 
 Use the Hermes/OpenCode executor workflow from your profile/skill.
 
