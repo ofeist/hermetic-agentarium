@@ -38,6 +38,30 @@ fi
 echo "Executor harness: OpenCode"
 echo "Executor model: $MODEL"
 
+if GUARD_BRANCH=$(git symbolic-ref --quiet --short HEAD 2>/dev/null); then
+    if [[ "$GUARD_BRANCH" == "main" || "$GUARD_BRANCH" == "master" ]]; then
+        if [[ "${AGENTOPS_ALLOW_MAIN_EXECUTOR:-}" == "1" ]]; then
+            echo "WARNING: AGENTOPS_ALLOW_MAIN_EXECUTOR=1 is set, bypassing main-branch guard." >&2
+            echo "WARNING: Executor work on '$GUARD_BRANCH' should only happen in exceptional circumstances." >&2
+            echo "" >&2
+        else
+            cat >&2 <<EOF
+Error: refusing to run OpenCode executor from branch '$GUARD_BRANCH'.
+
+AgentOps executor work should run in a task-specific worktree on a task branch,
+not directly from the planning checkout.
+
+Suggested next step:
+  scripts/start-agentops-worktree.sh <TASK-ID>
+
+Override for exceptional cases:
+  AGENTOPS_ALLOW_MAIN_EXECUTOR=1 scripts/run-opencode-executor.sh ...
+EOF
+            exit 1
+        fi
+    fi
+fi
+
 EXTRA_ENV=()
 if [[ -n "${OPENCODE_XDG_CONFIG_HOME:-}" ]]; then
     EXTRA_ENV+=("XDG_CONFIG_HOME=$OPENCODE_XDG_CONFIG_HOME")
