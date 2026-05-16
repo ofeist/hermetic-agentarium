@@ -6,6 +6,9 @@ usage() {
     echo "" >&2
     echo "Example:" >&2
     echo "  $0 TASK-0059-dogfood-review-prompt-notes" >&2
+    echo "" >&2
+    echo "Legacy/fallback helper: starts executor work in the current checkout." >&2
+    echo "Preferred helper: scripts/start-agentops-worktree.sh" >&2
 }
 
 if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
@@ -33,6 +36,8 @@ if [ -n "$STATUS" ]; then
   git status --short
   exit 1
 fi
+
+echo "Hint: start-agentops-task.sh is the legacy/fallback path. Prefer scripts/start-agentops-worktree.sh for executor work." >&2
 
 # Switch to main and update
 git checkout main
