@@ -41,7 +41,7 @@ Create a task-specific worktree on a task branch:
 
     git checkout main
     git pull --ff-only
-    ./scripts/start-agentops-worktree.sh first-run-smoke
+    ./scripts/start-agentops-worktree.sh TASK-0000-first-run-smoke
 
 `main` stays as the planning/control checkout. The worktree isolates executor work from `main`. `scripts/start-agentops-task.sh` remains a fallback.
 
@@ -80,7 +80,7 @@ If this was only a smoke test and you do not want to keep the result:
 Then return to main and delete the smoke branch if desired:
 
     git checkout main
-    git branch -D first-run-smoke
+    git branch -D task-0000-first-run-smoke
 
 ## Notes
 

@@ -70,7 +70,7 @@ Stop before running the executor. `main` is the planning/control checkout — do
 
     git checkout main
     git pull --ff-only
-    ./scripts/start-agentops-worktree.sh task-xxxx-short-description
+    ./scripts/start-agentops-worktree.sh TASK-1234-short-description
 
 If changes already happened on `main`, inspect carefully before moving or committing them. `scripts/start-agentops-task.sh` remains a fallback when a worktree is not desired.
 
