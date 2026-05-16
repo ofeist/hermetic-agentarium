@@ -26,6 +26,16 @@ Do not execute directly from this file.
   `PLANNED-TASK-TEMPLATE.md` or `READY-TASK-TEMPLATE.md`. Replace the
   duplicated skeleton with a pointer to the templates so there is one source
   of truth for ready-task structure.
+- improve review packet separation of lifecycle state and implementation diff:
+  recent TASK-0083 review showed that a stateless reviewer can mistake the
+  expected `ready/ -> review/` lifecycle move for implementation scope drift
+  - review packets should explicitly separate lifecycle state changes,
+    implementation diff, and verification evidence
+  - reviewer prompt should explicitly evaluate implementation diff and
+    verification evidence, while treating expected lifecycle moves as workflow
+    state
+  - guardrails: do not hide lifecycle moves, do not ignore unexpected file
+    changes, and only mark known lifecycle moves as expected
 
 ## Commit boundary after task enters review
 
