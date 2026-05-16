@@ -10,6 +10,9 @@ Do not execute directly from this file.
 ## Inbox
 
 - investigate coordinator model / Codex subscription options
+- make `skills/hermetic-coding-orchestrator/` a proper Hermes-native skill
+  package aligned with Hermes Agent skill conventions (layout, metadata, and
+  invocation flow), rather than only a repo-local instruction document
 - reconcile `agentops/USAGE.md` lines 47–94 ("Minimal task file") with the
   templates. The inline sketch uses section names (`Constraints`,
   `Implementation requirements`, `Decision states`) that don't match either
