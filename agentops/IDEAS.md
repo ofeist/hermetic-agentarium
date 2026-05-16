@@ -36,6 +36,17 @@ Do not execute directly from this file.
     state
   - guardrails: do not hide lifecycle moves, do not ignore unexpected file
     changes, and only mark known lifecycle moves as expected
+- fix `scripts/accept-agentops-task.sh` to update done task status:
+  recent TASK-0084, TASK-0085, and TASK-0086 closeouts had the same lifecycle
+  drift: task file moved to `agentops/tasks/done/` but internal `## Status`
+  remained `review`
+  - on accept, update moved task status from `review` to `done`
+  - verification:
+    - create temp review task fixture
+    - run accept helper
+    - assert file moved to `done/`
+    - assert internal status is `done`
+    - run `scripts/check-agentops-lifecycle.sh`
 
 ## Commit boundary after task enters review
 
