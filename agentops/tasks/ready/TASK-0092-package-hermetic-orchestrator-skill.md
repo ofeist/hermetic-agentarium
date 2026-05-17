@@ -1,15 +1,15 @@
-# skill-00-package-hermetic-orchestrator - Package hermetic orchestrator as a Hermes-native skill
+# TASK-0092 - Package hermetic-coding-orchestrator as Hermes-native skill
 
 ## Status
 
-planned
+ready
 
 ## Goal
 
-Plan the packaging work needed to turn `skills/hermetic-coding-orchestrator/`
-from a repo-local skill file into a proper Hermes-native local skill package
-without changing the existing skill name, invocation contract, or AgentOps
-runtime behavior.
+Implement the core packaging documentation for
+`skills/hermetic-coding-orchestrator/` as a Hermes-native local skill package,
+without changing the existing skill name, slash invocation, audit marker, or
+AgentOps runtime behavior.
 
 ## Background / why now
 
@@ -248,7 +248,7 @@ Work:
 
 ## Promotion decision
 
-Decision: ready_after_goal_rewrite
+Decision: promote_to_ready
 
 Reason:
 Hermes skill packaging contract is confirmed as a skill directory with
@@ -256,8 +256,8 @@ Hermes skill packaging contract is confirmed as a skill directory with
 `manifest.json` is required for the core local/native skill package in this
 slice unless official Hermes docs or Hermes CLI behavior explicitly requires it.
 
-The task is now properly narrowed to core packaging. It can be promoted after
-rewriting the ready-task goal from planning language to implementation language.
+The task is properly narrowed to core packaging and has the goal rewritten in
+implementation language.
 
 Next action:
 Promote a narrow ready task that packages the existing
@@ -332,7 +332,7 @@ Synchronized copy policy:
 
 Execute AgentOps ready task:
 
-agentops/tasks/ready/TASK-xxxx-short-slug.md
+agentops/tasks/ready/TASK-0092-package-hermetic-orchestrator-skill.md
 
 Use the Hermes/OpenCode executor workflow from your profile/skill.
 
