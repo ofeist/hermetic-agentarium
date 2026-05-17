@@ -45,6 +45,7 @@ profiles/coder/SOUL.md
 
 skills/hermetic-coding-orchestrator/SKILL.md
 → <install-root>/.hermes/skills/hermetic-coding-orchestrator/SKILL.md
+→ <install-root>/.hermes/profiles/coder/skills/hermetic-coding-orchestrator/SKILL.md
 ```
 
 The installer also creates or updates the local runtime file:

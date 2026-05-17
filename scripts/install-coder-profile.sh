@@ -20,12 +20,15 @@ install_into_home() {
 
   mkdir -p "$hermes_root/profiles/coder"
   mkdir -p "$hermes_root/skills/hermetic-coding-orchestrator"
+  mkdir -p "$hermes_root/profiles/coder/skills/hermetic-coding-orchestrator"
 
   cp "$REPO_ROOT/profiles/coder/SOUL.md" \
      "$hermes_root/profiles/coder/SOUL.md"
 
   cp "$REPO_ROOT/skills/hermetic-coding-orchestrator/SKILL.md" \
      "$hermes_root/skills/hermetic-coding-orchestrator/SKILL.md"
+  cp "$REPO_ROOT/skills/hermetic-coding-orchestrator/SKILL.md" \
+     "$hermes_root/profiles/coder/skills/hermetic-coding-orchestrator/SKILL.md"
 
   if [ ! -f "$env_file" ]; then
     cp "$REPO_ROOT/profiles/coder/.env.example" "$env_file"
@@ -74,6 +77,7 @@ echo "Installed from repo:"
 for root in "${INSTALLED_ROOTS[@]}"; do
   echo "- $root/profiles/coder/SOUL.md"
   echo "- $root/skills/hermetic-coding-orchestrator/SKILL.md"
+  echo "- $root/profiles/coder/skills/hermetic-coding-orchestrator/SKILL.md"
 done
 
 echo
