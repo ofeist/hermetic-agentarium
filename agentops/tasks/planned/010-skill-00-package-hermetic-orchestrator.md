@@ -86,10 +86,27 @@ Optional write scope only if needed:
 
 - `scripts/install-coder-profile.sh`
 
-Only modify `scripts/install-coder-profile.sh` if verification proves the
-current installer cannot install or preserve the skill layout.
+Only modify `scripts/install-coder-profile.sh` if inspection proves the current
+installer cannot install or preserve the skill layout or coder profile wiring
+required for `/hermetic-coding-orchestrator`.
 
 Do not modify task lifecycle helpers or executor helpers in this slice.
+
+## Installer handling
+
+`scripts/install-coder-profile.sh` is not part of the Hermes-native skill
+package metadata contract, but it may be part of the Hermetic Agentarium install
+contract.
+
+For this slice:
+
+- inspect the installer
+- document whether it already installs or preserves the skill layout
+- document whether it preserves the required coder profile wiring
+- modify it only if it currently fails to install or preserve the skill directory or profile wiring required for `/hermetic-coding-orchestrator`
+- do not change runtime helper behavior
+- do not change OpenCode executor behavior
+- do not change task lifecycle helper behavior
 
 ## Step-by-step packaging plan
 
@@ -108,8 +125,7 @@ Work:
 
 Step 2: Freeze the current behavior contract.
 
-Files:
-- `skills/hermetic-coding-orchestrator/SKILL.md`
+Read/verify only:
 - `scripts/render-collection-prompt.sh`
 - `agentops/templates/READY-TASK-TEMPLATE.md`
 - `agentops/templates/PLANNED-TASK-TEMPLATE.md`
@@ -117,7 +133,7 @@ Files:
 Work:
 - verify all generated prompts still start with `/hermetic-coding-orchestrator`
 - verify audit marker remains `USING_SKILL: hermetic-coding-orchestrator`
-- do not change canonical prompt text except to clarify packaging/install notes
+- do not modify these files in this slice unless verification exposes a concrete contradiction with the package docs
 
 Step 3: Normalize `SKILL.md` frontmatter if needed.
 
@@ -152,7 +168,8 @@ Files:
 Work:
 - document core local skill install
 - document verification commands after install
-- preserve existing profile installation behavior unless verification proves it is broken
+- inspect and classify installer behavior as one of: no change needed, docs-only clarification needed, or narrow installer fix needed
+- preserve existing profile installation behavior unless inspection proves it is broken
 
 Step 6: Reconcile repo docs.
 
@@ -230,7 +247,7 @@ Work:
 
 ## Promotion decision
 
-Decision: promote_after_scope_narrowing
+Decision: promote_after_minor_cleanup
 
 Reason:
 Hermes skill packaging contract is confirmed as a skill directory with
@@ -238,19 +255,23 @@ Hermes skill packaging contract is confirmed as a skill directory with
 `manifest.json` is required for the core local/native skill package in this
 slice unless official Hermes docs or Hermes CLI behavior explicitly requires it.
 
+The task is now properly narrowed to core packaging. Before promotion, rewrite
+the ready-task goal from planning language to implementation language.
+
 Next action:
 Promote a narrow ready task that packages the existing
 `hermetic-coding-orchestrator` skill with README/install/verification
-documentation only. Keep observability packaging, installer behavior changes,
-runtime workflow changes, and rename work as follow-up tasks.
+documentation only. Inspect the installer and modify it only if it fails to
+install or preserve the required skill/profile wiring. Keep observability
+packaging, runtime workflow changes, and rename work as follow-up tasks.
 
 ## Promotion criteria
 
 This task can be promoted to ready when:
 
-- write scope is narrowed to exact files for core packaging
-- installer behavior has been inspected and either left untouched or a concrete install issue is documented
 - write scope is narrowed to exact files
+- installer behavior has been inspected and classified as one of: no change needed, docs-only clarification needed, or narrow installer fix needed
+- the ready-task goal is rewritten from planning language to implementation language
 - verification commands are concrete
 - rename follow-up remains explicitly out of scope
 
@@ -351,6 +372,14 @@ Origin: `agentops/IDEAS.md` entry to package
 `skills/hermetic-coding-orchestrator/` as a proper Hermes-native skill with
 optional AgentOps observability. This task narrows the first slice to core
 skill packaging only.
+
+When promoting to ready, rewrite the goal to:
+
+```text
+Implement the core packaging documentation for `skills/hermetic-coding-orchestrator/`
+as a Hermes-native local skill package, without changing the existing skill name,
+slash invocation, audit marker, or AgentOps runtime behavior.
+```
 
 Recommended follow-up tasks:
 
