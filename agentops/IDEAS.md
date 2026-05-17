@@ -64,6 +64,13 @@ Do not execute directly from this file.
     - assert file moved to `done/`
     - assert internal status is `done`
     - run `scripts/check-agentops-lifecycle.sh`
+- investigate failing AgentOps fixture demo:
+  - Goal:
+    Check whether the current workflow already demonstrates failed verification handling.
+    If not, add a small deterministic fixture showing:
+    bad patch -> failing test -> narrow fix or blocked result with diff + rerun command.
+  - Non-goal:
+    Do not redesign the whole loop before inspecting what already exists.
 
 ## Result note replayability after lifecycle closeout
 
