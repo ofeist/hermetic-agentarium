@@ -64,43 +64,50 @@ examples/config.example.yaml
 docs/SECURITY.md
 ```
 
-## 5. Test skill detection
+## 5. Verify skill package
 
-In a small test repository, run:
+After install, verify the skill package is intact:
 
 ```bash
-coder
+test -f ~/.hermes/skills/hermetic-coding-orchestrator/SKILL.md
+grep -q '^name: hermetic-coding-orchestrator$' ~/.hermes/skills/hermetic-coding-orchestrator/SKILL.md
+grep -q 'USING_SKILL: hermetic-coding-orchestrator' ~/.hermes/skills/hermetic-coding-orchestrator/SKILL.md
 ```
 
-Then prompt:
+Verify the collection prompt generator still produces the correct invocation:
+
+```bash
+scripts/render-collection-prompt.sh agentops/tasks/ready/<any-ready-task>.md | head -1
+```
+
+Expected output starts with:
 
 ```text
-Use the hermetic-coding-orchestrator skill.
-
-Task:
-Report the workflow rules you will follow for this repository.
-
-Constraints:
-- Read-only.
-- Do not modify files.
-- Do not use delegate_task.
-- Do not commit.
-
-Return:
-- skill detected:
-- first verification command:
-- delegation guardrail:
-- dirty-worktree rule:
-- no-op rule:
+/hermetic-coding-orchestrator
 ```
 
-Expected result:
+Run the lifecycle check:
 
-```text
-skill detected: hermetic-coding-orchestrator
+```bash
+scripts/check-agentops-lifecycle.sh
 ```
 
-## 6. Working with real repositories
+If Hermes CLI is available, verify slash invocation works:
+
+```bash
+hermes --profile coder chat -q "/hermetic-coding-orchestrator Summarize your workflow rules in 3 bullets"
+```
+
+Expected result: the skill is detected and the response includes
+`USING_SKILL: hermetic-coding-orchestrator`.
+
+## 6. Skill package authority
+
+The package README at `skills/hermetic-coding-orchestrator/README.md` is the
+authoritative document for compatibility guarantees, install path, and
+verification. Consult it when the installed skill does not behave as expected.
+
+## 7. Working with real repositories
 
 Do not run Hermes against a repository that contains real secrets unless you have proper isolation.
 

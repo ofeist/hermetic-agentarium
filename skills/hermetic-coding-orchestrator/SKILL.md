@@ -1,6 +1,7 @@
 ---
 name: hermetic-coding-orchestrator
 description: Use this custom Hermetic Agentarium skill for controlled coding orchestration with bounded delegation, dirty-worktree protection, parent verification, and no-op/revise/revert review decisions.
+version: 0.1.0
 ---
 
 # Coding Orchestrator Workflow
