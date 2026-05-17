@@ -63,6 +63,11 @@ Shortest path to a local smoke run:
 
    into your local `~/.hermes/` runtime.
 
+   For the isolated `coder` profile, the installer also installs/preserves the
+   custom skill under the profile-local skills directory. This is required so
+   `/hermetic-coding-orchestrator` works when starting Hermes with
+   `hermes --profile coder` or the `coder` wrapper.
+
 3. Make sure OpenCode is installed and visible:
 
        which opencode
@@ -94,6 +99,11 @@ Hermetic Agentarium currently uses a repo-based installation model.
 The Hermes skill is installed from this repository into your local Hermes runtime,
 but the full AgentOps workflow also depends on repository-local helper scripts,
 templates, docs, and task directories.
+
+Installing only the raw `SKILL.md` may make the slash command visible in a
+default Hermes session, but it is not sufficient for the full AgentOps workflow.
+Use the repository installer so the `coder` profile, skill, helper scripts, and
+task layout expectations stay aligned.
 
 For that reason, the recommended setup is:
 
