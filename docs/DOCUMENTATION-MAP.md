@@ -25,6 +25,10 @@ Use these documents when running or reviewing AgentOps tasks:
 6. `docs/RUN-OBSERVABILITY.md` — inspect run metadata, artifacts, and token/time pressure.
 7. `agentops/results/` — safe result summaries for completed tasks.
 
+If the `/hermetic-coding-orchestrator` slash command is not recognized, see:
+- `docs/INSTALL.md` — short activation checklist and `Unknown command` troubleshooting.
+- `skills/hermetic-coding-orchestrator/README.md` — full activation verification and failure mode guide.
+
 ## Maintainer path
 
 Use these documents when changing this repository or local Hermes installation:

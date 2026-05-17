@@ -117,13 +117,87 @@ hermes --profile coder chat -q "/hermetic-coding-orchestrator Summarize your wor
 Expected result: the skill is detected and the response includes
 `USING_SKILL: hermetic-coding-orchestrator`.
 
-## 6. Skill package authority
+## 6. Quick activation checklist
+
+After running `./scripts/install-coder-profile.sh`, the skill lands in two
+expected locations:
+
+```text
+~/.hermes/skills/hermetic-coding-orchestrator/
+~/.hermes/profiles/coder/skills/hermetic-coding-orchestrator/
+```
+
+Both must contain `SKILL.md` for full coverage.
+
+### Activation checks
+
+Verify the skill is discoverable from **default Hermes**:
+
+```bash
+test -f ~/.hermes/skills/hermetic-coding-orchestrator/SKILL.md
+
+hermes
+# then in the Hermes session invoke:
+# /hermetic-coding-orchestrator
+```
+
+Verify the skill is discoverable from the **coder profile**:
+
+```bash
+test -f ~/.hermes/profiles/coder/skills/hermetic-coding-orchestrator/SKILL.md
+
+hermes --profile coder
+# then in the Hermes session invoke:
+# /hermetic-coding-orchestrator
+```
+
+### Expected output
+
+Successful invocation includes this marker:
+
+```text
+USING_SKILL: hermetic-coding-orchestrator
+```
+
+### Troubleshooting `Unknown command`
+
+If `/hermetic-coding-orchestrator` returns:
+
+```text
+Unknown command: /hermetic-coding-orchestrator
+```
+
+The fastest checks:
+
+1. Does the skill directory exist at the expected paths? Run the `test -f` checks above.
+2. Did you restart Hermes after running the installer? The skill may not be
+   picked up until the next Hermes session.
+3. If `hermes` works but `hermes --profile coder` returns `Unknown command`,
+   check whether the skill exists under the coder profile-local path:
+
+   ```bash
+   test -f ~/.hermes/profiles/coder/skills/hermetic-coding-orchestrator/SKILL.md
+   ```
+
+   If missing, rerun the installer:
+
+   ```bash
+   ./scripts/install-coder-profile.sh
+   ```
+
+   Then restart Hermes and test again.
+
+`hermes skills list` may show the skill in some modes but not others. Use slash
+invocation as the practical acceptance test rather than relying on CLI listing
+alone.
+
+## 7. Skill package authority
 
 The package README at `skills/hermetic-coding-orchestrator/README.md` is the
 authoritative document for compatibility guarantees, install path, and
 verification. Consult it when the installed skill does not behave as expected.
 
-## 7. Working with real repositories
+## 8. Working with real repositories
 
 Do not run Hermes against a repository that contains real secrets unless you have proper isolation.
 
