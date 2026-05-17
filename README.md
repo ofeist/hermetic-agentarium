@@ -87,6 +87,22 @@ Shortest path to a local smoke run:
 
 Always run executor work in a task-specific worktree on a task branch. `main` is the planning/control checkout — never run executor work directly on `main`. Branches remain the unit of change/review; worktrees provide execution isolation. Prefer `scripts/start-agentops-worktree.sh`; `scripts/start-agentops-task.sh` remains a fallback.
 
+## Installation model
+
+Hermetic Agentarium currently uses a repo-based installation model.
+
+The Hermes skill is installed from this repository into your local Hermes runtime,
+but the full AgentOps workflow also depends on repository-local helper scripts,
+templates, docs, and task directories.
+
+For that reason, the recommended setup is:
+
+```bash
+git clone https://github.com/ofeist/hermetic-agentarium.git
+cd hermetic-agentarium
+./scripts/install-coder-profile.sh
+```
+
 ## Includes
 
 - coder `SOUL.md`
