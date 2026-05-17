@@ -101,9 +101,10 @@ contract.
 For this slice:
 
 - inspect the installer
-- document whether it already installs or preserves the skill layout
-- document whether it preserves the required coder profile wiring
-- modify it only if it currently fails to install or preserve the skill directory or profile wiring required for `/hermetic-coding-orchestrator`
+- classify current installer behavior as one of: no change needed, docs-only clarification needed, or narrow installer fix needed
+- document whether it already installs or preserves the skill directory, coder profile, `SOUL.md`/profile wiring, and required setup for `/hermetic-coding-orchestrator`
+- modify it only if it currently fails to install or preserve the required skill/profile wiring and the fix is narrow
+- defer broader installer work to `skill-01-improve-installer-support-if-needed`
 - do not change runtime helper behavior
 - do not change OpenCode executor behavior
 - do not change task lifecycle helper behavior
@@ -214,7 +215,7 @@ Files:
 Work:
 - do not package `.agentops-runs/` support in this slice
 - do not modify `docs/RUN-AUDIT.md` or `docs/RUN-OBSERVABILITY.md` unless a narrow install-doc cross-reference is required
-- track optional observability packaging as a follow-up task, e.g. `skill-01-package-optional-agentops-observability`
+- track optional observability packaging as a follow-up task, e.g. `skill-03-package-optional-agentops-observability`
 
 ## Requirements
 
@@ -247,7 +248,7 @@ Work:
 
 ## Promotion decision
 
-Decision: promote_after_minor_cleanup
+Decision: ready_after_goal_rewrite
 
 Reason:
 Hermes skill packaging contract is confirmed as a skill directory with
@@ -255,15 +256,16 @@ Hermes skill packaging contract is confirmed as a skill directory with
 `manifest.json` is required for the core local/native skill package in this
 slice unless official Hermes docs or Hermes CLI behavior explicitly requires it.
 
-The task is now properly narrowed to core packaging. Before promotion, rewrite
-the ready-task goal from planning language to implementation language.
+The task is now properly narrowed to core packaging. It can be promoted after
+rewriting the ready-task goal from planning language to implementation language.
 
 Next action:
 Promote a narrow ready task that packages the existing
 `hermetic-coding-orchestrator` skill with README/install/verification
 documentation only. Inspect the installer and modify it only if it fails to
-install or preserve the required skill/profile wiring. Keep observability
-packaging, runtime workflow changes, and rename work as follow-up tasks.
+install or preserve the required skill/profile wiring and the fix is narrow.
+Keep observability packaging, runtime workflow changes, and rename work as
+follow-up tasks.
 
 ## Promotion criteria
 
@@ -383,10 +385,10 @@ slash invocation, audit marker, or AgentOps runtime behavior.
 
 Recommended follow-up tasks:
 
-- `skill-01-package-optional-agentops-observability`
-- `skill-02-improve-installer-support-if-needed`
-- `skill-03-document-skill-activation-troubleshooting`
+- `skill-01-improve-installer-support-if-needed`
+- `skill-02-document-skill-activation-troubleshooting`
+- `skill-03-package-optional-agentops-observability`
 
-Estimated core packaging effort after promotion: roughly 4-8 hours.
+Estimated effort after promotion: small, bounded docs-and-verification slice.
 
 Assign a TASK-XXXX ID only when promoting to `ready/`.
