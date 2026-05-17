@@ -1,8 +1,8 @@
-# skill-02-document-skill-activation-troubleshooting - Document skill activation and troubleshooting flow
+# TASK-0094 - Document skill activation and troubleshooting flow
 
 ## Status
 
-planned
+ready
 
 ## Goal
 
@@ -258,7 +258,7 @@ Synchronized copy policy:
 
 Execute AgentOps ready task:
 
-agentops/tasks/ready/TASK-xxxx-short-slug.md
+agentops/tasks/ready/TASK-0094-document-skill-activation-troubleshooting.md
 
 Use the Hermes/OpenCode executor workflow from your profile/skill.
 
