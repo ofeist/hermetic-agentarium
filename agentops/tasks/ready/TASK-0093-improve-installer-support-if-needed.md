@@ -1,8 +1,8 @@
-# skill-01-improve-installer-support-if-needed - Fix coder-profile skill discovery/install wiring
+# TASK-0093 - Improve installer support for coder-profile skill discovery
 
 ## Status
 
-planned
+ready
 
 ## Goal
 
