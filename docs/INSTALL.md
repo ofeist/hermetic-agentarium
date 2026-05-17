@@ -23,14 +23,28 @@ cd hermetic-agentarium
 ./scripts/install-coder-profile.sh
 ```
 
+The installer resolves two possible install targets:
+
+- account home from `getent passwd $(id -un)`
+- active `$HOME` (when different, e.g. profile-managed/sandbox sessions)
+
+It installs into each target's `.hermes/...` tree so the skill remains discoverable
+in normal and profile-managed workflows.
+
+You can override the install root explicitly:
+
+```bash
+HERMES_INSTALL_HOME=/absolute/path ./scripts/install-coder-profile.sh
+```
+
 This copies:
 
 ```text
 profiles/coder/SOUL.md
-→ ~/.hermes/profiles/coder/SOUL.md
+→ <install-root>/.hermes/profiles/coder/SOUL.md
 
 skills/hermetic-coding-orchestrator/SKILL.md
-→ ~/.hermes/skills/hermetic-coding-orchestrator/SKILL.md
+→ <install-root>/.hermes/skills/hermetic-coding-orchestrator/SKILL.md
 ```
 
 The installer also creates or updates the local runtime file:
@@ -66,7 +80,8 @@ docs/SECURITY.md
 
 ## 5. Verify skill package
 
-After install, verify the skill package is intact:
+After install, verify the skill package is intact (replace `~` if you used
+`HERMES_INSTALL_HOME`):
 
 ```bash
 test -f ~/.hermes/skills/hermetic-coding-orchestrator/SKILL.md
