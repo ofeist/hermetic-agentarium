@@ -48,6 +48,35 @@ Do not execute directly from this file.
     - assert internal status is `done`
     - run `scripts/check-agentops-lifecycle.sh`
 
+## Result note replayability after lifecycle closeout
+
+Problem:
+Some verification commands are valid only before lifecycle closeout, while the
+task file is still under `agentops/tasks/ready/`. After closeout, the task is
+moved to `agentops/tasks/done/`, and those commands may no longer be replayable.
+
+Example:
+`scripts/render-collection-prompt.sh` accepts ready-task paths, but a result
+note may later record or rewrite the command with an `agentops/tasks/done/...`
+path.
+
+Goal:
+Clarify result note conventions so audit notes distinguish between:
+- pre-closeout verification
+- post-closeout replayable verification
+
+Possible implementation:
+- update result note template/conventions
+- document that ready-path-only helpers must not be recorded as post-closeout
+  replayable checks
+- optionally add a lifecycle/result checker warning for patterns like:
+  `render-collection-prompt.sh agentops/tasks/done/`
+
+Non-goals:
+- do not change `render-collection-prompt.sh` behavior unless separately
+  justified
+- do not reopen completed task implementations just to rewrite old audit notes
+
 ## Commit boundary after task enters review
 
 Goal: explore whether there should be an optional commit boundary after a coder
