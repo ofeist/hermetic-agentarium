@@ -7,17 +7,26 @@ planned
 ## Goal
 
 Plan the packaging work needed to turn `skills/hermetic-coding-orchestrator/`
-from a repo-local skill file into a proper Hermes-native skill package without
-changing the existing skill name, invocation contract, or AgentOps runtime
-behavior.
+from a repo-local skill file into a proper Hermes-native local skill package
+without changing the existing skill name, invocation contract, or AgentOps
+runtime behavior.
 
 ## Background / why now
 
 `agentops/IDEAS.md` captures the need to package
-`skills/hermetic-coding-orchestrator/` as a Hermes-native skill and optionally
-include AgentOps observability support. The current skill is operationally useful
-but consists of a single `SKILL.md` file with repo-coupled docs and helper
-assumptions.
+`skills/hermetic-coding-orchestrator/` as a Hermes-native skill. The current
+skill is operationally useful, but it needs clearer package documentation,
+install guidance, and verification steps.
+
+Official Hermes skill creation guidance confirms that a normal/local Hermes
+skill is primarily:
+
+```text
+~/.hermes/skills/<category>/<skill-name>/SKILL.md
+```
+
+The required entrypoint is `SKILL.md`, and the package metadata contract for
+this slice is the YAML frontmatter in `SKILL.md`.
 
 Packaging should make installation and verification explicit while preserving
 the existing slash invocation and audit marker:
@@ -27,24 +36,24 @@ the existing slash invocation and audit marker:
 
 ## Problem statement
 
-The current skill has no package boundary, install contract, package metadata,
-or optional-component layout. AgentOps observability helpers exist in the repo,
-but there is no clear packaging distinction between the core orchestration skill
-and optional local run inspection support.
+The current skill has a valid `SKILL.md` entrypoint, but the package boundary,
+install path, and verification procedure are not documented as a clean
+Hermes-native local skill package.
 
-Without a packaging plan, implementation risks mixing behavior changes, docs
-reconciliation, optional observability wiring, and future rename work into one
-large change.
+Without scope narrowing, implementation risks mixing core packaging,
+observability packaging, installer rewrites, docs reconciliation, runtime
+behavior changes, and future rename work into one large change.
 
 ## Smallest useful slice
 
-Create a packaging-only plan and then implement the smallest package structure
-that preserves current behavior:
+Create a core-packaging-only plan and then implement the smallest useful
+documentation/package metadata update that preserves current behavior:
 
 - keep the current skill name and invocation unchanged
-- add package/install metadata and docs around the existing `SKILL.md`
-- define core vs optional observability assets
-- add verification steps for core-only and core-plus-observability installs
+- treat `SKILL.md` frontmatter as the Hermes skill metadata contract
+- add or improve README/install/verification docs around the existing `SKILL.md`
+- do not add `manifest.json` unless official Hermes docs or Hermes CLI behavior requires it
+- keep observability packaging as a follow-up task
 - do not rename the skill in this slice
 
 ## Executor
@@ -58,48 +67,41 @@ Fallback: disabled
 - `skills/hermetic-coding-orchestrator/SKILL.md`
 - `agentops/IDEAS.md`
 - `agentops/USAGE.md`
-- `docs/AGENTOPS-HELPERS.md`
-- `docs/RUN-AUDIT.md`
-- `docs/RUN-OBSERVABILITY.md`
 - `docs/INSTALL.md`
 - `docs/DOCUMENTATION-MAP.md`
 - `scripts/install-coder-profile.sh`
 - `scripts/render-collection-prompt.sh`
-- `scripts/run-opencode-executor.sh`
-- `scripts/render-agentops-run-summary.sh`
-- `scripts/record-agentops-outcome.sh`
-- `scripts/export-agentops-prometheus-metrics.sh`
 - `.gitignore`
 
 ## Write scope
 
-Packaging implementation should be limited to files like:
+Core packaging implementation should be limited to:
 
 - `skills/hermetic-coding-orchestrator/SKILL.md`
 - `skills/hermetic-coding-orchestrator/README.md`
-- `skills/hermetic-coding-orchestrator/manifest.json` or equivalent package metadata, depending on the chosen Hermes package contract
-- `skills/hermetic-coding-orchestrator/observability/README.md`
-- `skills/hermetic-coding-orchestrator/observability/manifest.json` or equivalent optional-component metadata, if needed
 - `docs/INSTALL.md`
 - `docs/DOCUMENTATION-MAP.md`
-- `agentops/USAGE.md`
-- `docs/RUN-AUDIT.md`
-- `docs/RUN-OBSERVABILITY.md`
-- `scripts/install-coder-profile.sh` only if it is the existing local installer entry point that should learn the packaged skill layout
 
-Do not modify task lifecycle helpers unless packaging verification proves a path
-assumption is broken.
+Optional write scope only if needed:
+
+- `scripts/install-coder-profile.sh`
+
+Only modify `scripts/install-coder-profile.sh` if verification proves the
+current installer cannot install or preserve the skill layout.
+
+Do not modify task lifecycle helpers or executor helpers in this slice.
 
 ## Step-by-step packaging plan
 
 Step 1: Define the package contract.
 
 Files:
+- `skills/hermetic-coding-orchestrator/SKILL.md`
 - `skills/hermetic-coding-orchestrator/README.md`
-- optional package metadata file under `skills/hermetic-coding-orchestrator/`
 
 Work:
-- describe what counts as the core skill package
+- state that the core local Hermes skill package is the skill directory plus `SKILL.md`
+- treat `SKILL.md` YAML frontmatter as the package metadata contract
 - document install target and expected load path
 - document required invocation and audit marker
 - state that packaging does not rename the skill
@@ -117,33 +119,28 @@ Work:
 - verify audit marker remains `USING_SKILL: hermetic-coding-orchestrator`
 - do not change canonical prompt text except to clarify packaging/install notes
 
-Step 3: Add package metadata.
+Step 3: Normalize `SKILL.md` frontmatter if needed.
 
 Files:
-- `skills/hermetic-coding-orchestrator/manifest.json` or equivalent
+- `skills/hermetic-coding-orchestrator/SKILL.md`
 
 Work:
-- include package name, description, version, entry file, and optional component declarations
-- keep metadata local and static
-- do not add runtime dependencies unless required by Hermes
+- preserve `name: hermetic-coding-orchestrator`
+- preserve the existing description unless it needs a narrow packaging clarification
+- add `version` and Hermes metadata tags/category only if consistent with official Hermes guidance
+- do not add `manifest.json` unless official Hermes docs or Hermes CLI behavior explicitly requires it
 
-Step 4: Separate optional observability support.
+Step 4: Add core package README.
 
 Files:
-- `skills/hermetic-coding-orchestrator/observability/README.md`
-- optional metadata under `skills/hermetic-coding-orchestrator/observability/`
-- `docs/RUN-AUDIT.md`
-- `docs/RUN-OBSERVABILITY.md`
+- `skills/hermetic-coding-orchestrator/README.md`
 
 Work:
-- document `.agentops-runs/` as local-only
-- list optional helpers:
-  - `scripts/run-opencode-executor.sh`
-  - `scripts/render-agentops-run-summary.sh`
-  - `scripts/record-agentops-outcome.sh`
-  - `scripts/export-agentops-prometheus-metrics.sh`
-- keep Prometheus/Grafana support optional
-- explicitly prohibit exporting raw prompts or committing raw logs
+- document when to use the skill
+- document local install path
+- document verification commands
+- document compatibility guarantees for the name, slash invocation, and audit marker
+- mention optional observability as a follow-up, not part of this package slice
 
 Step 5: Wire install documentation.
 
@@ -153,37 +150,33 @@ Files:
 - `scripts/install-coder-profile.sh` only if needed
 
 Work:
-- document core-only install
-- document core plus optional observability install
+- document core local skill install
 - document verification commands after install
-- preserve existing profile installation behavior unless intentionally extended
+- preserve existing profile installation behavior unless verification proves it is broken
 
 Step 6: Reconcile repo docs.
 
 Files:
-- `agentops/USAGE.md`
-- `docs/AGENTOPS-HELPERS.md`
 - `docs/DOCUMENTATION-MAP.md`
-- `docs/RUN-AUDIT.md`
-- `docs/RUN-OBSERVABILITY.md`
+- `docs/INSTALL.md`
 
 Work:
 - remove contradictory install or invocation guidance
 - point to the packaged skill README as the package authority
-- keep AgentOps lifecycle docs focused on repo workflow, not skill distribution
+- avoid broad AgentOps lifecycle docs rewrites
 
 Step 7: Add verification.
 
 Files:
 - packaging README and/or docs install section
-- optional lightweight verification helper only if existing checks are not enough
 
 Work:
 - verify skill package files exist
 - verify `SKILL.md` front matter still has the expected name
+- verify `SKILL.md` still contains the audit marker
 - verify generated collection prompt still starts with `/hermetic-coding-orchestrator`
 - run `scripts/check-agentops-lifecycle.sh`
-- run relevant shell syntax checks for touched scripts
+- if Hermes CLI is available, verify the skill is visible and slash invocation works
 
 Step 8: Keep rename work separate.
 
@@ -196,15 +189,23 @@ Work:
 - do not change audit marker
 - capture rename as a later migration task with compatibility alias planning
 
+Step 9: Keep optional observability packaging separate.
+
+Files:
+- none in this task unless adding a follow-up note
+
+Work:
+- do not package `.agentops-runs/` support in this slice
+- do not modify `docs/RUN-AUDIT.md` or `docs/RUN-OBSERVABILITY.md` unless a narrow install-doc cross-reference is required
+- track optional observability packaging as a follow-up task, e.g. `skill-01-package-optional-agentops-observability`
+
 ## Requirements
 
 - Packaging must preserve current runtime behavior by default.
-- Core skill install must be separable from optional observability support.
-- Observability must remain opt-in.
-- `.agentops-runs/` artifacts must remain local-only and gitignored.
-- Packaging docs must prohibit raw prompt/log export.
-- Existing helper scripts must keep their current command-line behavior unless a
-  packaging path assumption requires a narrowly documented update.
+- Use `SKILL.md` YAML frontmatter as the Hermes skill package metadata contract for this slice.
+- Do not add `manifest.json` unless official Hermes docs or Hermes CLI behavior explicitly requires it.
+- Observability packaging must remain a follow-up task.
+- Existing helper scripts must keep their current command-line behavior unless installer verification proves a narrowly documented path/install issue.
 - The skill rename must not be included in this slice.
 
 ## Non-goals
@@ -214,36 +215,41 @@ Work:
 - Do not change `USING_SKILL: hermetic-coding-orchestrator`.
 - Do not redesign AgentOps lifecycle.
 - Do not make observability mandatory.
+- Do not package optional AgentOps observability support in this slice.
 - Do not add Prometheus/Grafana as a default install path.
+- Do not introduce `manifest.json` unless Hermes requires it.
 - Do not move or rewrite runtime helper scripts unless needed for package install compatibility.
+- Do not change OpenCode executor behavior.
+- Do not change lifecycle helper behavior.
 - Do not commit `.agentops-runs/` artifacts.
 
 ## Open questions
 
-- What exact metadata filename and schema does Hermes expect for native skill packaging?
-- Should optional observability support be represented as package metadata, a documented install profile, or both?
-- Should `scripts/install-coder-profile.sh` install the packaged skill, or should packaging provide a separate installer?
+- Is the current `scripts/install-coder-profile.sh` path sufficient to install/preserve the skill layout?
 - Should package versioning start at `0.1.0` or follow repository versioning?
 
 ## Promotion decision
 
-Decision: keep_planned
+Decision: promote_after_scope_narrowing
 
 Reason:
-The direction is clear, but the Hermes-native package metadata contract needs to
-be confirmed before this becomes executor-ready.
+Hermes skill packaging contract is confirmed as a skill directory with
+`SKILL.md` frontmatter plus optional supporting files. No separate
+`manifest.json` is required for the core local/native skill package in this
+slice unless official Hermes docs or Hermes CLI behavior explicitly requires it.
 
 Next action:
-Confirm the package metadata/install contract, then promote a narrow
-implementation task for package structure and install docs.
+Promote a narrow ready task that packages the existing
+`hermetic-coding-orchestrator` skill with README/install/verification
+documentation only. Keep observability packaging, installer behavior changes,
+runtime workflow changes, and rename work as follow-up tasks.
 
 ## Promotion criteria
 
 This task can be promoted to ready when:
 
-- Hermes package metadata filename and required fields are known
-- core vs optional observability install shape is chosen
-- installer ownership is decided
+- write scope is narrowed to exact files for core packaging
+- installer behavior has been inspected and either left untouched or a concrete install issue is documented
 - write scope is narrowed to exact files
 - verification commands are concrete
 - rename follow-up remains explicitly out of scope
@@ -263,20 +269,29 @@ Implementation verification when promoted:
 git status --short --branch
 test -f skills/hermetic-coding-orchestrator/SKILL.md
 grep -q '^name: hermetic-coding-orchestrator$' skills/hermetic-coding-orchestrator/SKILL.md
+grep -q 'USING_SKILL: hermetic-coding-orchestrator' skills/hermetic-coding-orchestrator/SKILL.md
 scripts/render-collection-prompt.sh agentops/tasks/ready/<TASK-XXXX-slug>.md | head -1
 scripts/check-agentops-lifecycle.sh
 ```
 
-Add any Hermes-native package validation command once the package contract is
-known.
+If Hermes CLI is available, also verify:
+
+```bash
+hermes skills list | grep hermetic-coding-orchestrator
+hermes --profile coder chat -q "/hermetic-coding-orchestrator Summarize your workflow rules in 3 bullets"
+```
+
+Expected result: the skill is visible, slash invocation works, and the response
+includes `USING_SKILL: hermetic-coding-orchestrator`.
 
 ## Accept criteria
 
 - Packaging plan is file-by-file and step-by-step.
 - Current skill name and invocation remain unchanged.
-- Core skill and optional observability responsibilities are separated.
-- Safety guardrails for local run artifacts, prompts, logs, and metadata are explicit.
-- Open questions identify the blockers to promotion.
+- `SKILL.md` frontmatter is treated as the package metadata contract.
+- No `manifest.json` is introduced unless Hermes requires it.
+- Optional observability packaging is deferred.
+- Open questions identify only the blockers to promotion.
 - No runtime helper behavior changes are made by this planning task.
 
 ## Hermes/coder collection prompt
@@ -334,9 +349,15 @@ Uncertainty:
 
 Origin: `agentops/IDEAS.md` entry to package
 `skills/hermetic-coding-orchestrator/` as a proper Hermes-native skill with
-optional AgentOps observability.
+optional AgentOps observability. This task narrows the first slice to core
+skill packaging only.
 
-Estimated packaging-only effort after open questions are resolved: roughly
-6-10 hours.
+Recommended follow-up tasks:
+
+- `skill-01-package-optional-agentops-observability`
+- `skill-02-improve-installer-support-if-needed`
+- `skill-03-document-skill-activation-troubleshooting`
+
+Estimated core packaging effort after promotion: roughly 4-8 hours.
 
 Assign a TASK-XXXX ID only when promoting to `ready/`.
