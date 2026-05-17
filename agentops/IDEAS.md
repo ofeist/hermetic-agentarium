@@ -36,6 +36,23 @@ Do not execute directly from this file.
     state
   - guardrails: do not hide lifecycle moves, do not ignore unexpected file
     changes, and only mark known lifecycle moves as expected
+- agentops-structure-bootstrap: helper that scaffolds a fresh AgentOps
+  layout in a target repo:
+  - install the `coder` profile (e.g. into `profiles/coder/` or
+    `~/.hermes/profiles/coder/`, mirroring `scripts/install-coder-profile.sh`)
+  - create the AgentOps lifecycle directory tree:
+    - `agentops/tasks/planned/`
+    - `agentops/tasks/ready/`
+    - `agentops/tasks/running/`
+    - `agentops/tasks/review/`
+    - `agentops/tasks/done/`
+    - `agentops/results/`
+    - `agentops/templates/`
+  - intent: turn "set up AgentOps in a new repo" from a manual checklist
+    into one command
+  - open questions: idempotency (refuse vs reuse existing dirs), whether
+    to seed the templates dir, profile install scope (repo-local vs
+    `~/.hermes/`), interaction with `scripts/install-coder-profile.sh`
 - fix `scripts/accept-agentops-task.sh` to update done task status:
   recent TASK-0084, TASK-0085, and TASK-0086 closeouts had the same lifecycle
   drift: task file moved to `agentops/tasks/done/` but internal `## Status`
