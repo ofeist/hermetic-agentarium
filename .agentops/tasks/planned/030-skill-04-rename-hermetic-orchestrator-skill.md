@@ -1,4 +1,4 @@
-# skill-04-rename-skill - Rename skill to a shorter name after core packaging stabilizes
+# 030-skill-04 — Rename hermetic-coding-orchestrator skill to agentops-coder
 
 ## Status
 
@@ -6,33 +6,48 @@ planned
 
 ## Goal
 
-Define a safe migration plan for renaming the skill to a shorter name once the
-core packaging flow is stable, while preserving backward compatibility during
-transition.
+Rename the canonical skill identity to `agentops-coder` with canonical slash
+invocation `/agentops-coder` and canonical audit marker
+`USING_SKILL: agentops-coder`, while preserving backward compatibility for
+`/hermetic-coding-orchestrator` during a defined transition window.
 
 ## Background / why now
 
-Current skill name is considered too long. A shorter name is desired, but the
-new canonical name is not yet defined.
+The `.agentops/` structure migration is complete and bootstrap is in place, so
+the remaining naming migration can proceed against stable paths.
 
-The current compatibility contract is widely referenced:
+The current canonical contract is still:
 
 - skill name: `hermetic-coding-orchestrator`
 - slash invocation: `/hermetic-coding-orchestrator`
 - audit marker: `USING_SKILL: hermetic-coding-orchestrator`
 
+The shorter canonical name is now decided:
+
+- skill name: `agentops-coder`
+- slash invocation: `/agentops-coder`
+- audit marker: `USING_SKILL: agentops-coder`
+
 ## Problem statement
 
-A rename touches prompts, docs, templates, and invocation habits. Doing it
-without a compatibility window risks workflow breakage and traceability drift.
+The current name is long and referenced across installer docs, templates,
+prompt renderers, and profile guidance. A hard cut with no transition would
+break existing slash-invocation habits and make historical comparisons harder
+during rollout.
 
 ## Smallest useful slice
 
-Decide target short name and execute a staged migration:
+Execute a staged rename with compatibility:
 
-- phase 1: introduce new canonical name with compatibility alias
-- phase 2: migrate templates/docs/generators
-- phase 3: remove alias in a later cleanup
+1. Introduce `agentops-coder` as canonical skill name, slash invocation, and
+   audit marker.
+2. Keep `/hermetic-coding-orchestrator` working as a compatibility alias during
+   transition.
+3. Update active generators/templates/docs/scripts to emit/use canonical
+   `/agentops-coder` + `USING_SKILL: agentops-coder`.
+4. Document compatibility window and explicit removal criteria.
+
+Compatibility removal is a separate follow-up task and not in this slice.
 
 ## Executor
 
@@ -47,67 +62,120 @@ Fallback: disabled
 - `.agentops/templates/PLANNED-TASK-TEMPLATE.md`
 - `.agentops/templates/READY-TASK-TEMPLATE.md`
 - `scripts/render-collection-prompt.sh`
+- `scripts/render-opencode-prompt.sh`
+- `scripts/install-coder-profile.sh`
 - `docs/INSTALL.md`
 - `docs/DOCUMENTATION-MAP.md`
+- `README.md`
 - `.agentops/USAGE.md`
+- `profiles/coder/SOUL.md`
 
 ## Write scope
 
-TBD
-
-Likely candidates:
-
-- skill directory and skill metadata
-- prompt/template docs and generators
-- install docs
+- `skills/hermetic-coding-orchestrator/SKILL.md` (compatibility bridge content)
+- `skills/hermetic-coding-orchestrator/README.md`
+- `skills/agentops-coder/SKILL.md` (new canonical skill entrypoint)
+- `skills/agentops-coder/README.md` (new canonical package docs)
+- `scripts/render-collection-prompt.sh`
+- `scripts/render-opencode-prompt.sh`
+- `scripts/install-coder-profile.sh`
+- `.agentops/templates/PLANNED-TASK-TEMPLATE.md`
+- `.agentops/templates/READY-TASK-TEMPLATE.md`
+- `profiles/coder/SOUL.md`
+- `docs/INSTALL.md`
+- `docs/DOCUMENTATION-MAP.md`
+- `README.md`
+- `.agentops/USAGE.md`
+- `.agentops/tasks/ready/` (promotion file move if this planned task becomes ready)
+- `.agentops/tasks/done/` and `.agentops/results/` during lifecycle closeout only
 
 ## Requirements
 
-TBD
-
-Candidate requirements:
-
-- define target short name before implementation
-- preserve compatibility during transition window
-- preserve auditability across old/new name references
+- Canonical skill name becomes `agentops-coder`.
+- Canonical slash invocation becomes `/agentops-coder`.
+- Canonical audit marker becomes `USING_SKILL: agentops-coder`.
+- Preserve backward compatibility for `/hermetic-coding-orchestrator` during
+  transition.
+- Compatibility policy:
+  - Keep old slash invocation functional for at least one full follow-up task
+    cycle after this rename lands.
+  - Old invocation must route to the same behavior contract as canonical.
+  - During transition, output may include both markers, but canonical marker
+    `USING_SKILL: agentops-coder` must be present.
+  - Define explicit alias-removal criteria in docs (no silent removal).
+- Update generators/templates/scripts/docs so newly generated prompts use
+  `/agentops-coder` and canonical marker.
+- Preserve behavior contract (worktree policy, lifecycle ownership, executor
+  constraints); this is a naming migration, not a workflow redesign.
+- Keep historical `.agentops/tasks/done/` and `.agentops/results/` file
+  contents unchanged.
+- Do not change `.agentops-runs/`.
 
 ## Non-goals
 
-- No core packaging redesign.
-- No observability packaging in this slice.
-- No lifecycle workflow redesign.
+- No observability changes.
+- No lifecycle redesign.
+- No user-level `$HOME/.agentops` design or migration.
+- No `.agentops/` structure migration work (already done).
+- No removal of the compatibility alias in this slice.
 
 ## Open questions
 
-- What is the final short skill name?
-- How long should alias compatibility stay in place?
-- Should both old and new audit markers be accepted temporarily?
+None.
 
 ## Promotion decision
 
-Decision: keep_planned
+Decision: promote_after_scope_confirmation
 
 Reason:
-Target name is not yet defined.
+Canonical rename target and compatibility policy are now defined; scope is
+implementation-ready once write-scope boundaries are confirmed.
 
 Next action:
-Decide canonical short name and migration policy, then promote to ready.
+Promote this task to ready and execute the staged rename with compatibility.
 
 ## Promotion criteria
 
-- canonical short name is decided
-- compatibility/alias strategy is explicit
-- read/write scope is concrete
-- verification commands are concrete
+- canonical name/invocation/marker are explicit (`agentops-coder`,
+  `/agentops-coder`, `USING_SKILL: agentops-coder`)
+- compatibility policy is explicit and documented
+- write scope is concrete and limited
+- verification commands are concrete and runnable
 
 ## Verification
 
 ```bash
 git status --short --branch
 git diff --stat
+
+test -f skills/agentops-coder/SKILL.md
+grep -q '^name: agentops-coder$' skills/agentops-coder/SKILL.md
+grep -q 'USING_SKILL: agentops-coder' skills/agentops-coder/SKILL.md
+
+grep -q '/agentops-coder' scripts/render-collection-prompt.sh
+grep -q '/agentops-coder' scripts/render-opencode-prompt.sh
+grep -q 'USING_SKILL: agentops-coder' scripts/render-opencode-prompt.sh
+
+grep -q '/agentops-coder' .agentops/templates/READY-TASK-TEMPLATE.md
+grep -q '/agentops-coder' .agentops/templates/PLANNED-TASK-TEMPLATE.md
+
+grep -q '/agentops-coder' profiles/coder/SOUL.md
+grep -q '/agentops-coder' docs/INSTALL.md
+
+# Compatibility checks (old invocation still documented/supported in this slice)
+grep -q '/hermetic-coding-orchestrator' skills/hermetic-coding-orchestrator/SKILL.md
+grep -q '/hermetic-coding-orchestrator' docs/INSTALL.md
+
+# Installer includes canonical skill path
+grep -q 'skills/agentops-coder' scripts/install-coder-profile.sh
 ```
 
 ## Accept criteria
 
-- Rename plan preserves compatibility and traceability.
-- Scope is limited and migration is staged.
+- Canonical references use `agentops-coder` / `/agentops-coder` /
+  `USING_SKILL: agentops-coder`.
+- Old slash invocation remains functional/documented during transition.
+- New generated prompts and templates use canonical naming.
+- Installer/docs/profile guidance are updated to canonical naming.
+- Backward compatibility policy and alias-removal criteria are documented.
+- No observability, lifecycle redesign, or `$HOME/.agentops` scope is mixed in.
