@@ -1,4 +1,4 @@
-# agentops-xx-migrate-agentops-to-dot-agentops - Migrate AgentOps paths from `agentops/` to `.agentops/`
+# agentops-structure-00-plan-dot-agentops-repo-migration - Plan repo-local migration from `agentops/` to `.agentops/`
 
 ## Status
 
@@ -6,8 +6,9 @@ planned
 
 ## Goal
 
-Plan a safe repository-wide migration from `agentops/` to `.agentops/` with
-clear compatibility handling and low workflow disruption.
+Produce a planning/inventory slice for a safe repository-wide migration from
+`agentops/` to `.agentops/`, including cutover strategy and rollback, without
+moving directories yet.
 
 ## Background / why now
 
@@ -23,12 +24,14 @@ task artifacts unless migration is staged and consistently applied.
 
 ## Smallest useful slice
 
-Design a staged migration:
+Design a staged migration plan:
 
 - phase 1: inventory every hardcoded `agentops/` path
-- phase 2: introduce compatibility handling (or bulk atomic cutover strategy)
-- phase 3: migrate scripts/docs/templates and validate lifecycle checks
-- phase 4: remove compatibility layer if one was used
+- phase 2: decide compatibility-based vs atomic cutover
+- phase 3: decide handling for historical `done/` and `results/` files
+- phase 4: define verification and rollback
+
+Do not move directories in this task.
 
 ## Executor
 
@@ -48,12 +51,12 @@ Fallback: disabled
 
 TBD
 
-Likely candidates:
+Likely candidates (planning docs/notes only):
 
 - `scripts/*.sh` that reference `agentops/`
 - `docs/*.md` with lifecycle path references
 - templates and planned/ready task references
-- directory move from `agentops/` to `.agentops/` when ready
+- no directory move in this task
 
 ## Requirements
 
@@ -61,10 +64,11 @@ TBD
 
 Candidate requirements:
 
-- no data loss in lifecycle folders/tasks/results
-- lifecycle helpers continue to function
-- migration path is reversible or checkpointed
-- docs and templates are updated consistently
+- no path migration actions are executed in this task
+- inventory includes scripts, docs, templates, and known path-sensitive checks
+- migration strategy explicitly chooses atomic vs compatibility-based approach
+- handling of historical `done/` and `results/` files is explicit
+- verification and rollback are explicitly defined
 
 ## Non-goals
 
@@ -83,11 +87,12 @@ Candidate requirements:
 Decision: keep_planned
 
 Reason:
-This is a cross-cutting migration and needs explicit inventory and cutover
-strategy before execution.
+This is a cross-cutting migration and should start as planning/inventory only
+before any path movement is attempted.
 
 Next action:
-Prepare a concrete migration plan with exact path impacts and verification.
+Prepare a concrete migration plan with exact path impacts, cutover strategy,
+historical-file handling, verification, and rollback.
 
 ## Promotion criteria
 
