@@ -1,14 +1,14 @@
-# agentops-structure-00-plan-dot-agentops-repo-migration - Plan repo-local migration from `agentops/` to `.agentops/`
+# TASK-0095 - Plan dot-agentops repo migration (planning output only)
 
 ## Status
 
-planned
+ready
 
 ## Goal
 
-Produce a planning/inventory slice for a safe repository-wide migration from
+Produce a planning/inventory output for a safe repository-wide migration from
 `agentops/` to `.agentops/`, including cutover strategy and rollback, without
-moving directories yet.
+performing any directory migration actions.
 
 ## Background / why now
 
@@ -68,6 +68,8 @@ directories in this slice.
   handled.
 - Define concrete verification commands for the future migration task.
 - Define rollback strategy for the future migration task.
+- This ready task is planning-only: executor output must be the migration plan,
+  not an implemented migration.
 
 ## Expected planning output
 
@@ -98,15 +100,15 @@ The executor must produce a migration plan that answers:
 
 ## Promotion decision
 
-Decision: keep_planned
+Decision: promote_to_ready
 
 Reason:
-This is a cross-cutting migration and should start as planning/inventory only
-before any path movement is attempted.
+This is a cross-cutting migration, but this ready task is intentionally
+planning/inventory-only before any path movement is attempted.
 
 Next action:
-Prepare a concrete migration plan with exact path impacts, cutover strategy,
-historical-file handling, verification, and rollback.
+Execute the planning slice and produce a concrete migration plan with exact path
+impacts, cutover strategy, historical-file handling, verification, and rollback.
 
 ## Promotion criteria
 
