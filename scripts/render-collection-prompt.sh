@@ -6,10 +6,10 @@ usage() {
     echo "" >&2
     echo "Render the canonical Hermes/coder collection prompt for a ready AgentOps task." >&2
     echo "" >&2
-    echo "The task path must be under agentops/tasks/ready/." >&2
+    echo "The task path must be under .agentops/tasks/ready/." >&2
     echo "" >&2
     echo "Example:" >&2
-    echo "  $0 agentops/tasks/ready/TASK-0083-hermes-coder-collection-prompt-helper.md" >&2
+    echo "  $0 .agentops/tasks/ready/TASK-0083-hermes-coder-collection-prompt-helper.md" >&2
 }
 
 if [[ $# -ne 1 ]]; then
@@ -18,7 +18,7 @@ if [[ $# -ne 1 ]]; then
 fi
 
 TASK_PATH="$1"
-READY_DIR="agentops/tasks/ready"
+READY_DIR=".agentops/tasks/ready"
 
 if [[ ! -f "$TASK_PATH" ]]; then
     echo "Error: task file '$TASK_PATH' not found or is not a regular file" >&2
@@ -31,7 +31,7 @@ RESOLVED_READY_DIR="$(realpath "$READY_DIR")"
 case "$RESOLVED_TASK_PATH" in
     "$RESOLVED_READY_DIR"/*) ;;
     *)
-        echo "Error: task path must be under agentops/tasks/ready/" >&2
+        echo "Error: task path must be under .agentops/tasks/ready/" >&2
         exit 1
         ;;
 esac

@@ -156,8 +156,8 @@ Start here:
 - [OpenCode Executor Workflow](docs/OPENCODE-EXECUTOR-WORKFLOW.md) — Hermes/OpenCode execution model.
 - [Debugging](docs/DEBUGGING.md) — common failures and safe checks.
 - [POC Status](docs/POC-STATUS.md) — current validated POC status.
-- [AgentOps Task Lifecycle](agentops/TASK-LIFECYCLE.md) — task lifecycle states and decisions.
-- [AgentOps Usage Guide](agentops/USAGE.md) — practical lifecycle usage.
+- [AgentOps Task Lifecycle](.agentops/TASK-LIFECYCLE.md) — task lifecycle states and decisions.
+- [AgentOps Usage Guide](.agentops/USAGE.md) — practical lifecycle usage.
 - [Security](docs/SECURITY.md) — repository and secret-handling rules.
 - [DeepSeek Provider Setup](docs/DEEPSEEK_PROVIDER_SETUP.md) — configure Hermes so the parent can stay on OpenAI while delegated child agents use DeepSeek.
 

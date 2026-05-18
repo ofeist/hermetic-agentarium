@@ -36,7 +36,7 @@ Fallback: disabled
 - output of `agentops-structure-00-plan-dot-agentops-repo-migration`
 - current lifecycle directories/templates
 - `scripts/check-agentops-lifecycle.sh`
-- `agentops/IDEAS.md` bootstrap note
+- `.agentops/IDEAS.md` bootstrap note
 
 ## Write scope
 

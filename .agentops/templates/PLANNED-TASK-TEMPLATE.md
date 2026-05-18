@@ -14,7 +14,7 @@ This keeps promotion cheap and mechanical:
 - change `Status` from `planned` to `ready`
 - replace only real-unknown `TBD` sections with concrete values
 - resolve or remove open questions
-- move the file from `agentops/tasks/planned/` to `agentops/tasks/ready/`
+- move the file from `.agentops/tasks/planned/` to `.agentops/tasks/ready/`
 - assign a `TASK-XXXX` ID only when promoting to `ready/`
 
 ---
@@ -157,7 +157,7 @@ Synchronized copy policy:
 
 Execute AgentOps ready task:
 
-agentops/tasks/ready/TASK-xxxx-short-slug.md
+.agentops/tasks/ready/TASK-xxxx-short-slug.md
 
 Use the Hermes/OpenCode executor workflow from your profile/skill.
 

@@ -124,7 +124,7 @@ Synchronized copy policy:
 
 Execute AgentOps ready task:
 
-agentops/tasks/ready/TASK-xxxx-short-slug.md
+.agentops/tasks/ready/TASK-xxxx-short-slug.md
 
 Use the Hermes/OpenCode executor workflow from your profile/skill.
 

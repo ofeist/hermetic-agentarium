@@ -10,7 +10,7 @@ usage() {
     echo "  scripts/render-review-prompt.sh <task-file> <verification-notes-file>" >&2
     echo "" >&2
     echo "Arguments:" >&2
-    echo "  task-id-slug  Task identifier matching agentops/tasks/ready/<task-id-slug>.md" >&2
+    echo "  task-id-slug  Task identifier matching .agentops/tasks/ready/<task-id-slug>.md" >&2
     echo "" >&2
     echo "Options:" >&2
     echo "  -h, --help    Show this help message and exit" >&2
@@ -36,7 +36,7 @@ if [[ "$TASK_ID" == *"/"* || "$TASK_ID" == *".."* ]]; then
     exit 1
 fi
 
-READY_TASK_FILE="agentops/tasks/ready/$TASK_ID.md"
+READY_TASK_FILE=".agentops/tasks/ready/$TASK_ID.md"
 
 cat <<HEREDOC
 # Parent verification / context notes

@@ -4,11 +4,11 @@ This document describes the lightweight planning and promotion process for Agent
 
 ## Directory Roles
 
-- **agentops/IDEAS.md**: Raw brainstormed ideas and high-level inspirations. A flat list of prospective work.
-- **agentops/tasks/planned/**: Refinement space for fleshing out ideas into candidate tasks. Defines scope, context, and entry criteria before turning into executable work.
-- **agentops/tasks/ready/**: Approved, scoped, and detailed tasks ready for execution by AgentOps or delegated agents.
-- **agentops/tasks/done/**: Completed tasks with recorded outcomes, results, and any follow-up notes.
-- **agentops/results/**: Safe committed result summaries for completed tasks.
+- **.agentops/IDEAS.md**: Raw brainstormed ideas and high-level inspirations. A flat list of prospective work.
+- **.agentops/tasks/planned/**: Refinement space for fleshing out ideas into candidate tasks. Defines scope, context, and entry criteria before turning into executable work.
+- **.agentops/tasks/ready/**: Approved, scoped, and detailed tasks ready for execution by AgentOps or delegated agents.
+- **.agentops/tasks/done/**: Completed tasks with recorded outcomes, results, and any follow-up notes.
+- **.agentops/results/**: Safe committed result summaries for completed tasks.
 
 ## Planned/ Directory Purpose
 
@@ -23,7 +23,7 @@ Each planned task should include the following sections:
 - **Smallest useful slice**: The minimal deliverable that provides value or feedback.
 - **Non-goals**: Explicitly out-of-scope items.
 - **Open questions**: Unresolved uncertainties or dependencies.
-- **Candidate ready task**: A draft of the ready-style task that could be moved to agentops/tasks/ready/ once criteria are met.
+- **Candidate ready task**: A draft of the ready-style task that could be moved to .agentops/tasks/ready/ once criteria are met.
 
 ## Promotion Criteria
 
@@ -35,7 +35,7 @@ A planned task is eligible for promotion to ready when:
 4. Candidate ready task is written in the ready-task format.
 5. It has been selected as the next useful slice.
 
-Once these criteria are satisfied, move the file from **agentops/tasks/planned/** to **agentops/tasks/ready/**.
+Once these criteria are satisfied, move the file from **.agentops/tasks/planned/** to **.agentops/tasks/ready/**.
 
 ---
 

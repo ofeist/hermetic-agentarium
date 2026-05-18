@@ -25,7 +25,7 @@ if [[ "$TASK_ID_SLUG" == *"/"* || "$TASK_ID_SLUG" == *".."* ]]; then
     exit 1
 fi
 
-READY_TASK_FILE="agentops/tasks/ready/$TASK_ID_SLUG.md"
+READY_TASK_FILE=".agentops/tasks/ready/$TASK_ID_SLUG.md"
 PROMPT_FILE="/tmp/$TASK_ID_SLUG.prompt.md"
 RENDER_SCRIPT="scripts/render-opencode-prompt.sh"
 EXECUTOR_SCRIPT="scripts/run-opencode-executor.sh"

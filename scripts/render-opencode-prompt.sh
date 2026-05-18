@@ -7,7 +7,7 @@ usage() {
     echo "Render a ready AgentOps task file into a standardized OpenCode executor prompt." >&2
     echo "" >&2
     echo "Example:" >&2
-    echo "  $0 agentops/tasks/ready/TASK-xxxx-description.md > /tmp/TASK-xxxx.prompt.md" >&2
+    echo "  $0 .agentops/tasks/ready/TASK-xxxx-description.md > /tmp/TASK-xxxx.prompt.md" >&2
 }
 
 if [[ $# -ne 1 ]]; then

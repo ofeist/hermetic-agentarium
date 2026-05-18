@@ -1,6 +1,6 @@
 # AgentOps Usage Guide
 
-This guide explains how to use the lightweight `agentops/` lifecycle directory.
+This guide explains how to use the lightweight `.agentops/` lifecycle directory.
 
 The goal is not to replace Git, tests, or code review. The goal is to keep agentic tasks explicit, reviewable, and easy to resume.
 
@@ -12,12 +12,12 @@ Tasks move through these states:
 
 The current directories are:
 
-    agentops/tasks/planned/
-    agentops/tasks/ready/
-    agentops/tasks/running/
-    agentops/tasks/review/
-    agentops/tasks/done/
-    agentops/results/
+    .agentops/tasks/planned/
+    .agentops/tasks/ready/
+    .agentops/tasks/running/
+    .agentops/tasks/review/
+    .agentops/tasks/done/
+    .agentops/results/
 
 ## State meanings
 
@@ -30,8 +30,8 @@ The current directories are:
 
 ### Planned-to-ready promotion
 
-New planned tasks should start from `agentops/templates/PLANNED-TASK-TEMPLATE.md`.
-Ready tasks should start from `agentops/templates/READY-TASK-TEMPLATE.md`.
+New planned tasks should start from `.agentops/templates/PLANNED-TASK-TEMPLATE.md`.
+Ready tasks should start from `.agentops/templates/READY-TASK-TEMPLATE.md`.
 
 Promotion from `planned/` to `ready/` is a **mechanical transformation**, not a
 rewrite. Ready-shaped planned tasks should keep their existing structure and
@@ -97,7 +97,7 @@ A ready task should include:
 
 A result file should be written under:
 
-    agentops/results/TASK-xxxx-result.md
+    .agentops/results/TASK-xxxx-result.md
 
 It should include:
 
@@ -129,21 +129,21 @@ It should include:
 
 Move a completed task from `ready/` to `done/`:
 
-    git mv agentops/tasks/ready/TASK-xxxx-name.md agentops/tasks/done/TASK-xxxx-name.md
+    git mv .agentops/tasks/ready/TASK-xxxx-name.md .agentops/tasks/done/TASK-xxxx-name.md
 
 Create the result summary:
 
-    $EDITOR agentops/results/TASK-xxxx-result.md
+    $EDITOR .agentops/results/TASK-xxxx-result.md
 
 Review:
 
     git status --short --branch
     git diff --stat
-    git diff -- agentops/tasks/done/TASK-xxxx-name.md agentops/results/TASK-xxxx-result.md
+    git diff -- .agentops/tasks/done/TASK-xxxx-name.md .agentops/results/TASK-xxxx-result.md
 
 Commit:
 
-    git add agentops/tasks/done/TASK-xxxx-name.md agentops/results/TASK-xxxx-result.md
+    git add .agentops/tasks/done/TASK-xxxx-name.md .agentops/results/TASK-xxxx-result.md
     git commit -m "TASK-xxxx: close out task name"
 
 ## Parent review rules

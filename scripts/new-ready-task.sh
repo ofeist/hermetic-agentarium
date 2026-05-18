@@ -23,13 +23,13 @@ if [[ "$TASK_SLUG" == *"/"* || "$TASK_SLUG" == *".."* ]]; then
   exit 1
 fi
 
-TEMPLATE="agentops/templates/READY-TASK-TEMPLATE.md"
+TEMPLATE=".agentops/templates/READY-TASK-TEMPLATE.md"
 if [ ! -f "$TEMPLATE" ]; then
   echo "Error: template file not found: $TEMPLATE" >&2
   exit 1
 fi
 
-OUTPUT_DIR="agentops/tasks/ready"
+OUTPUT_DIR=".agentops/tasks/ready"
 OUTPUT_FILE="$OUTPUT_DIR/${TASK_SLUG}.md"
 
 # Ensure output does not already exist

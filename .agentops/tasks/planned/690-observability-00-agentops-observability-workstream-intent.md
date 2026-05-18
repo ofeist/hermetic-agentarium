@@ -71,13 +71,13 @@ Likely candidates:
 - `docs/RUN-AUDIT.md`
 - `docs/RUN-OBSERVABILITY.md`
 - `docs/DOCUMENTATION-MAP.md`
-- `agentops/tasks/ready/TASK-0089-run-outcome-metadata.md` (or its
+- `.agentops/tasks/ready/TASK-0089-run-outcome-metadata.md` (or its
   `done/` counterpart, once landed)
-- `agentops/tasks/planned/71-observability-04-wire-decision-helpers-to-outcome-writer.md`
-- `agentops/tasks/planned/72-observability-05-noop-blocked-revert-outcome-paths.md`
-- `agentops/tasks/planned/80-observability-02-prompt-hash-metadata.md`
-- `agentops/tasks/planned/90-observability-03-agent-model-usage-audit.md`
-- `agentops/tasks/planned/100-policy-01-cost-aware-agentops-model-routing.md`
+- `.agentops/tasks/planned/71-observability-04-wire-decision-helpers-to-outcome-writer.md`
+- `.agentops/tasks/planned/72-observability-05-noop-blocked-revert-outcome-paths.md`
+- `.agentops/tasks/planned/80-observability-02-prompt-hash-metadata.md`
+- `.agentops/tasks/planned/90-observability-03-agent-model-usage-audit.md`
+- `.agentops/tasks/planned/100-policy-01-cost-aware-agentops-model-routing.md`
 
 ## Write scope
 

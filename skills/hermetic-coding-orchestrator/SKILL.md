@@ -169,7 +169,7 @@ For AgentOps tasks that specify OpenCode as executor:
    - Preferred: `scripts/start-agentops-worktree.sh <TASK-XXXX[-slug]>` to create or prepare a task-specific branch and sibling worktree from `origin/main`. If it fails, stop and report `blocked` instead of editing on `main`.
    - Fallback: `scripts/start-agentops-task.sh <task-id-slug>` may still be used when a worktree is not desired, but prefer the worktree helper for all executor work.
 
-3. Read the ready task file from `agentops/tasks/ready/`.
+3. Read the ready task file from `.agentops/tasks/ready/`.
 
 4. Generate a bounded executor prompt in `/tmp` that preserves:
    - goal
@@ -211,7 +211,7 @@ Run task-specific tests/checks when applicable.
 - `scripts/submit-agentops-task.sh` owns `ready -> review`.
 - `scripts/accept-agentops-task.sh` owns `review -> done`.
 - Do not manually move lifecycle task files unless performing an explicit reconciliation task.
-- Accepted tasks must be under `agentops/tasks/done/`, visibly marked `done`, and must have a result note under `agentops/results/`.
+- Accepted tasks must be under `.agentops/tasks/done/`, visibly marked `done`, and must have a result note under `.agentops/results/`.
 - After lifecycle closeout, run `scripts/check-agentops-lifecycle.sh` to detect inconsistencies.
 - Treat duplicate task IDs, done tasks still marked `ready`, and result notes pointing to missing task paths as workflow issues that must be resolved.
 
@@ -231,7 +231,7 @@ and wording** unless a section is:
 **Normal promotion edits (mechanical only):**
 
 Do only these edits during promotion:
-- move file from `agentops/tasks/planned/` to `agentops/tasks/ready/`
+- move file from `.agentops/tasks/planned/` to `.agentops/tasks/ready/`
 - assign the next `TASK-XXXX` ID
 - update the top-level title and file path
 - change `Status` from `planned` to `ready`
@@ -267,7 +267,7 @@ AgentOps execution prompts MUST start with `/hermetic-coding-orchestrator` so th
 
 Execute AgentOps ready task:
 
-agentops/tasks/ready/TASK-xxxx-short-slug.md
+.agentops/tasks/ready/TASK-xxxx-short-slug.md
 
 Use the Hermes/OpenCode executor workflow from your profile/skill.
 

@@ -7,7 +7,7 @@ planned
 ## Goal
 
 Evaluate whether AgentOps task/runtime state should remain fully repo-local under
-`.agentops/` (or `agentops/` during migration), or whether some state should
+`.agentops/` (or `.agentops/` during migration), or whether some state should
 live in a user-level home such as `$HOME/.agentops/`.
 
 ## Background / why now
@@ -20,7 +20,7 @@ user-level runtime/state.
 
 Two concerns must be distinguished clearly:
 
-- `repo/.agentops/` (or `repo/agentops/`): project-local lifecycle metadata
+- `repo/.agentops/` (or `repo/.agentops/`): project-local lifecycle metadata
 - `$HOME/.agentops/`: user-level runtime/state across repositories
 
 Without this distinction, future tooling can mix scope boundaries and create

@@ -7,7 +7,7 @@ usage() {
     echo "Accept a completed AgentOps review task: move from review/ to done/ and create result summary." >&2
     echo "" >&2
     echo "Arguments:" >&2
-    echo "  task-id-slug   Task identifier matching agentops/tasks/review/<task-id-slug>.md" >&2
+    echo "  task-id-slug   Task identifier matching .agentops/tasks/review/<task-id-slug>.md" >&2
     echo "  decision-note  Short note explaining the accept decision" >&2
     echo "" >&2
     echo "Options:" >&2
@@ -35,11 +35,11 @@ if [[ "$TASK_SLUG" == *"/"* || "$TASK_SLUG" == *".."* ]]; then
   exit 1
 fi
 
-REVIEW_DIR="agentops/tasks/review"
+REVIEW_DIR=".agentops/tasks/review"
 REVIEW_FILE="${REVIEW_DIR}/${TASK_SLUG}.md"
-DONE_DIR="agentops/tasks/done"
+DONE_DIR=".agentops/tasks/done"
 DONE_FILE="${DONE_DIR}/${TASK_SLUG}.md"
-RESULT_DIR="agentops/results"
+RESULT_DIR=".agentops/results"
 RESULT_FILE="${RESULT_DIR}/${TASK_SLUG}-result.md"
 
 if [ ! -f "$REVIEW_FILE" ]; then

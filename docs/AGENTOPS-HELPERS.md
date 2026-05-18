@@ -69,9 +69,9 @@ not check:
 
 - Orphaned worktrees (`git worktree list` entries with no matching task in
   any lifecycle directory, or entries pointing to removed branches).
-- Tasks in `agentops/tasks/running/` whose `## Status` is not `running`.
-- Tasks in `agentops/tasks/review/` whose `## Status` is not `review`.
-- Tasks in `agentops/tasks/ready/` whose `## Status` is not `ready` or does
+- Tasks in `.agentops/tasks/running/` whose `## Status` is not `running`.
+- Tasks in `.agentops/tasks/review/` whose `## Status` is not `review`.
+- Tasks in `.agentops/tasks/ready/` whose `## Status` is not `ready` or does
   not match.
 - Stale `running/` entries (task file exists but `.agentops-runs/<task-id>/`
   metadata shows the executor exited hours ago).
@@ -147,7 +147,7 @@ Verification:
 # Verify the two helpers compose for a task in review
 TASK_SLUG="TASK-0081-review-handoff-helper"
 scripts/render-verification-notes.sh "$TASK_SLUG" > /tmp/verify-notes.md
-scripts/render-review-prompt.sh "agentops/tasks/review/$TASK_SLUG.md" /tmp/verify-notes.md > /tmp/review-packet.md
+scripts/render-review-prompt.sh ".agentops/tasks/review/$TASK_SLUG.md" /tmp/verify-notes.md > /tmp/review-packet.md
 head -5 /tmp/review-packet.md
 ```
 
@@ -175,15 +175,15 @@ Lifecycle state touched:
 Purpose:
 Fix `scripts/accept-agentops-task.sh` to update the moved task file's
 `## Status` from `review` to `done` on accept. Currently the helper moves
-`agentops/tasks/review/<slug>.md` to `agentops/tasks/done/<slug>.md` but
+`.agentops/tasks/review/<slug>.md` to `.agentops/tasks/done/<slug>.md` but
 leaves the internal status as `review` — lifecycle drift observed on
 TASK-0084, TASK-0085, and TASK-0086 closeouts.
 
 Input:
-Task file path under `agentops/tasks/review/`.
+Task file path under `.agentops/tasks/review/`.
 
 Output:
-File moved to `agentops/tasks/done/` with `## Status` updated to `done`.
+File moved to `.agentops/tasks/done/` with `## Status` updated to `done`.
 
 Verification:
 ```bash
@@ -191,8 +191,8 @@ Verification:
 # (exact fixture shape to be designed at implementation time)
 TEMP_DIR=$(scripts/agentops-tmp-dir.sh)
 # ... prepare fixture ...
-scripts/accept-agentops-task.sh "$TEMP_DIR/agentops/tasks/review/TEST-X.md"
-grep -q 'done' "$TEMP_DIR/agentops/tasks/done/TEST-X.md" || echo "FAIL: status not updated"
+scripts/accept-agentops-task.sh "$TEMP_DIR/.agentops/tasks/review/TEST-X.md"
+grep -q 'done' "$TEMP_DIR/.agentops/tasks/done/TEST-X.md" || echo "FAIL: status not updated"
 scripts/check-agentops-lifecycle.sh
 ```
 
@@ -249,7 +249,7 @@ None (reads lifecycle directories).
 
 Output:
 Reserved ID written to a lightweight reservation file (e.g.
-`agentops/.task-id-reservation`).
+`.agentops/.task-id-reservation`).
 
 Verification:
 ```bash
@@ -314,7 +314,7 @@ Collection prompt with inline worktree setup instruction.
 Verification:
 ```bash
 bash -n scripts/render-collection-prompt.sh
-scripts/render-collection-prompt.sh --with-worktree agentops/tasks/ready/TASK-0088-slug.md
+scripts/render-collection-prompt.sh --with-worktree .agentops/tasks/ready/TASK-0088-slug.md
 ```
 
 Notes:

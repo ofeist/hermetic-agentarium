@@ -7,11 +7,11 @@ usage() {
     echo "Create a new ready revision task from an existing reviewed/done/ready task." >&2
     echo "" >&2
     echo "The source task is not moved or deleted. The new task is created under" >&2
-    echo "agentops/tasks/ready/ and includes context from the source plus the revision note." >&2
+    echo ".agentops/tasks/ready/ and includes context from the source plus the revision note." >&2
     echo "" >&2
     echo "Arguments:" >&2
     echo "  source-task-id-or-path  Task id slug (e.g. TASK-xxxx) or path under" >&2
-    echo "                          agentops/tasks/{review,done,ready}/" >&2
+    echo "                          .agentops/tasks/{review,done,ready}/" >&2
     echo "  new-task-id-slug        Slug for the new revision task (e.g. TASK-xxxx-revision-1)" >&2
     echo "  revision-note           Short note describing the revision reason" >&2
     echo "" >&2
@@ -48,8 +48,8 @@ if [[ "$SOURCE_ARG" == *".md" ]]; then
     exit 1
   }
   case "$SOURCE_FILE" in
-    "$(realpath "agentops/tasks/review")"/*|"$(realpath "agentops/tasks/done")"/*|"$(realpath "agentops/tasks/ready")"/*) ;;
-    *) echo "Error: source path must be under agentops/tasks/{review,done,ready}/: $SOURCE_ARG" >&2; exit 1 ;;
+    "$(realpath ".agentops/tasks/review")"/*|"$(realpath ".agentops/tasks/done")"/*|"$(realpath ".agentops/tasks/ready")"/*) ;;
+    *) echo "Error: source path must be under .agentops/tasks/{review,done,ready}/: $SOURCE_ARG" >&2; exit 1 ;;
   esac
 else
   SOURCE_SLUG="$SOURCE_ARG"
@@ -59,19 +59,19 @@ else
   fi
   SOURCE_FILE=""
   for dir in review done ready; do
-    candidate="agentops/tasks/${dir}/${SOURCE_SLUG}.md"
+    candidate=".agentops/tasks/${dir}/${SOURCE_SLUG}.md"
     if [ -f "$candidate" ]; then
       SOURCE_FILE="$candidate"
       break
     fi
   done
   if [ -z "$SOURCE_FILE" ]; then
-    echo "Error: source task not found in agentops/tasks/{review,done,ready}/: $SOURCE_SLUG" >&2
+    echo "Error: source task not found in .agentops/tasks/{review,done,ready}/: $SOURCE_SLUG" >&2
     exit 1
   fi
 fi
 
-OUTPUT_DIR="agentops/tasks/ready"
+OUTPUT_DIR=".agentops/tasks/ready"
 OUTPUT_FILE="${OUTPUT_DIR}/${NEW_SLUG}.md"
 
 if [ -e "$OUTPUT_FILE" ]; then

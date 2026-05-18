@@ -14,7 +14,7 @@ usage() {
     echo "  -h, --help             Show this help message and exit" >&2
     echo "" >&2
     echo "Example:" >&2
-    echo "  $0 agentops/tasks/ready/TASK-0067-revision-prompt-renderer.md /tmp/reviewer-feedback.md > /tmp/revision.prompt.md" >&2
+    echo "  $0 .agentops/tasks/ready/TASK-0067-revision-prompt-renderer.md /tmp/reviewer-feedback.md > /tmp/revision.prompt.md" >&2
 }
 
 if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then

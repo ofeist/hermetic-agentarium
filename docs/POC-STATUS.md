@@ -26,7 +26,7 @@ The minimal Hermes AgentOps executor loop has been validated. Hermes/coder can a
 - `docs/OPENCODE-EXECUTOR-WORKFLOW.md`
 - `docs/HERMES-OPENCODE-RUN.md`
 - `docs/HERMES-OPENCODE-RUNTIME.md`
-- `agentops/` task lifecycle structure
+- `.agentops/` task lifecycle structure
 - `profiles/coder/SOUL.md`
 - `skills/hermetic-coding-orchestrator/SKILL.md`
 
@@ -70,5 +70,5 @@ The POC proves the minimal executor bridge. Further work should focus on hardeni
 Phase 3 should focus on minimal task lifecycle operations:
 
 - move completed tasks from `ready/` to `done/`
-- write result records under `agentops/results/`
+- write result records under `.agentops/results/`
 - keep lifecycle changes small, explicit, and reviewable

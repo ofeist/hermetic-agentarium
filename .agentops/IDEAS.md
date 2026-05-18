@@ -20,7 +20,7 @@ Do not execute directly from this file.
   - guardrails: observability remains optional, do not export raw prompts, do
     not commit raw logs, prefer metadata/hashes/counts/sizes/summaries, keep
     Prometheus/Grafana as an optional later layer
-- reconcile `agentops/USAGE.md` lines 47–94 ("Minimal task file") with the
+- reconcile `.agentops/USAGE.md` lines 47–94 ("Minimal task file") with the
   templates. The inline sketch uses section names (`Constraints`,
   `Implementation requirements`, `Decision states`) that don't match either
   `PLANNED-TASK-TEMPLATE.md` or `READY-TASK-TEMPLATE.md`. Replace the
@@ -41,13 +41,13 @@ Do not execute directly from this file.
   - install the `coder` profile (e.g. into `profiles/coder/` or
     `~/.hermes/profiles/coder/`, mirroring `scripts/install-coder-profile.sh`)
   - create the AgentOps lifecycle directory tree:
-    - `agentops/tasks/planned/`
-    - `agentops/tasks/ready/`
-    - `agentops/tasks/running/`
-    - `agentops/tasks/review/`
-    - `agentops/tasks/done/`
-    - `agentops/results/`
-    - `agentops/templates/`
+    - `.agentops/tasks/planned/`
+    - `.agentops/tasks/ready/`
+    - `.agentops/tasks/running/`
+    - `.agentops/tasks/review/`
+    - `.agentops/tasks/done/`
+    - `.agentops/results/`
+    - `.agentops/templates/`
   - intent: turn "set up AgentOps in a new repo" from a manual checklist
     into one command
   - open questions: idempotency (refuse vs reuse existing dirs), whether
@@ -55,7 +55,7 @@ Do not execute directly from this file.
     `~/.hermes/`), interaction with `scripts/install-coder-profile.sh`
 - fix `scripts/accept-agentops-task.sh` to update done task status:
   recent TASK-0084, TASK-0085, and TASK-0086 closeouts had the same lifecycle
-  drift: task file moved to `agentops/tasks/done/` but internal `## Status`
+  drift: task file moved to `.agentops/tasks/done/` but internal `## Status`
   remained `review`
   - on accept, update moved task status from `review` to `done`
   - verification:
@@ -76,12 +76,12 @@ Do not execute directly from this file.
 
 Problem:
 Some verification commands are valid only before lifecycle closeout, while the
-task file is still under `agentops/tasks/ready/`. After closeout, the task is
-moved to `agentops/tasks/done/`, and those commands may no longer be replayable.
+task file is still under `.agentops/tasks/ready/`. After closeout, the task is
+moved to `.agentops/tasks/done/`, and those commands may no longer be replayable.
 
 Example:
 `scripts/render-collection-prompt.sh` accepts ready-task paths, but a result
-note may later record or rewrite the command with an `agentops/tasks/done/...`
+note may later record or rewrite the command with an `.agentops/tasks/done/...`
 path.
 
 Goal:
@@ -94,7 +94,7 @@ Possible implementation:
 - document that ready-path-only helpers must not be recorded as post-closeout
   replayable checks
 - optionally add a lifecycle/result checker warning for patterns like:
-  `render-collection-prompt.sh agentops/tasks/done/`
+  `render-collection-prompt.sh .agentops/tasks/done/`
 
 Non-goals:
 - do not change `render-collection-prompt.sh` behavior unless separately
@@ -135,12 +135,12 @@ Open questions:
 When an idea becomes actionable, promote it gradually:
 
     IDEAS.md
-      -> agentops/tasks/planned/
-      -> agentops/tasks/ready/
-      -> agentops/tasks/running/
-      -> agentops/tasks/review/
-      -> agentops/tasks/done/
-      -> agentops/results/
+      -> .agentops/tasks/planned/
+      -> .agentops/tasks/ready/
+      -> .agentops/tasks/running/
+      -> .agentops/tasks/review/
+      -> .agentops/tasks/done/
+      -> .agentops/results/
 
 Meaning:
 

@@ -7,8 +7,8 @@ The AgentOps lifecycle directory is being migrated from `agentops/` to
 operational metadata rather than primary product code.
 
 This document is the reference for the migration. The detailed migration plan
-lives at `agentops/tasks/planned/010-agentops-structure-00-plan-dot-agentops-repo-migration.md`
-(which will itself move to `.agentops/` during the migration).
+lives at `.agentops/tasks/planned/010-agentops-structure-00-plan-dot-agentops-repo-migration.md`
+(which has moved to `.agentops/` as part of the migration).
 
 ## What changes (active workflow inputs)
 

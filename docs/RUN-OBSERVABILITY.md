@@ -142,7 +142,7 @@ Checklist (in order):
 
 Checklist (in order):
 
-1. Check `agentops/results/TASK-xxxx-result.md` for repeated
+1. Check `.agentops/results/TASK-xxxx-result.md` for repeated
    revise/review rounds in the decision history.
 2. Check `review-notes.md` in the run artifact directory for parent
    review comments that triggered rework.

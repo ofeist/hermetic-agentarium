@@ -56,8 +56,8 @@ Likely candidates:
 - `scripts/accept-agentops-task.sh`
 - `scripts/revise-agentops-task.sh`
 - `scripts/record-agentops-outcome.sh` (added by TASK-0089)
-- `agentops/tasks/done/TASK-0089-run-outcome-metadata.md` (when done)
-  or `agentops/tasks/ready/TASK-0089-run-outcome-metadata.md` (until then)
+- `.agentops/tasks/done/TASK-0089-run-outcome-metadata.md` (when done)
+  or `.agentops/tasks/ready/TASK-0089-run-outcome-metadata.md` (until then)
 - `.agentops-runs/` (layout)
 - `docs/RUN-AUDIT.md`
 - `docs/RUN-OBSERVABILITY.md`

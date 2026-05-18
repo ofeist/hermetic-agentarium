@@ -22,8 +22,8 @@ if [[ "$TASK_SLUG" == *"/"* || "$TASK_SLUG" == *".."* ]]; then
   exit 1
 fi
 
-READY_FILE="agentops/tasks/ready/${TASK_SLUG}.md"
-REVIEW_DIR="agentops/tasks/review"
+READY_FILE=".agentops/tasks/ready/${TASK_SLUG}.md"
+REVIEW_DIR=".agentops/tasks/review"
 REVIEW_FILE="${REVIEW_DIR}/${TASK_SLUG}.md"
 
 # Fail if ready file does not exist
@@ -64,7 +64,7 @@ echo "# 1. Render parent verification / context notes"
 echo "scripts/render-verification-notes.sh ${TASK_SLUG} > /tmp/${TASK_SLUG}-verification-notes.md"
 echo ""
 echo "# 2. Render review prompt (with verification notes)"
-echo "scripts/render-review-prompt.sh agentops/tasks/review/${TASK_SLUG}.md /tmp/${TASK_SLUG}-verification-notes.md > /tmp/${TASK_SLUG}-review.prompt.md"
+echo "scripts/render-review-prompt.sh .agentops/tasks/review/${TASK_SLUG}.md /tmp/${TASK_SLUG}-verification-notes.md > /tmp/${TASK_SLUG}-review.prompt.md"
 echo ""
 echo "# 3. Run one-shot coder reviewer"
 echo "coder -z \"\$(cat /tmp/${TASK_SLUG}-review.prompt.md)\""

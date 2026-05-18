@@ -34,11 +34,11 @@ task_id_from_slug() {
 }
 
 TASK_DIRS=(
-    "agentops/tasks/planned"
-    "agentops/tasks/ready"
-    "agentops/tasks/running"
-    "agentops/tasks/review"
-    "agentops/tasks/done"
+    ".agentops/tasks/planned"
+    ".agentops/tasks/ready"
+    ".agentops/tasks/running"
+    ".agentops/tasks/review"
+    ".agentops/tasks/done"
 )
 
 echo "=== AgentOps lifecycle check ==="
@@ -64,7 +64,7 @@ done
 
 # ---- 2. Done tasks still marked ready ----
 echo "-- Checking done tasks for stale ready status"
-for f in agentops/tasks/done/TASK-*.md; do
+for f in .agentops/tasks/done/TASK-*.md; do
     [ -f "$f" ] || continue
 
     # Pattern A: Status: ready (single-line frontmatter style)
@@ -88,24 +88,33 @@ done
 
 # ---- 3. Result notes referencing truly non-existent task files ----
 echo "-- Checking result note task path references"
-for rf in agentops/results/*.md; do
+for rf in .agentops/results/*.md; do
     [ -f "$rf" ] || continue
     while IFS= read -r line; do
-        # Extract paths like agentops/tasks/<state>/TASK-NNNN-*.md
+        # Extract paths matching both old (agentops/) and new (.agentops/) patterns
         while IFS= read -r path; do
             [ -n "$path" ] || continue
-            if [ ! -f "$path" ]; then
-                echo "ERROR: $rf references missing path: $path"
-                ERRORS=$((ERRORS + 1))
+            if [ -f "$path" ]; then
+                continue
             fi
-        done < <(printf '%s\n' "$line" | grep -Eo 'agentops/tasks/(planned|ready|running|review|done)/TASK-[0-9][^ )`[:space:]]*\.md' || true)
+            # If the path uses the old agentops/ prefix, try the .agentops/ equivalent
+            # (historical records were not rewritten and may reference pre-migration paths)
+            if [[ "$path" == agentops/* ]]; then
+                alt_path=".${path}"
+                if [ -f "$alt_path" ]; then
+                    continue
+                fi
+            fi
+            echo "ERROR: $rf references missing path: $path"
+            ERRORS=$((ERRORS + 1))
+        done < <(printf '%s\n' "$line" | grep -Eo '(\.?agentops)/tasks/(planned|ready|running|review|done)/TASK-[0-9][^ )`[:space:]]*\.md' || true)
     done < "$rf"
 done
 
 # ---- 4. Done tasks without result notes (warn only) ----
 # Load historical baseline of known missing-result done tasks
 declare -A HISTORICAL_BASELINE
-BASELINE_FILE="agentops/lifecycle/historical-baseline.txt"
+BASELINE_FILE=".agentops/lifecycle/historical-baseline.txt"
 if [ -f "$BASELINE_FILE" ]; then
     while IFS= read -r line || [ -n "$line" ]; do
         [[ "$line" =~ ^[[:space:]]*# ]] && continue
@@ -115,12 +124,12 @@ if [ -f "$BASELINE_FILE" ]; then
 fi
 
 echo "-- Checking done tasks for result notes"
-for f in agentops/tasks/done/TASK-*.md; do
+for f in .agentops/tasks/done/TASK-*.md; do
     [ -f "$f" ] || continue
     task_slug=$(basename "$f" .md)
     task_id=$(task_id_from_slug "$task_slug")
     result_found=0
-    for rf in agentops/results/*.md; do
+    for rf in .agentops/results/*.md; do
         [ -f "$rf" ] || continue
         result_slug=$(basename "$rf" .md)
         if [[ "$result_slug" == "${task_slug}-result" || "$result_slug" == "${task_id}-result" ]]; then

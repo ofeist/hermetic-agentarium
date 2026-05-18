@@ -128,7 +128,7 @@ If sensitive data appears in a local run log, delete the local log or redact it 
 
 Safe summaries belong under:
 
-    agentops/results/TASK-xxxx-result.md
+    .agentops/results/TASK-xxxx-result.md
 
 A committed result summary should include only reviewed, safe information such as:
 

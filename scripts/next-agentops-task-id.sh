@@ -2,11 +2,11 @@
 set -euo pipefail
 
 LIFECYCLE_DIRS=(
-    "agentops/tasks/planned"
-    "agentops/tasks/ready"
-    "agentops/tasks/running"
-    "agentops/tasks/review"
-    "agentops/tasks/done"
+    ".agentops/tasks/planned"
+    ".agentops/tasks/ready"
+    ".agentops/tasks/running"
+    ".agentops/tasks/review"
+    ".agentops/tasks/done"
 )
 
 MAX_ID=0

@@ -14,8 +14,8 @@ usage() {
     echo "  -h, --help               Show this help message and exit" >&2
     echo "" >&2
     echo "Example:" >&2
-    echo "  $0 agentops/tasks/ready/TASK-0056-review-prompt-renderer.md > /tmp/TASK-0056-review.prompt.md" >&2
-    echo "  $0 agentops/tasks/ready/TASK-0058-review-prompt-verification-notes.md /tmp/notes.md > /tmp/TASK-0058-review.prompt.md" >&2
+    echo "  $0 .agentops/tasks/ready/TASK-0056-review-prompt-renderer.md > /tmp/TASK-0056-review.prompt.md" >&2
+    echo "  $0 .agentops/tasks/ready/TASK-0058-review-prompt-verification-notes.md /tmp/notes.md > /tmp/TASK-0058-review.prompt.md" >&2
 }
 
 if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then

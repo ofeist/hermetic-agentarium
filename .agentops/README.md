@@ -7,7 +7,7 @@ Store task lifecycle artifacts for Hermes/OpenCode executor workflows. This dire
 ## Directory overview
 
 ```
-agentops/
+.agentops/
   README.md           # This file
   TASK-LIFECYCLE.md   # Lifecycle state definitions
   tasks/
@@ -21,4 +21,4 @@ agentops/
 
 ## Source of truth
 
-Git, diffs, and tests remain the authoritative source of truth for changes. The agentops/ directory is a lightweight tracking aid, not a replacement for version control or test results.
+Git, diffs, and tests remain the authoritative source of truth for changes. The .agentops/ directory is a lightweight tracking aid, not a replacement for version control or test results.

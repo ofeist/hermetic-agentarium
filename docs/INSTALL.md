@@ -93,7 +93,7 @@ grep -q 'USING_SKILL: hermetic-coding-orchestrator' ~/.hermes/skills/hermetic-co
 Verify the collection prompt generator still produces the correct invocation:
 
 ```bash
-scripts/render-collection-prompt.sh agentops/tasks/ready/<any-ready-task>.md | head -1
+scripts/render-collection-prompt.sh .agentops/tasks/ready/<any-ready-task>.md | head -1
 ```
 
 Expected output starts with:

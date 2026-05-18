@@ -43,13 +43,13 @@ Fallback: disabled
 ## Read scope
 
 - `skills/hermetic-coding-orchestrator/SKILL.md`
-- `agentops/tasks/ready/TASK-0092-package-hermetic-orchestrator-skill.md`
-- `agentops/templates/PLANNED-TASK-TEMPLATE.md`
-- `agentops/templates/READY-TASK-TEMPLATE.md`
+- `.agentops/tasks/ready/TASK-0092-package-hermetic-orchestrator-skill.md`
+- `.agentops/templates/PLANNED-TASK-TEMPLATE.md`
+- `.agentops/templates/READY-TASK-TEMPLATE.md`
 - `scripts/render-collection-prompt.sh`
 - `docs/INSTALL.md`
 - `docs/DOCUMENTATION-MAP.md`
-- `agentops/USAGE.md`
+- `.agentops/USAGE.md`
 
 ## Write scope
 

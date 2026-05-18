@@ -131,7 +131,7 @@ USING_SKILL: hermetic-coding-orchestrator
 - `main` is the planning/control checkout. Executor work runs in a task-specific worktree on a task branch.
 - Do not run executor work directly on `main`, even as a user-requested exception.
 - Prefer `scripts/start-agentops-worktree.sh` to create or prepare the task worktree.
-- Read the ready task file from `agentops/tasks/ready/`.
+- Read the ready task file from `.agentops/tasks/ready/`.
 - Prepare the executor prompt as a temporary file under `/tmp`.
 - Use `scripts/run-opencode-executor.sh` to invoke OpenCode.
 - Use the runner-configured executor model, normally from `AGENTOPS_EXECUTOR_MODEL`.
