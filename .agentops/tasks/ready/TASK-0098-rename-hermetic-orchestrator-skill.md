@@ -1,8 +1,8 @@
-# 030-skill-04 — Rename hermetic-coding-orchestrator skill to agentops-coder
+# TASK-0098 — Rename hermetic-coding-orchestrator skill to agentops-coder
 
 ## Status
 
-planned
+ready
 
 ## Goal
 
@@ -56,7 +56,7 @@ Compatibility removal is a separate follow-up task and not in this slice.
 
 ## Executor
 
-Harness: TBD (default in this repo: OpenCode)
+Harness: OpenCode
 Model source: runner configuration (`AGENTOPS_EXECUTOR_MODEL`)
 Fallback: disabled
 
@@ -136,22 +136,18 @@ None.
 
 ## Promotion decision
 
-Decision: promote_to_ready
+Decision: already_ready
 
 Reason:
 Canonical rename target and compatibility policy are now defined; scope is
 implementation-ready once write-scope boundaries are confirmed.
 
 Next action:
-Promote this task to ready and execute the staged rename with compatibility.
+Execute the staged rename with compatibility.
 
 ## Promotion criteria
 
-- canonical name/invocation/marker are explicit (`agentops-coder`,
-  `/agentops-coder`, `USING_SKILL: agentops-coder`)
-- compatibility policy is explicit and documented
-- write scope is concrete and limited
-- verification commands are concrete and runnable
+Already promoted to ready.
 
 ## Verification
 
