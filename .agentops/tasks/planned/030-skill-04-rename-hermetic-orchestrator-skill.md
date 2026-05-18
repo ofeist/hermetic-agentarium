@@ -176,6 +176,8 @@ grep -q '/agentops-coder' docs/INSTALL.md
 # Compatibility checks (old invocation still documented/supported in this slice)
 grep -q '/hermetic-coding-orchestrator' skills/hermetic-coding-orchestrator/SKILL.md
 grep -q '/hermetic-coding-orchestrator' docs/INSTALL.md
+grep -q '^name: hermetic-coding-orchestrator$' skills/hermetic-coding-orchestrator/SKILL.md
+grep -q 'USING_SKILL: agentops-coder' skills/hermetic-coding-orchestrator/SKILL.md
 
 # Installer includes canonical skill path
 grep -q 'skills/agentops-coder' scripts/install-coder-profile.sh
