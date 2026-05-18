@@ -44,6 +44,16 @@ In short:
 - preserve existing structure and wording
 - large unexpected diffs must be called out in review
 
+## First-time setup
+
+Bootstrap the AgentOps lifecycle directories with the idempotent helper:
+
+```bash
+scripts/bootstrap-agentops-structure.sh
+```
+
+The helper defaults to `.agentops/` and can be run repeatedly without harm.
+
 ## Minimal task file
 
 A ready task should include:

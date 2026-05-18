@@ -14,6 +14,7 @@ for re-proposal:
 
 | Script | Purpose | Lifecycle state |
 |--------|---------|-----------------|
+| `bootstrap-agentops-structure.sh` | Create/validate .agentops/ directories, placeholders, templates | none (bootstrap) |
 | `check-agentops-lifecycle.sh` | Duplicate IDs, stale statuses, result-note gaps | done, review, results |
 | `submit-agentops-task.sh` | Move ready → review; update status to review | ready → review |
 | `accept-agentops-task.sh` | Move review → done | review → done |
