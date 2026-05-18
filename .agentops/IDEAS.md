@@ -130,6 +130,15 @@ Open questions:
 - Should the parent be allowed to amend the executor commit, or should review
   fixes become a second commit?
 
+## Remove deprecated hermetic-coding-orchestrator bridge
+
+After at least one full follow-up task cycle with `/agentops-coder` as canonical,
+remove the deprecated `/hermetic-coding-orchestrator` bridge to avoid duplicated
+skill-body drift.
+
+Until removal, canonical edits must be made in `skills/agentops-coder/SKILL.md`
+and mirrored into `skills/hermetic-coding-orchestrator/SKILL.md`.
+
 ## Promotion path
 
 When an idea becomes actionable, promote it gradually:
