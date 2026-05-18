@@ -35,14 +35,19 @@ prompt renderers, and profile guidance. A hard cut with no transition would
 break existing slash-invocation habits and make historical comparisons harder
 during rollout.
 
+Hermes slash commands are registered from installed skills by each skill's
+`SKILL.md` frontmatter `name`. A compatibility alias is not implicit just
+because docs mention one. Compatibility must be represented as a real installed
+skill entrypoint.
+
 ## Smallest useful slice
 
 Execute a staged rename with compatibility:
 
 1. Introduce `agentops-coder` as canonical skill name, slash invocation, and
    audit marker.
-2. Keep `/hermetic-coding-orchestrator` working as a compatibility alias during
-   transition.
+2. Keep `/hermetic-coding-orchestrator` working as a compatibility bridge skill
+   during transition.
 3. Update active generators/templates/docs/scripts to emit/use canonical
    `/agentops-coder` + `USING_SKILL: agentops-coder`.
 4. Document compatibility window and explicit removal criteria.
@@ -94,8 +99,14 @@ Fallback: disabled
 - Canonical skill name becomes `agentops-coder`.
 - Canonical slash invocation becomes `/agentops-coder`.
 - Canonical audit marker becomes `USING_SKILL: agentops-coder`.
-- Preserve backward compatibility for `/hermetic-coding-orchestrator` during
-  transition.
+- Implement compatibility as two installed skills:
+  - `skills/agentops-coder/SKILL.md` with `name: agentops-coder` (canonical).
+  - `skills/hermetic-coding-orchestrator/SKILL.md` with
+    `name: hermetic-coding-orchestrator` (deprecated bridge entrypoint).
+- Do not change old skill frontmatter name to `agentops-coder`; old slash
+  command must remain registered via its own skill name.
+- Preserve backward compatibility for `/hermetic-coding-orchestrator` via the
+  bridge skill during transition.
 - Compatibility policy:
   - Keep old slash invocation functional for at least one full follow-up task
     cycle after this rename lands.
@@ -168,12 +179,25 @@ grep -q '/hermetic-coding-orchestrator' docs/INSTALL.md
 
 # Installer includes canonical skill path
 grep -q 'skills/agentops-coder' scripts/install-coder-profile.sh
+
+# Hermes acceptance after install
+./scripts/install-coder-profile.sh
+
+# Fresh coder-profile session: canonical command
+hermes --profile coder chat -q "/agentops-coder Summarize your workflow rules in 3 bullets"
+# Expect: USING_SKILL: agentops-coder
+
+# Fresh coder-profile session: compatibility bridge command
+hermes --profile coder chat -q "/hermetic-coding-orchestrator Summarize your workflow rules in 3 bullets"
+# Expect: USING_SKILL: agentops-coder
 ```
 
 ## Accept criteria
 
 - Canonical references use `agentops-coder` / `/agentops-coder` /
   `USING_SKILL: agentops-coder`.
+- Canonical and bridge skills are both installable and discoverable in coder
+  profile runtime.
 - Old slash invocation remains functional/documented during transition.
 - New generated prompts and templates use canonical naming.
 - Installer/docs/profile guidance are updated to canonical naming.
