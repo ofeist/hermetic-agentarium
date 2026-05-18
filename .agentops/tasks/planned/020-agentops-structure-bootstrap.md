@@ -2,7 +2,7 @@
 
 ## Status
 
-planned
+promoted
 
 ## Goal
 
@@ -72,14 +72,13 @@ Candidate requirements:
 
 ## Promotion decision
 
-Decision: keep_planned
+Decision: promote_to_ready
 
 Reason:
-Should follow structure planning (`agentops-structure-00`) so it targets the
-canonical repo-local path layout.
+TASK-0096 landed the canonical `.agentops/` repo-local path. The concrete ready task is `.agentops/tasks/ready/TASK-0097-agentops-structure-bootstrap.md`.
 
 Next action:
-Promote after structure planning outcome is concrete.
+Execute TASK-0097 through the Hermes/coder collection prompt.
 
 ## Promotion criteria
 
