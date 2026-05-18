@@ -136,7 +136,7 @@ None.
 
 ## Promotion decision
 
-Decision: promote_after_scope_confirmation
+Decision: promote_to_ready
 
 Reason:
 Canonical rename target and compatibility policy are now defined; scope is
