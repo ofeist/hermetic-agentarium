@@ -1,180 +1,86 @@
-# hermetic-coding-orchestrator
+# hermetic-coding-orchestrator (DEPRECATED)
 
-Hermes-native local skill for controlled coding orchestration with bounded
-delegation, dirty-worktree protection, parent verification, and no-op/revise/revert
-review decisions.
+**Deprecated compatibility bridge.** The canonical skill is now `agentops-coder`
+(`/agentops-coder`, `skills/agentops-coder/SKILL.md`).
+
+This package is kept during transition so `/hermetic-coding-orchestrator` slash
+invocations continue to work. Both skills route to the same behavior contract
+and emit the canonical audit marker `USING_SKILL: agentops-coder`.
 
 ## When to use
 
-Use this skill for AgentOps coding tasks that are more than a trivial one-line
-edit. The skill enforces:
-
-- git worktree isolation (no executor work on `main`)
-- bounded single-attempt delegation guardrails
-- independent parent verification after every executor run
-- explicit review decisions: accept / revise / revert / no-op / blocked
+**Prefer `/agentops-coder` for new invocations.** This bridge is only for
+existing habits/tooling that still reference the old name.
 
 ## Install
 
-The core local Hermes package is the skill directory plus `SKILL.md`. Install
-via the repo installer:
+The repo installer installs both the canonical skill and this bridge:
 
 ```bash
 ./scripts/install-coder-profile.sh
 ```
 
-This copies `SKILL.md` to the Hermes-native load path:
+This copies both `SKILL.md` files to Hermes-native load paths:
 
 ```text
+~/.hermes/skills/agentops-coder/SKILL.md
 ~/.hermes/skills/hermetic-coding-orchestrator/SKILL.md
 ```
 
-The `SKILL.md` YAML frontmatter is the package metadata contract. The install
-target follows the standard Hermes local skill layout:
-
-```text
-~/.hermes/skills/<category>/<skill-name>/SKILL.md
-```
-
-This README is source-repo package documentation only and is not copied to
-`~/.hermes` by the installer.
-
 ## Expected install locations
 
-After running `./scripts/install-coder-profile.sh`, the skill lands in two
-expected locations:
+After running `./scripts/install-coder-profile.sh`, this bridge skill lands in:
 
 ```text
 ~/.hermes/skills/hermetic-coding-orchestrator/
 ~/.hermes/profiles/coder/skills/hermetic-coding-orchestrator/
 ```
 
-- The first location (`~/.hermes/skills/`) is the global Hermes skill path.
-- The second location (`~/.hermes/profiles/coder/skills/`) is the coder
-  profile-local skill path.
-
-Default Hermes can load the skill from the global path. The `coder` profile may
-require the skill to exist under the profile-local path. The installer copies
-`SKILL.md` into both locations for full coverage.
-
 ## Verify
 
-After install, verify the package is intact:
+After install, verify the bridge is intact:
 
 ```bash
 test -f ~/.hermes/skills/hermetic-coding-orchestrator/SKILL.md
 grep -q '^name: hermetic-coding-orchestrator$' ~/.hermes/skills/hermetic-coding-orchestrator/SKILL.md
-grep -q 'USING_SKILL: hermetic-coding-orchestrator' ~/.hermes/skills/hermetic-coding-orchestrator/SKILL.md
+grep -q 'USING_SKILL: agentops-coder' ~/.hermes/skills/hermetic-coding-orchestrator/SKILL.md
 ```
 
-If Hermes CLI is available, verify the skill is visible:
+If Hermes CLI is available, verify both slash commands work:
 
 ```bash
+hermes --profile coder chat -q "/agentops-coder Summarize your workflow rules in 3 bullets"
 hermes --profile coder chat -q "/hermetic-coding-orchestrator Summarize your workflow rules in 3 bullets"
 ```
 
-## Activation and troubleshooting
+Both should return results with `USING_SKILL: agentops-coder`.
 
-### Activation checks
+## Deprecation schedule
 
-Verify the skill is discoverable from **default Hermes**:
+| Milestone | Criteria |
+|---|---|
+| Transition start | TASK-0098 merge |
+| Minimum compatibility window | One full follow-up task cycle after TASK-0098 lands |
+| Removal trigger | A dedicated removal task exists and is completed |
+| Alias removal | Removed via a separate follow-up task |
 
-```bash
-test -f ~/.hermes/skills/hermetic-coding-orchestrator/SKILL.md
+There is no silent removal. The bridge stays until a dedicated alias-removal
+task is explicitly planned, promoted, and executed.
 
-hermes
-# then in the Hermes session invoke:
-# /hermetic-coding-orchestrator
-```
+## Compatibility guarantee summary
 
-Verify the skill is discoverable from the **coder profile**:
-
-```bash
-test -f ~/.hermes/profiles/coder/skills/hermetic-coding-orchestrator/SKILL.md
-
-hermes --profile coder
-# then in the Hermes session invoke:
-# /hermetic-coding-orchestrator
-```
-
-### Expected marker output
-
-Successful invocation includes:
-
-```text
-USING_SKILL: hermetic-coding-orchestrator
-```
-
-Slash invocation (`/hermetic-coding-orchestrator`) is the practical acceptance
-test. `hermes skills list` may be useful, but it should not be the only
-verification mechanism — CLI listing behavior can differ by mode.
-
-### Common failure: `Unknown command`
-
-If `/hermetic-coding-orchestrator` returns:
-
-```text
-Unknown command: /hermetic-coding-orchestrator
-```
-
-Fastest checks:
-
-1. **Skill file missing**: verify both install paths exist:
-
-   ```bash
-   test -f ~/.hermes/skills/hermetic-coding-orchestrator/SKILL.md
-   test -f ~/.hermes/profiles/coder/skills/hermetic-coding-orchestrator/SKILL.md
-   ```
-
-2. **Restart needed**: Hermes may need a restart to pick up a newly installed
-   skill. Did you restart after running the installer?
-
-3. **Default works, coder profile does not**: If `hermes` can invoke the skill
-   but `hermes --profile coder` returns `Unknown command`, check whether the
-   skill exists under the coder profile-local path. If missing, rerun the
-   installer and restart Hermes:
-
-   ```bash
-   ./scripts/install-coder-profile.sh
-   # then restart hermes --profile coder and test:
-   # /hermetic-coding-orchestrator
-   ```
-
-4. **Custom install path**: if you used `HERMES_INSTALL_HOME`, adjust the
-   expected paths accordingly (replace `~` with the custom install root).
-
-### Rerun the installer safely
-
-The installer is idempotent. After changing install paths or profile wiring,
-rerun it:
-
-```bash
-./scripts/install-coder-profile.sh
-```
-
-This does not change runtime helper behavior, lifecycle helpers, or observability
-packaging.
-
-## Compatibility
-
-| Property | Value | Guarantee |
+| Property | Value | Status |
 |---|---|---|
-| Skill name | `hermetic-coding-orchestrator` | Unchanged |
-| Slash invocation | `/hermetic-coding-orchestrator` | Unchanged |
-| Audit marker | `USING_SKILL: hermetic-coding-orchestrator` | Unchanged |
-| Generated collection prompt | Starts with `/hermetic-coding-orchestrator` | Unchanged |
-| Installer behavior | `scripts/install-coder-profile.sh` preserves profile + skill layout | Unchanged |
-
-## Follow-up tasks
-
-Optional AgentOps observability packaging is deferred to a follow-up task
-(`skill-03-package-optional-agentops-observability`). It is not part of this
-package slice.
+| Skill name | `hermetic-coding-orchestrator` | Deprecated, kept for compatibility |
+| Slash invocation | `/hermetic-coding-orchestrator` | Still functional during transition |
+| Audit marker | `USING_SKILL: agentops-coder` | Canonical (emitted by both skills) |
+| Canonical skill | `agentops-coder` | `/agentops-coder` |
+| Removal | By dedicated follow-up task only | No silent removal |
 
 ## Package layout
 
 ```text
 skills/hermetic-coding-orchestrator/
-  SKILL.md      # Hermes skill entrypoint and metadata contract
+  SKILL.md      # Hermes skill entrypoint (deprecated bridge)
   README.md     # Source-repo package documentation (this file)
 ```

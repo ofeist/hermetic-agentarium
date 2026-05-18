@@ -25,9 +25,9 @@ Use these documents when running or reviewing AgentOps tasks:
 6. `docs/RUN-OBSERVABILITY.md` — inspect run metadata, artifacts, and token/time pressure.
 7. `.agentops/results/` — safe result summaries for completed tasks.
 
-If the `/hermetic-coding-orchestrator` slash command is not recognized, see:
+If the `/agentops-coder` slash command is not recognized, see:
 - `docs/INSTALL.md` — short activation checklist and `Unknown command` troubleshooting.
-- `skills/hermetic-coding-orchestrator/README.md` — full activation verification and failure mode guide.
+- `skills/agentops-coder/README.md` — full activation verification and failure mode guide.
 
 ## Maintainer path
 
@@ -37,7 +37,7 @@ Use these documents when changing this repository or local Hermes installation:
 2. `docs/WORKFLOW.md` — repository maintenance workflow.
 3. `docs/DEEPSEEK_PROVIDER_SETUP.md` — DeepSeek provider setup notes.
 4. `profiles/coder/SOUL.md` — Hermes coder profile behavior.
-5. `skills/hermetic-coding-orchestrator/` — custom orchestration skill package (see `skills/hermetic-coding-orchestrator/README.md` for package docs, install path, and compatibility; `SKILL.md` is the Hermes entrypoint and metadata contract).
+5. `skills/agentops-coder/` — canonical orchestration skill package (see `skills/agentops-coder/README.md` for package docs, install path, and compatibility; `SKILL.md` is the Hermes entrypoint and metadata contract).
 
 ## Current project phase
 

@@ -36,7 +36,7 @@ Ready tasks should start from `.agentops/templates/READY-TASK-TEMPLATE.md`.
 Promotion from `planned/` to `ready/` is a **mechanical transformation**, not a
 rewrite. Ready-shaped planned tasks should keep their existing structure and
 wording. See the full promotion policy in
-`skills/hermetic-coding-orchestrator/SKILL.md`.
+`skills/agentops-coder/SKILL.md`.
 
 In short:
 - move the file, assign the next `TASK-XXXX` ID, update `Status` to `ready`

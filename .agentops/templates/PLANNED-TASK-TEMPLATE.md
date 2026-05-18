@@ -146,14 +146,14 @@ more specific checks.
 
 Synchronized copy policy:
 - This block is an ergonomics copy of the canonical prompt in
-  `skills/hermetic-coding-orchestrator/SKILL.md`
+  `skills/agentops-coder/SKILL.md`
   (`### Canonical ready task invocation prompt`).
 - Keep wording aligned with the canonical SKILL prompt and rendered helper output
   (`scripts/render-collection-prompt.sh`).
 - Replace `TASK-xxxx-short-slug.md` with the actual ready task path.
 
 ```text
-/hermetic-coding-orchestrator
+/agentops-coder
 
 Execute AgentOps ready task:
 

@@ -37,7 +37,7 @@ case "$RESOLVED_TASK_PATH" in
 esac
 
 cat <<COLLECTION_PROMPT
-/hermetic-coding-orchestrator
+/agentops-coder
 
 Execute AgentOps ready task:
 

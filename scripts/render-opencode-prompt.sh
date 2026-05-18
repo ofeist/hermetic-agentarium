@@ -38,8 +38,8 @@ render_task_content() {
 }
 
 cat <<PROMPT_PREFIX
-/hermetic-coding-orchestrator
-USING_SKILL: hermetic-coding-orchestrator
+/agentops-coder
+USING_SKILL: agentops-coder
 
 You are an OpenCode executor. Your job is to implement the task below.
 

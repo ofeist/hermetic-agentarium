@@ -1,18 +1,8 @@
 ---
-name: hermetic-coding-orchestrator
-description: DEPRECATED compatibility bridge. Self-contained alias of the canonical agentops-coder workflow. Use /agentops-coder for new invocations.
-version: 0.2.1-deprecated
+name: agentops-coder
+description: Canonical AgentOps coding orchestrator skill for controlled coding orchestration with bounded delegation, dirty-worktree protection, parent verification, and no-op/revise/revert review decisions.
+version: 0.2.0
 ---
-
-# Compatibility bridge
-
-This skill is a deprecated compatibility entrypoint for `/hermetic-coding-orchestrator`.
-
-The canonical skill is now `/agentops-coder`.
-
-When invoked through this bridge, follow the same AgentOps coder workflow and emit:
-
-`USING_SKILL: agentops-coder`
 
 # AgentOps Coder Workflow
 

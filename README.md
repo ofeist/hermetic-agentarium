@@ -56,17 +56,19 @@ Shortest path to a local smoke run:
 
        ./scripts/install-coder-profile.sh
 
-   This installs:
+    This installs:
 
-       profiles/coder/SOUL.md
-       skills/hermetic-coding-orchestrator/SKILL.md
+        profiles/coder/SOUL.md
+        skills/agentops-coder/SKILL.md (canonical)
+        skills/hermetic-coding-orchestrator/SKILL.md (compatibility bridge)
 
-   into your local `~/.hermes/` runtime.
+    into your local `~/.hermes/` runtime.
 
-   For the isolated `coder` profile, the installer also installs/preserves the
-   custom skill under the profile-local skills directory. This is required so
-   `/hermetic-coding-orchestrator` works when starting Hermes with
-   `hermes --profile coder` or the `coder` wrapper.
+    For the isolated `coder` profile, the installer also installs/preserves
+    both skills under the profile-local skills directory. This is required so
+    `/agentops-coder` (canonical) and `/hermetic-coding-orchestrator`
+    (deprecated bridge) both work when starting Hermes with
+    `hermes --profile coder` or the `coder` wrapper.
 
 3. Make sure OpenCode is installed and visible:
 
@@ -116,7 +118,8 @@ cd hermetic-agentarium
 ## Includes
 
 - coder `SOUL.md`
-- `hermetic-coding-orchestrator` `SKILL.md`
+- `agentops-coder` `SKILL.md` (canonical orchestrator skill)
+- `hermetic-coding-orchestrator` `SKILL.md` (deprecated compatibility bridge)
 - example configuration templates
 - workflow and security documentation
 - install helper scripts
@@ -133,9 +136,15 @@ cd hermetic-agentarium
 
 ## Custom skill name
 
-The main custom skill is `hermetic-coding-orchestrator`.
+The canonical custom skill is `agentops-coder` (slash invocation `/agentops-coder`).
 
-It is intentionally named differently from Hermes bundled skills such as `subagent-driven-development`, so prompts can target this repository's workflow more explicitly.
+It is intentionally named differently from Hermes bundled skills such as
+`subagent-driven-development`, so prompts can target this repository's workflow
+more explicitly.
+
+The previous name `hermetic-coding-orchestrator` (`/hermetic-coding-orchestrator`)
+is kept as a deprecated compatibility bridge during the transition window. New
+invocations should use `/agentops-coder`.
 
 ## Core workflow
 

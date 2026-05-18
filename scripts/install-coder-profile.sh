@@ -21,6 +21,8 @@ install_into_home() {
   mkdir -p "$hermes_root/profiles/coder"
   mkdir -p "$hermes_root/skills/hermetic-coding-orchestrator"
   mkdir -p "$hermes_root/profiles/coder/skills/hermetic-coding-orchestrator"
+  mkdir -p "$hermes_root/skills/agentops-coder"
+  mkdir -p "$hermes_root/profiles/coder/skills/agentops-coder"
 
   cp "$REPO_ROOT/profiles/coder/SOUL.md" \
      "$hermes_root/profiles/coder/SOUL.md"
@@ -29,6 +31,11 @@ install_into_home() {
      "$hermes_root/skills/hermetic-coding-orchestrator/SKILL.md"
   cp "$REPO_ROOT/skills/hermetic-coding-orchestrator/SKILL.md" \
      "$hermes_root/profiles/coder/skills/hermetic-coding-orchestrator/SKILL.md"
+
+  cp "$REPO_ROOT/skills/agentops-coder/SKILL.md" \
+     "$hermes_root/skills/agentops-coder/SKILL.md"
+  cp "$REPO_ROOT/skills/agentops-coder/SKILL.md" \
+     "$hermes_root/profiles/coder/skills/agentops-coder/SKILL.md"
 
   if [ ! -f "$env_file" ]; then
     cp "$REPO_ROOT/profiles/coder/.env.example" "$env_file"
@@ -76,8 +83,10 @@ done
 echo "Installed from repo:"
 for root in "${INSTALLED_ROOTS[@]}"; do
   echo "- $root/profiles/coder/SOUL.md"
-  echo "- $root/skills/hermetic-coding-orchestrator/SKILL.md"
-  echo "- $root/profiles/coder/skills/hermetic-coding-orchestrator/SKILL.md"
+  echo "- $root/skills/hermetic-coding-orchestrator/SKILL.md (compatibility bridge)"
+  echo "- $root/profiles/coder/skills/hermetic-coding-orchestrator/SKILL.md (compatibility bridge)"
+  echo "- $root/skills/agentops-coder/SKILL.md (canonical)"
+  echo "- $root/profiles/coder/skills/agentops-coder/SKILL.md (canonical)"
 done
 
 echo
