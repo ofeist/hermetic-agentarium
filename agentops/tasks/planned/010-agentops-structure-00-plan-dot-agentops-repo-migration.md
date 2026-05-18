@@ -49,32 +49,46 @@ Fallback: disabled
 
 ## Write scope
 
-TBD
+Planning output only:
 
-Likely candidates (planning docs/notes only):
+- `agentops/tasks/planned/010-agentops-structure-00-plan-dot-agentops-repo-migration.md`
+- optional: `docs/AGENTOPS-PATH-MIGRATION.md`
 
-- `scripts/*.sh` that reference `agentops/`
-- `docs/*.md` with lifecycle path references
-- templates and planned/ready task references
-- no directory move in this task
+Do not modify runtime helper scripts, lifecycle helpers, templates, or move
+directories in this slice.
 
 ## Requirements
 
-TBD
+- Do not execute path migration actions in this task.
+- Inventory scripts, docs, templates, skills, task files, result files, and
+  path-sensitive checks that reference `agentops/`.
+- Explicitly choose or recommend atomic cutover vs temporary dual-path
+  compatibility.
+- Explicitly decide how historical `done/` and `results/` files should be
+  handled.
+- Define concrete verification commands for the future migration task.
+- Define rollback strategy for the future migration task.
 
-Candidate requirements:
+## Expected planning output
 
-- no path migration actions are executed in this task
-- inventory includes scripts, docs, templates, and known path-sensitive checks
-- migration strategy explicitly chooses atomic vs compatibility-based approach
-- handling of historical `done/` and `results/` files is explicit
-- verification and rollback are explicitly defined
+The executor must produce a migration plan that answers:
+
+- where all `agentops/` path references exist
+- which references are runtime-critical vs historical/docs-only
+- whether the future migration should be atomic or compatibility-based
+- whether historical done/result files should remain unchanged or be rewritten
+- exact future migration steps
+- exact verification commands
+- rollback plan
 
 ## Non-goals
 
 - No skill rename work in this slice.
 - No observability feature redesign.
 - No unrelated refactors.
+- Do not move `agentops/` to `.agentops/` in this task.
+- Do not modify runtime helper behavior in this task.
+- Do not rewrite lifecycle paths yet.
 
 ## Open questions
 
