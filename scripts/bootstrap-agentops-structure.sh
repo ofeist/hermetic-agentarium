@@ -7,7 +7,8 @@ Usage: bootstrap-agentops-structure.sh [TARGET_DIR]
 
 Bootstrap or validate the canonical .agentops/ lifecycle layout.
 
-Default TARGET_DIR is .agentops (relative to repository root).
+Default TARGET_DIR is the repository-root .agentops directory, resolved from this script's location.
+Explicit TARGET_DIR arguments are interpreted relative to the caller's current directory unless absolute.
 
 Creates required directories, ensures .gitkeep placeholders exist in
 directories that are tracked when otherwise empty, and validates that
@@ -21,7 +22,14 @@ Exit codes:
 USAGE
 }
 
-TARGET="${1:-.agentops}"
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd -- "$SCRIPT_DIR/.." && pwd)"
+
+if [ "$#" -gt 0 ]; then
+    TARGET="$1"
+else
+    TARGET="$REPO_ROOT/.agentops"
+fi
 
 if [ -e "$TARGET" ] && [ ! -d "$TARGET" ]; then
     echo "ERROR: target path exists but is not a directory: $TARGET"

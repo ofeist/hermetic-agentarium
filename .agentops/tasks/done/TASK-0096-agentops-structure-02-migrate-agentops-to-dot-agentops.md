@@ -224,7 +224,7 @@ Synchronized copy policy:
 
 Execute AgentOps ready task:
 
-agentops/tasks/ready/TASK-0096-agentops-structure-02-migrate-agentops-to-dot-agentops.md
+.agentops/tasks/ready/TASK-0096-agentops-structure-02-migrate-agentops-to-dot-agentops.md
 
 Use the Hermes/OpenCode executor workflow from your profile/skill.
 
