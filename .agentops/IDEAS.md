@@ -139,6 +139,50 @@ skill-body drift.
 Until removal, canonical edits must be made in `skills/agentops-coder/SKILL.md`
 and mirrored into `skills/hermetic-coding-orchestrator/SKILL.md`.
 
+## AgentOps routing metadata before cost tests
+
+Source:
+External feedback on AgentOps / Hermes + OpenCode routing.
+
+Problem:
+Before doing cost-aware model routing or cost tests, AgentOps should record the basic routing facts for each run. Otherwise it is hard to know what actually happened when a coordinator/executor/reviewer role requests one model but the underlying provider resolves or retries to another model.
+
+Goal:
+Add a future observability slice for safe routing metadata.
+
+Capture, where available:
+- requested_model
+- provider_model
+- provider
+- role: coordinator / executor / reviewer / helper
+- token counts
+- latency / duration
+- retry reason
+- fallback reason, if any
+- final outcome: accept / revise / revert / no-op / blocked
+
+Why:
+This creates a factual baseline before cost optimization. Cost tests are not very useful if we cannot first answer which model/provider actually ran, how long it took, whether it retried, and what outcome it produced.
+
+Possible location:
+- raw/local run metadata: `.agentops-runs/`
+- committed safe summaries: `.agentops/results/`
+- future cross-repo index/cache: `$HOME/.agentops/` only if the packaging-boundary decision allows it
+
+Non-goals:
+- do not export prompt text
+- do not parse secrets
+- do not build a dashboard yet
+- do not implement automatic cost optimization yet
+- do not change model routing policy in this slice
+
+Relationship:
+This likely belongs under the AgentOps observability workstream, near:
+- agent/model usage audit
+- prompt hash metadata
+- run outcome metadata
+- future cost-aware model routing policy
+
 ## Promotion path
 
 When an idea becomes actionable, promote it gradually:
