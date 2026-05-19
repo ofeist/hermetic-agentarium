@@ -17,6 +17,8 @@ The decision should clarify which parts belong in:
 - the Hermes `coder` profile
 - a future standalone AgentOps CLI/tooling layer
 - optional user-level state such as `$HOME/.agentops/`
+- observability artifact locations such as `.agentops-runs/`, `.agentops/results/`,
+  and any future `$HOME/.agentops/` index
 
 No helper migration or packaging implementation should be performed in this task.
 
@@ -51,6 +53,7 @@ AgentOps currently mixes several concerns in one repository:
 - Hermes profile template (`profiles/coder/`)
 - executable helper scripts (`scripts/`)
 - project-local lifecycle state (`.agentops/`)
+- local run/audit artifacts (`.agentops-runs/`, `.agentops/results/`)
 - documentation and examples
 
 This works for developing the toolkit itself, but it is not yet obvious how a
@@ -80,7 +83,8 @@ Possible product models include:
      preferences, project registry, or global indexes
 
 Without a clear boundary, future work can accidentally turn the Hermes skill,
-profile, repository, and helper scripts into overlapping packaging mechanisms.
+profile, repository, helper scripts, observability artifacts, and optional user-level
+state into overlapping packaging mechanisms.
 
 ## Smallest useful slice
 
@@ -92,6 +96,7 @@ Produce an architecture/design decision document that answers:
 - which helper scripts should instead become a future CLI layer
 - whether `$HOME/.agentops/` should exist at all, and if yes, for what limited
   purpose
+- where observability artifacts should live by default
 - what the recommended near-term product model is
 
 No path migrations, script moves, or CLI implementation in this task.
@@ -108,7 +113,9 @@ Fallback: disabled
 - `docs/INSTALL.md`
 - `docs/DOCUMENTATION-MAP.md`
 - `docs/AGENTOPS-PATH-MIGRATION.md`
-- `skills/agentops-coder/SKILL.md`
+- `docs/RUN-AUDIT.md`
+- `docs/RUN-OBSERVABILITY.md`
+- `skills/agentops-coder/SKILL.md
 - `skills/agentops-coder/README.md`
 - `skills/hermetic-coding-orchestrator/SKILL.md`
 - `profiles/coder/SOUL.md`
@@ -157,6 +164,11 @@ state in this slice.
 - Define whether `$HOME/.agentops/` should exist, and if yes, restrict it to
   user-level runtime/cache/index/preferences rather than canonical task/result
   storage.
+- Reserve observability locations explicitly:
+  - `.agentops-runs/` for repo-local, gitignored raw run artifacts
+  - `.agentops/results/` for committed safe result summaries/audit notes
+  - `$HOME/.agentops/` only for optional future cross-repo indexes, caches,
+    preferences, or dashboards; not as canonical task/result storage
 - Recommend a near-term default model and rationale.
 - Identify follow-up tasks that should be created from the decision.
 
@@ -168,7 +180,8 @@ state in this slice.
 - No standalone CLI implementation in this task.
 - No installer behavior changes in this task.
 - No skill rename work in this task.
-- No observability packaging work in this task.
+- No observability packaging or implementation work in this task.
+- No observability dashboard, metrics exporter, or run metadata schema change in this task.
 - No change to `.agentops/` lifecycle semantics in this task.
 
 ## Open questions
@@ -181,6 +194,8 @@ state in this slice.
   enough for now?
 - Should `$HOME/.agentops/` exist at all?
 - If `$HOME/.agentops/` exists, what exact data categories belong there?
+- Where should raw run artifacts, safe result summaries, and future cross-repo
+  observability indexes live?
 - How should users apply AgentOps to a different repository without cloning the
   whole toolkit into that repository?
 
@@ -222,6 +237,8 @@ test -f docs/AGENTOPS-PACKAGING-BOUNDARIES.md
 grep -q 'repo/.agentops' docs/AGENTOPS-PACKAGING-BOUNDARIES.md
 grep -q 'skills/agentops-coder' docs/AGENTOPS-PACKAGING-BOUNDARIES.md
 grep -q 'scripts/' docs/AGENTOPS-PACKAGING-BOUNDARIES.md
+grep -q '.agentops-runs' docs/AGENTOPS-PACKAGING-BOUNDARIES.md
+grep -q '.agentops/results' docs/AGENTOPS-PACKAGING-BOUNDARIES.md
 ```
 
 ## Accept criteria
@@ -231,9 +248,12 @@ grep -q 'scripts/' docs/AGENTOPS-PACKAGING-BOUNDARIES.md
   - Hermes skill behavior
   - Hermes profile configuration
   - executable helper tooling
+  - observability artifact locations
   - optional user-level state
 - The recommended near-term product model is explicit.
 - Existing helper scripts are classified by likely future home.
+- Observability artifact locations are explicit: raw run artifacts, safe
+  committed summaries, and optional future cross-repo indexes are separated.
 - `$HOME/.agentops/` is either rejected for now or limited to clearly defined
   non-canonical user-level state.
 - No path migration, helper move, CLI implementation, or installer change is
@@ -254,8 +274,13 @@ Design toward a future split:
 - stable bootstrap/check/render helpers may move into the `agentops-coder` skill
   package later
 - heavier lifecycle automation may become a standalone `agentops` CLI
+- `.agentops-runs/` remains the repo-local, gitignored default for raw run
+  artifacts such as executor prompts, stdout/stderr, metadata, duration,
+  model/provider, and exit code
+- `.agentops/results/` remains the committed location for safe result summaries
+  and review/audit notes
 - `$HOME/.agentops/` may exist later only for global preferences, cache, project
-  registry, or optional run indexes
+  registry, optional cross-repo run indexes, or dashboard state
 ```
 
 Possible follow-up tasks after this decision:
@@ -264,5 +289,7 @@ Possible follow-up tasks after this decision:
 - `agentops-packaging-02-design-agentops-init`
 - `agentops-packaging-03-evaluate-skill-bundled-helper-scripts`
 - `agentops-packaging-04-evaluate-agentops-cli`
+- `agentops-observability-00-document-observability-locations` or update existing
+  `observability-00` after this decision
 - `agentops-structure-02-evaluate-user-level-agentops-home` if still needed as
   a narrower follow-up
