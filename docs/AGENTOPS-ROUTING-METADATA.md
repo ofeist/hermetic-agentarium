@@ -194,6 +194,8 @@ token_counts_total: unknown
 retry_reason:
 fallback_reason:
 final_outcome: accept
+error_class:
+error_reason:
 ```
 
 They must not include:
@@ -224,6 +226,7 @@ Suggested future verification commands:
 bash -n scripts/run-opencode-executor.sh
 bash -n scripts/render-agentops-run-summary.sh
 bash -n scripts/record-agentops-outcome.sh
+printf 'test prompt\n' > /tmp/agentops-routing-smoke.prompt.md
 AGENTOPS_RUN_ID=TASK-xxxx-routing-smoke AGENTOPS_EXECUTOR_COMMAND='printf "ok\n"' scripts/run-opencode-executor.sh /tmp/agentops-routing-smoke.prompt.md
 test -f .agentops-runs/TASK-xxxx-routing-smoke/metadata.txt
 test -f .agentops-runs/TASK-xxxx-routing-smoke/routing.txt
