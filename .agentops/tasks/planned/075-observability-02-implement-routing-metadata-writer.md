@@ -237,7 +237,11 @@ Base verification:
 ```bash
 git status --short --branch
 git diff --stat
-bash -n scripts/*.sh
+bash -n scripts/run-opencode-executor.sh
+bash -n scripts/render-agentops-run-summary.sh
+bash -n scripts/record-agentops-outcome.sh
+# If a helper script is added in this slice, include it explicitly:
+# bash -n scripts/write-agentops-routing-metadata.sh
 scripts/check-agentops-lifecycle.sh
 ```
 
@@ -255,12 +259,24 @@ test -f .agentops-runs/TASK-xxxx-routing-smoke/routing.txt
 
 grep -q '^timestamp=' .agentops-runs/TASK-xxxx-routing-smoke/routing.txt
 grep -q '^run_id=' .agentops-runs/TASK-xxxx-routing-smoke/routing.txt
+grep -q '^task_id=' .agentops-runs/TASK-xxxx-routing-smoke/routing.txt
+grep -q '^phase=' .agentops-runs/TASK-xxxx-routing-smoke/routing.txt
+grep -q '^role=' .agentops-runs/TASK-xxxx-routing-smoke/routing.txt
+grep -q '^harness=' .agentops-runs/TASK-xxxx-routing-smoke/routing.txt
 grep -q '^requested_model=' .agentops-runs/TASK-xxxx-routing-smoke/routing.txt
 grep -q '^resolved_provider=' .agentops-runs/TASK-xxxx-routing-smoke/routing.txt
 grep -q '^resolved_model=' .agentops-runs/TASK-xxxx-routing-smoke/routing.txt
+grep -q '^token_counts_prompt=' .agentops-runs/TASK-xxxx-routing-smoke/routing.txt
+grep -q '^token_counts_completion=' .agentops-runs/TASK-xxxx-routing-smoke/routing.txt
+grep -q '^token_counts_total=' .agentops-runs/TASK-xxxx-routing-smoke/routing.txt
 grep -q '^duration_ms=' .agentops-runs/TASK-xxxx-routing-smoke/routing.txt
+grep -q '^retry_reason=' .agentops-runs/TASK-xxxx-routing-smoke/routing.txt
+grep -q '^fallback_reason=' .agentops-runs/TASK-xxxx-routing-smoke/routing.txt
 grep -q '^exit_code=' .agentops-runs/TASK-xxxx-routing-smoke/routing.txt
 grep -q '^final_outcome=' .agentops-runs/TASK-xxxx-routing-smoke/routing.txt
+grep -q '^error_class=' .agentops-runs/TASK-xxxx-routing-smoke/routing.txt
+grep -q '^error_reason=' .agentops-runs/TASK-xxxx-routing-smoke/routing.txt
+grep -q '^debug_hint=' .agentops-runs/TASK-xxxx-routing-smoke/routing.txt
 ```
 
 Safety verification:
