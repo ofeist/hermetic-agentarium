@@ -1,8 +1,8 @@
-# agentops-packaging-00-define-helper-script-boundaries - Define AgentOps helper packaging boundaries
+# TASK-0099 - Define AgentOps helper packaging boundaries
 
 ## Status
 
-planned
+done
 
 ## Goal
 
@@ -129,9 +129,8 @@ Fallback: disabled
 
 Planning/design output only:
 
-- this planned task file, or
-- optional new design note:
-  - `docs/AGENTOPS-PACKAGING-BOUNDARIES.md`
+- this ready task file
+- `docs/AGENTOPS-PACKAGING-BOUNDARIES.md`
 
 Optional cross-reference only if needed:
 
@@ -201,17 +200,18 @@ state in this slice.
 
 ## Promotion decision
 
-Decision: keep_planned
+Decision: promote_to_ready
 
 Reason:
-This is an architecture/design task. It should replace the narrower
+This is a bounded architecture/design slice. It replaces the narrower
 `evaluate-user-level-agentops-home` question with the broader packaging-boundary
 decision, because the `$HOME/.agentops/` question depends on how helper scripts
 and target-repo state are packaged.
 
 Next action:
-Promote when the team wants to decide the AgentOps product boundary before
-moving helpers into skills, adding a CLI, or designing `$HOME/.agentops/`.
+Produce `docs/AGENTOPS-PACKAGING-BOUNDARIES.md` and do not move helpers into
+skills, add a CLI, change installer behavior, migrate state, or change
+`.agentops/` lifecycle semantics.
 
 ## Promotion criteria
 

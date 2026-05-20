@@ -38,6 +38,7 @@ Use these documents when changing this repository or local Hermes installation:
 3. `docs/DEEPSEEK_PROVIDER_SETUP.md` — DeepSeek provider setup notes.
 4. `profiles/coder/SOUL.md` — Hermes coder profile behavior.
 5. `skills/agentops-coder/` — canonical orchestration skill package (see `skills/agentops-coder/README.md` for package docs, install path, and compatibility; `SKILL.md` is the Hermes entrypoint and metadata contract).
+6. `docs/AGENTOPS-PACKAGING-BOUNDARIES.md` — current boundary between repo-local `.agentops/`, helper scripts, Hermes skill package, optional `$HOME/.agentops/`, and future CLI candidates.
 
 ## Current project phase
 
