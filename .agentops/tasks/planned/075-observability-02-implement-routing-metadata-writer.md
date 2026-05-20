@@ -6,11 +6,11 @@ planned
 
 ## Goal
 
-Implement the first minimal AgentOps routing metadata writer based on the design
-produced by `070-observability-01-routing-metadata-and-bad-model-fixture`.
+Implement the first minimal AgentOps routing metadata writer based on the accepted
+design in `docs/AGENTOPS-ROUTING-METADATA.md`.
 
 This task should add a small, safe, queryable metadata artifact for each executor
-run, so later observability and cost-aware routing work can answer:
+run so later observability and cost-aware routing work can answer:
 
 - what model was requested
 - what provider/model actually ran, when available
@@ -18,16 +18,22 @@ run, so later observability and cost-aware routing work can answer:
 - whether retry/fallback happened, when available
 - how the run ended
 
-This task should not implement dashboards, automatic cost optimization, or
-routing policy changes.
+This task should not implement dashboards, automatic cost optimization, routing
+policy changes, or the bad-model fixture.
 
-## Background / why later
+## Background / why now
 
-This task intentionally follows `070`.
+This task follows `070-observability-01-routing-metadata-and-bad-model-fixture`.
 
-`070` should first decide the routing metadata contract, storage format,
-bad-model fixture strategy, and safety rules. This task implements the smallest
-useful writer only after that design is accepted.
+`070` accepted a near-term routing metadata design:
+
+- write raw/local routing metadata under `.agentops-runs/<run-id>/`
+- use a boring key/value file first
+- write `routing.txt`
+- keep prompt text, raw logs, request payloads, response payloads, and secrets
+  out of committed files
+- leave bad-model fixture implementation as a follow-up unless explicitly split
+  differently later
 
 ## Problem statement
 
@@ -42,105 +48,139 @@ That is fragile and makes cost analysis unreliable.
 
 ## Smallest useful slice
 
-Implement the minimal routing metadata writer defined by `070`.
+Implement the minimal routing metadata writer defined by
+`docs/AGENTOPS-ROUTING-METADATA.md`.
 
-Expected direction, to be confirmed by the `070` design:
+Expected behavior:
 
-- write raw/local routing metadata under `.agentops-runs/<run-id>/`
-- keep raw prompt text and raw logs out of committed files
-- optionally surface a safe summary into `.agentops/results/` only if the design
-  explicitly allows it
-- capture partial metadata when some provider fields are unavailable
+- create `.agentops-runs/<run-id>/routing.txt` for executor runs
+- use key/value lines
+- record best-effort routing fields
+- record partial metadata when some provider fields are unavailable
 - do not fail successful executor runs only because optional metadata is missing
+- preserve existing `.agentops-runs/<run-id>/metadata.txt` behavior
+- do not commit `.agentops-runs/`
+
+The bad-model fixture is a follow-up task.
 
 ## Executor
 
-Harness: TBD (default in this repo: OpenCode)
+Harness: OpenCode
 Model source: runner configuration (`AGENTOPS_EXECUTOR_MODEL`)
 Fallback: disabled
 
 ## Read scope
-
-To be finalized after `070`.
-
-Likely candidates:
 
 - `docs/AGENTOPS-ROUTING-METADATA.md`
 - `docs/RUN-AUDIT.md`
 - `docs/RUN-OBSERVABILITY.md`
 - `docs/AGENTOPS-PACKAGING-BOUNDARIES.md`
 - `scripts/run-opencode-executor.sh`
-- `scripts/record-agentops-outcome.sh`
 - `scripts/render-agentops-run-summary.sh`
+- `scripts/record-agentops-outcome.sh`
 - `.agentops/tasks/done/` and `.agentops/results/` examples from recent runs
 
 ## Write scope
 
-To be finalized after `070`.
-
-Likely candidates:
-
 - `scripts/run-opencode-executor.sh`
 - `scripts/render-agentops-run-summary.sh`
-- optional helper script if the design chooses one, for example:
-  - `scripts/write-agentops-routing-metadata.sh`
-- docs/tests only as required by the design:
+- docs only if needed to reflect the implemented artifact:
   - `docs/RUN-AUDIT.md`
   - `docs/RUN-OBSERVABILITY.md`
   - `docs/AGENTOPS-ROUTING-METADATA.md`
 
+Optional only if simpler and justified:
+
+- a small dedicated helper script, for example:
+  - `scripts/write-agentops-routing-metadata.sh`
+
 Do not modify model routing policy, provider configuration, Hermes profile
-configuration, or OpenCode authentication.
+configuration, OpenCode authentication, lifecycle helpers, or `.agentops/`
+lifecycle semantics.
 
 ## Requirements
 
-To be finalized after `070`.
-
-Expected implementation requirements:
-
-- Implement the metadata contract accepted in
-  `docs/AGENTOPS-ROUTING-METADATA.md`.
-- Store raw/local metadata under `.agentops-runs/<run-id>/`.
-- Include at least the fields selected by `070`, likely:
+- Implement the metadata contract from `docs/AGENTOPS-ROUTING-METADATA.md`.
+- Store raw/local metadata under `.agentops-runs/<run-id>/routing.txt`.
+- Use key/value text format.
+- Include at least these fields, with `unknown` or empty values where
+  appropriate:
   - `timestamp`
+  - `run_id`
+  - `task_id`
+  - `phase`
   - `role`
+  - `harness`
   - `requested_model`
   - `resolved_provider`
   - `resolved_model`
-  - `token_counts`
-  - `latency_ms` or `duration_ms`
+  - `token_counts_prompt`
+  - `token_counts_completion`
+  - `token_counts_total`
+  - `duration_ms`
   - `retry_reason`
   - `fallback_reason`
   - `exit_code`
   - `final_outcome`
+  - `error_class`
+  - `error_reason`
+  - `debug_hint`
+- Prefer `requested_model` for what AgentOps asked the harness/provider to use.
+- Prefer `resolved_provider` and `resolved_model` for what actually ran, if
+  known.
+- Do not rename or remove existing `metadata.txt` fields in this slice.
 - Record partial metadata when provider-specific values are unavailable.
-- Do not export prompt text.
 - Do not parse secrets.
+- Do not export prompt text.
 - Do not commit `.agentops-runs/`.
 - Preserve existing executor behavior.
 - Preserve existing lifecycle behavior.
-- Keep output safe for local debugging first; committed summaries are optional
-  and must be explicitly safe.
+- Keep committed summaries optional and safe.
+
+## Expected field behavior
+
+Near-term expected values:
+
+- `timestamp`: UTC ISO-8601 timestamp.
+- `run_id`: current AgentOps run id.
+- `task_id`: parsed from run id or empty/unknown if unavailable.
+- `phase`: usually `executor` for this slice.
+- `role`: usually `executor` for this slice.
+- `harness`: likely `OpenCode` for `scripts/run-opencode-executor.sh`.
+- `requested_model`: value requested by the workflow, usually
+  `AGENTOPS_EXECUTOR_MODEL`.
+- `resolved_provider`: best-effort provider name if reliably known, otherwise
+  `unknown`.
+- `resolved_model`: best-effort model name if reliably known, otherwise
+  `unknown`.
+- token counts: `unknown` unless reliably available without unsafe log parsing.
+- `duration_ms`: derive from wrapper timing where possible.
+- `retry_reason` / `fallback_reason`: empty unless reliably known.
+- `exit_code`: executor command exit code.
+- `final_outcome`: `unknown` for plain executor runs unless known at this stage;
+  later outcome helpers may update or summarize outcome separately.
+- `error_class`, `error_reason`, `debug_hint`: empty for successful runs unless
+  available safely.
 
 ## Bad-model/debug fixture
 
-This implementation task may include the bad-model fixture only if `070` says
-the fixture should be implemented together with the metadata writer.
+Do not implement the bad-model fixture in this task.
 
-Otherwise, create a separate follow-up task for the fixture.
+Create or keep a separate follow-up task for:
 
-Expected future fixture behavior:
+```text
+observability-03-add-bad-model-debug-fixture
+```
 
-- intentionally request an invalid or unsupported model/provider configuration
-- verify the metadata writer records the failure path safely
-- record requested model
-- record resolved provider/model if available
-- record error/retry/fallback reason if available
-- record timestamp and duration
-- provide a rerun/debug hint if available
+That follow-up should intentionally request an invalid or unsupported model and
+verify the failure path records useful routing metadata.
+
+This task should only make the writer capable of recording failure fields when
+they are available.
 
 ## Non-goals
 
+- Do not implement the bad-model fixture.
 - Do not implement automatic cost optimization.
 - Do not change routing policy.
 - Do not change model selection behavior.
@@ -155,39 +195,40 @@ Expected future fixture behavior:
 
 ## Open questions
 
-These should be resolved by `070` before promotion:
+These may remain partially open during implementation if values are not reliably
+available yet:
 
-- Which helper owns metadata writing?
-- Should the metadata format be JSON, JSONL, Markdown, or key/value text?
-- Which token fields are reliably available?
-- Should retries/fallbacks be represented as separate fields or a normalized
-  event list?
-- Should the bad-model fixture be implemented in this task or in a follow-up?
-- Should safe summaries be surfaced into `.agentops/results/`, or should this
-  task only write `.agentops-runs/` artifacts?
+- Which token fields are reliably available without parsing unsafe logs?
+- Can `resolved_provider` and `resolved_model` be derived safely from existing
+  configuration, or should they remain `unknown` for now?
+- Should later outcome helpers update routing metadata, or should outcome remain
+  separate in `outcome.txt`?
+- Should the writer be inline in `run-opencode-executor.sh` or extracted into a
+  small helper script?
+
+Do not block the first implementation on unavailable provider-specific fields.
+Use `unknown` when needed.
 
 ## Promotion decision
 
-Decision: keep_planned
+Decision: promote_to_ready
 
 Reason:
-This implementation task depends on the design output from
-`070-observability-01-routing-metadata-and-bad-model-fixture`.
+`070` accepted the routing metadata design and chose the near-term key/value
+`routing.txt` artifact under `.agentops-runs/<run-id>/`.
 
 Next action:
-Promote only after `070` is accepted and the routing metadata contract, storage
-format, and fixture strategy are known.
+Promote and implement the smallest safe writer. Keep the bad-model fixture as a
+follow-up.
 
 ## Promotion criteria
 
-- `docs/AGENTOPS-ROUTING-METADATA.md` or equivalent design exists
-- metadata fields are decided
-- storage format is decided
-- writer ownership is decided
-- bad-model fixture strategy is decided
-- write scope is concrete
-- verification commands are concrete
-- no routing-policy changes are included
+- `docs/AGENTOPS-ROUTING-METADATA.md` exists.
+- Metadata fields are decided.
+- Storage format is decided: key/value `routing.txt`.
+- Write scope is concrete.
+- Verification commands are concrete.
+- No routing-policy changes are included.
 
 ## Verification
 
@@ -200,33 +241,59 @@ bash -n scripts/*.sh
 scripts/check-agentops-lifecycle.sh
 ```
 
-Expected future task-specific verification, to be finalized after `070`:
+Routing metadata smoke verification:
 
 ```bash
-# Example only; exact paths depend on the accepted design.
-test -f .agentops-runs/<run-id>/routing-metadata.json
-grep -q 'requested_model' .agentops-runs/<run-id>/routing-metadata.json
-grep -q 'resolved_model' .agentops-runs/<run-id>/routing-metadata.json
-grep -q 'duration' .agentops-runs/<run-id>/routing-metadata.json
+printf 'test prompt\n' > /tmp/agentops-routing-smoke.prompt.md
+
+AGENTOPS_RUN_ID=TASK-xxxx-routing-smoke \
+AGENTOPS_EXECUTOR_COMMAND='printf "ok\n"' \
+scripts/run-opencode-executor.sh /tmp/agentops-routing-smoke.prompt.md
+
+test -f .agentops-runs/TASK-xxxx-routing-smoke/metadata.txt
+test -f .agentops-runs/TASK-xxxx-routing-smoke/routing.txt
+
+grep -q '^timestamp=' .agentops-runs/TASK-xxxx-routing-smoke/routing.txt
+grep -q '^run_id=' .agentops-runs/TASK-xxxx-routing-smoke/routing.txt
+grep -q '^requested_model=' .agentops-runs/TASK-xxxx-routing-smoke/routing.txt
+grep -q '^resolved_provider=' .agentops-runs/TASK-xxxx-routing-smoke/routing.txt
+grep -q '^resolved_model=' .agentops-runs/TASK-xxxx-routing-smoke/routing.txt
+grep -q '^duration_ms=' .agentops-runs/TASK-xxxx-routing-smoke/routing.txt
+grep -q '^exit_code=' .agentops-runs/TASK-xxxx-routing-smoke/routing.txt
+grep -q '^final_outcome=' .agentops-runs/TASK-xxxx-routing-smoke/routing.txt
 ```
 
-Do not use `|| true` to mask required verification failures.
+Safety verification:
+
+```bash
+# Optional diagnostic: ignored local run artifacts may appear here.
+git status --short --ignored | grep '.agentops-runs/' || true
+
+# Required check: .agentops-runs must not be tracked.
+if git status --short | grep '.agentops-runs/'; then
+  echo 'FAIL: .agentops-runs contains tracked changes'
+  exit 1
+fi
+```
+
+Do not use `|| true` to mask required verification failures. The optional
+ignored-file diagnostic above is allowed because it is not a required pass/fail
+check.
 
 ## Accept criteria
 
-- A structured routing metadata artifact is written for executor runs.
-- The artifact is local/raw under `.agentops-runs/` unless the accepted design
-  says otherwise.
-- The metadata captures requested model, resolved provider/model if available,
-  timing, retry/fallback reason if available, exit code, and outcome fields
-  chosen by `070`.
-- Missing provider-specific fields are handled gracefully.
+- `.agentops-runs/<run-id>/routing.txt` is written for executor runs.
+- The artifact uses key/value text format.
+- The artifact includes the selected routing metadata fields.
+- Missing provider-specific fields are handled gracefully with `unknown` or empty
+  values according to the design.
 - Prompt text and secrets are not exported.
+- Existing `metadata.txt` behavior remains compatible.
 - Existing executor and lifecycle behavior remains compatible.
 - `.agentops-runs/` artifacts remain gitignored and uncommitted.
 - Documentation is updated only as needed to explain the new metadata artifact.
-- No dashboard, automatic cost optimization, routing-policy change, or lifecycle
-  redesign is included.
+- No bad-model fixture, dashboard, automatic cost optimization, routing-policy
+  change, or lifecycle redesign is included.
 
 ## Notes
 
