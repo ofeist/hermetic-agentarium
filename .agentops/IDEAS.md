@@ -183,6 +183,54 @@ This likely belongs under the AgentOps observability workstream, near:
 - run outcome metadata
 - future cost-aware model routing policy
 
+## AgentOps routing metadata and bad-model debug fixture
+
+Source:
+External feedback on AgentOps routing observability.
+
+Problem:
+Before cost tests or cost-aware routing, AgentOps needs a boring but queryable routing log. Otherwise it is unclear what model was requested, what provider/model actually ran, how long it took, whether retries happened, and why failures occurred.
+
+Goal:
+Add a future observability slice that records safe routing metadata and includes one forced bad-model/error fixture to test support/debugging paths before real traffic.
+
+Capture, where available:
+
+- timestamp
+- requested_model
+- provider_model / resolved_model
+- provider
+- role: coordinator / executor / reviewer / helper
+- token counts
+- latency / duration
+- retry_reason
+- fallback_reason, if any
+- final outcome: accept / revise / revert / no-op / blocked
+
+Debug fixture:
+Add one deterministic bad-model or invalid-routing case that verifies the workflow records the failure cleanly and returns useful debugging information, such as:
+
+- requested model
+- resolved provider/model if any
+- error class/reason
+- retry reason
+- rerun command or next debugging step
+
+Why:
+This creates a factual baseline before cost optimization. Cost tests are not useful if we cannot first answer what actually ran and why a run failed or retried.
+
+Possible location:
+- raw/local run metadata: `.agentops-runs/`
+- committed safe summaries: `.agentops/results/`
+- future cross-repo index/cache: `$HOME/.agentops/` only if the packaging-boundary decision allows it
+
+Non-goals:
+- do not export prompt text
+- do not parse secrets
+- do not build a dashboard yet
+- do not implement automatic cost optimization yet
+- do not change routing policy in this slice
+
 ## Promotion path
 
 When an idea becomes actionable, promote it gradually:
