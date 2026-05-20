@@ -62,6 +62,17 @@ only `SKILL.md` may expose a slash command, but it is not enough to provide the
 helper scripts, task layout, templates, lifecycle checks, worktree helpers, or
 review conventions.
 
+## Near-Term Usage Model For Another Repository
+
+For now, using AgentOps with another repository means:
+
+1. Keep `hermetic-agentarium` as the toolkit checkout.
+2. Initialize or maintain `.agentops/` in the target repository.
+3. Run helper scripts from the toolkit checkout against the target repository
+   only where explicitly supported.
+4. Do not assume the installed Hermes skill alone is sufficient for the full
+   workflow.
+
 ## Product Boundaries
 
 ### Hermetic Agentarium
