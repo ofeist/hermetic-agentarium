@@ -74,6 +74,7 @@ RUN_DIR=""
 STDOUT_FILE=""
 STDERR_FILE=""
 METADATA_FILE=""
+ROUTING_FILE=""
 
 timestamp_utc() {
     date -u +"%Y-%m-%dT%H:%M:%SZ"
@@ -89,6 +90,7 @@ if [[ -n "$RUN_ID" ]]; then
     STDOUT_FILE="$RUN_DIR/executor-stdout.log"
     STDERR_FILE="$RUN_DIR/executor-stderr.log"
     METADATA_FILE="$RUN_DIR/metadata.txt"
+    ROUTING_FILE="$RUN_DIR/routing.txt"
 
     mkdir -p "$RUN_DIR"
     cp "$PROMPT_FILE" "$RUN_DIR/executor-prompt.md"
@@ -140,10 +142,14 @@ run_opencode() {
 if [[ -n "$RUN_ID" ]]; then
     EXIT_CODE=0
 
+    START_MS=$(date +%s%3N)
+
     set +e
     run_opencode > >(tee "$STDOUT_FILE") 2> >(tee "$STDERR_FILE" >&2)
     EXIT_CODE=$?
     set -e
+
+    END_MS=$(date +%s%3N)
 
     FINISHED_AT="$(timestamp_utc)"
 
@@ -161,6 +167,40 @@ if [[ -n "$RUN_ID" ]]; then
         echo "stdout_bytes=$STDOUT_BYTES"
         echo "stderr_bytes=$STDERR_BYTES"
     } >> "$METADATA_FILE"
+
+    DURATION_MS=$((END_MS - START_MS))
+
+    ERROR_CLASS=""
+    ERROR_REASON=""
+    DEBUG_HINT=""
+    if [[ "$EXIT_CODE" -ne 0 ]]; then
+        ERROR_CLASS="executor_failed"
+        ERROR_REASON="exit code $EXIT_CODE"
+        DEBUG_HINT="check $RUN_DIR/executor-stderr.log"
+    fi
+
+    {
+        echo "timestamp=$STARTED_AT"
+        echo "run_id=$RUN_ID"
+        echo "task_id=$TASK_ID"
+        echo "phase=executor"
+        echo "role=executor"
+        echo "harness=OpenCode"
+        echo "requested_model=$MODEL"
+        echo "resolved_provider=unknown"
+        echo "resolved_model=unknown"
+        echo "token_counts_prompt=unknown"
+        echo "token_counts_completion=unknown"
+        echo "token_counts_total=unknown"
+        echo "duration_ms=$DURATION_MS"
+        echo "retry_reason="
+        echo "fallback_reason="
+        echo "exit_code=$EXIT_CODE"
+        echo "final_outcome=unknown"
+        echo "error_class=$ERROR_CLASS"
+        echo "error_reason=$ERROR_REASON"
+        echo "debug_hint=$DEBUG_HINT"
+    } > "$ROUTING_FILE"
 
     echo "Local run audit: $RUN_DIR" >&2
 
