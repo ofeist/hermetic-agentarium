@@ -1,8 +1,8 @@
-# observability-01-routing-metadata-and-bad-model-fixture - Plan queryable routing metadata before cost tests
+# TASK-0100 - Plan queryable routing metadata before cost tests
 
 ## Status
 
-planned
+done
 
 ## Goal
 

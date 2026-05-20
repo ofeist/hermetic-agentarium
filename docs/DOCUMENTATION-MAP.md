@@ -12,6 +12,7 @@ Read these in order:
 4. `docs/FIRST-RUN.md` — run the first safe smoke test.
 5. `docs/DEBUGGING.md` — troubleshoot common setup and execution issues.
 6. `docs/RUN-OBSERVABILITY.md` — inspect run metadata, artifacts, and token/time pressure.
+7. `docs/AGENTOPS-ROUTING-METADATA.md` — planned routing metadata contract for requested/resolved model facts and bad-model fixture behavior.
 
 ## Operator path
 
@@ -24,6 +25,7 @@ Use these documents when running or reviewing AgentOps tasks:
 5. `examples/opencode-docs-task.prompt.md` — filled example prompt.
 6. `docs/RUN-OBSERVABILITY.md` — inspect run metadata, artifacts, and token/time pressure.
 7. `.agentops/results/` — safe result summaries for completed tasks.
+8. `docs/AGENTOPS-ROUTING-METADATA.md` — routing metadata fields to include in future safe run summaries.
 
 If the `/agentops-coder` slash command is not recognized, see:
 - `docs/INSTALL.md` — short activation checklist and `Unknown command` troubleshooting.
