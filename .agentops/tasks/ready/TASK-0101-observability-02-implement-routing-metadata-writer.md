@@ -1,8 +1,8 @@
-# observability-02-implement-routing-metadata-writer - Implement safe routing metadata writer
+# TASK-0101 - Implement safe routing metadata writer
 
 ## Status
 
-planned
+ready
 
 ## Goal
 
