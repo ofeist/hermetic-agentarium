@@ -1,8 +1,8 @@
-# observability-00 — Document AgentOps observability workstream intent
+# TASK-0102 - Document AgentOps observability workstream intent
 
 ## Status
 
-planned
+ready
 
 ## Goal
 
@@ -209,32 +209,31 @@ failure fixtures, summaries, and eventually cost-aware model routing.
 
 ## Open questions
 
-- Should completed task IDs be mentioned in the doc, or should the doc stay
-  purely theme/capability-based?
+None. Use the decided approach:
 
-Do not block the doc on historical perfection. Prefer a concise current overview.
+- keep the observability doc theme/capability-based
+- avoid fragile lifecycle-path references
+- mention completed task IDs only sparingly when they add concrete context
+- add one pointer from `docs/DOCUMENTATION-MAP.md`
 
 ## Promotion decision
 
-Decision: keep_planned
+Decision: promote_to_ready
 
 Reason:
-The task is now shaped, but should be promoted only after confirming whether
-`docs/DOCUMENTATION-MAP.md` should be updated and whether completed task IDs
-should be mentioned.
+Doc location and link strategy are now decided:
+
+- target doc remains `docs/AGENTOPS-OBSERVABILITY.md`
+- add one pointer from `docs/DOCUMENTATION-MAP.md`
+- keep content theme/capability-based
+- mention completed task IDs sparingly only when useful
 
 Next action:
-Promote to ready after the link strategy is decided.
+Execute the documentation slice in `ready`.
 
 ## Promotion criteria
 
-This task can be promoted to ready when:
-
-- doc location is confirmed as `docs/AGENTOPS-OBSERVABILITY.md`
-- link strategy is decided
-- read/write scope is still accurate
-- the canonical skill marker remains `/agentops-coder` / `USING_SKILL:
-  agentops-coder`
+Already promoted to ready.
 
 ## Verification
 
