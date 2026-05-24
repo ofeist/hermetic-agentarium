@@ -6,258 +6,292 @@ planned
 
 ## Goal
 
-Create a short documentation page explaining why the AgentOps
-observability tasks exist and how the related slices fit together.
+Create a short documentation page explaining why the AgentOps observability
+workstream exists and how the related slices fit together.
 
-Suggested target doc:
+Target doc:
 
 `docs/AGENTOPS-OBSERVABILITY.md`
 
 ## Background / why now
 
-We keep revisiting why the observability tasks exist.
+AgentOps observability is no longer only an idea.
 
-The original trigger was reviewing local AgentOps run summaries. Those
-summaries showed activity signals such as:
+Recent work established local run auditing and routing metadata:
 
-- model
-- prompt size
-- duration
-- stdout/stderr size
-- exit code
-- local artifact path
+- raw/local run artifacts under `.agentops-runs/<run-id>/`
+- safe committed summaries under `.agentops/results/`
+- existing `metadata.txt` for execution-level facts
+- new `routing.txt` for routing/model metadata
 
-That was useful, but incomplete. It did not answer whether a run
-produced useful value, repeated an old prompt, used the intended model
-role, or wasted time/cost.
+That is useful, but the relationship between the observability slices is not
+obvious from individual task files alone.
 
-This context should be captured in repo documentation so the intent
-does not live only in chat memory.
+We need a concise overview so future work does not treat outcome metadata,
+routing metadata, prompt hashes, bad-model fixtures, model usage audit, and
+cost-aware routing as unrelated tweaks.
 
 ## Problem statement
 
-The observability tasks are related, but their relationship is not
-obvious from the individual task files alone.
+Without a workstream overview, it is easy to forget:
 
-Without a short workstream overview, it is easy to forget why these
-tasks exist or accidentally treat them as unrelated metadata tweaks.
+- why observability exists
+- which questions it should answer
+- which artifacts are local-only
+- which summaries are safe to commit
+- why cost-aware routing must come after measurement
+- why prompt text and raw logs must not be exported
+
+This context should live in repo documentation, not only in chat history.
 
 ## Smallest useful slice
 
-Create `docs/AGENTOPS-OBSERVABILITY.md` with a concise workstream
-overview.
+Create `docs/AGENTOPS-OBSERVABILITY.md`.
 
 The doc should explain:
 
 - origin of the observability workstream
-- core questions it should answer
-- how current planned/ready slices fit together
-- safety rules for local run metadata and prompt handling
+- core questions observability should answer
+- current and near-term slices by capability/theme
+- safety rules for local run metadata, prompt handling, logs, and secrets
+- why dashboards/cost-aware routing come later
 
 No implementation work in this slice.
 
 ## Executor
 
-Harness: TBD (default in this repo: OpenCode)
+Harness: OpenCode
 Model source: runner configuration (`AGENTOPS_EXECUTOR_MODEL`)
 Fallback: disabled
 
 ## Read scope
 
-TBD
-
-Likely candidates:
-
 - `docs/RUN-AUDIT.md`
 - `docs/RUN-OBSERVABILITY.md`
+- `docs/AGENTOPS-ROUTING-METADATA.md`
+- `docs/AGENTOPS-PACKAGING-BOUNDARIES.md`
 - `docs/DOCUMENTATION-MAP.md`
-- `.agentops/tasks/ready/TASK-0089-run-outcome-metadata.md` (or its
-  `done/` counterpart, once landed)
-- `.agentops/tasks/planned/71-observability-04-wire-decision-helpers-to-outcome-writer.md`
-- `.agentops/tasks/planned/72-observability-05-noop-blocked-revert-outcome-paths.md`
-- `.agentops/tasks/planned/80-observability-02-prompt-hash-metadata.md`
-- `.agentops/tasks/planned/90-observability-03-agent-model-usage-audit.md`
-- `.agentops/tasks/planned/100-policy-01-cost-aware-agentops-model-routing.md`
+- `.agentops/tasks/done/` examples for recently completed observability tasks
+- `.agentops/results/` examples for recently completed observability tasks
+- `.agentops/tasks/planned/` observability and policy follow-up tasks, if present
 
 ## Write scope
 
-TBD
+- `docs/AGENTOPS-OBSERVABILITY.md`
+- `docs/DOCUMENTATION-MAP.md` only if needed to surface the new doc
 
-Likely candidates:
-
-- `docs/AGENTOPS-OBSERVABILITY.md` (new)
-- minimal cross-link update to `docs/DOCUMENTATION-MAP.md` if needed to
-  surface the new doc
-
-Do not modify executor wrappers, helper scripts, or task files.
+Do not modify executor wrappers, helper scripts, lifecycle helpers, or task
+files.
 
 ## Requirements
 
-TBD
+- Create `docs/AGENTOPS-OBSERVABILITY.md`.
+- Keep the doc concise and practical.
+- Use capability/theme-based slice descriptions instead of fragile lifecycle
+  paths.
+- Mention task IDs only for completed/landed work when useful.
+- Do not link to lifecycle paths that will rot when files move between
+  `planned/`, `ready/`, `review/`, and `done/`.
+- Include a short section for each:
+  - Origin
+  - Core questions
+  - Current artifacts
+  - Current / near-term slices
+  - Safety rules
+  - What comes later
+- Mention the current artifact split:
+  - `.agentops-runs/<run-id>/metadata.txt`
+  - `.agentops-runs/<run-id>/routing.txt`
+  - `.agentops/results/`
+- Explain that `.agentops-runs/` is local and gitignored.
+- Explain that committed files should contain only safe summaries.
+- Explain that prompt text, raw logs, request/response payloads, auth config,
+  and secrets must not be exported.
+- Explain that cost-aware routing should not be implemented until the metadata
+  foundation is stable.
+- Add a one-line pointer from `docs/DOCUMENTATION-MAP.md` if that is how the
+  repository surfaces docs.
 
-When ready, this section should contain concrete requirements covering:
+## Suggested doc outline
 
-- exact doc location (`docs/AGENTOPS-OBSERVABILITY.md` unless a better
-  home is identified)
-- whether the workstream overview also needs a one-line pointer from
-  `docs/DOCUMENTATION-MAP.md`
-- which related slices the "Current slices" section names (must reflect
-  the actual planned/ready state at promotion time)
-
-Suggested content (to confirm at promotion):
-
-````md
-# AgentOps Observability Workstream
+```md
+# AgentOps Observability
 
 ## Origin
 
 This workstream started from reviewing local AgentOps run summaries.
 
-The existing summaries showed activity:
-
-- model
-- prompt size
-- duration
-- stdout/stderr size
-- exit code
-- local artifact path
-
-That was useful, but incomplete. It did not answer whether the run
-produced value, repeated an old prompt, used the intended model role,
-or wasted time/cost.
+The early summaries showed activity: model, prompt size, duration,
+stdout/stderr size, exit code, and local artifact paths. That was useful, but
+not enough to answer whether a run produced value, repeated a prompt, used the
+intended model role, or wasted time/cost.
 
 ## Core questions
 
 - What happened in this run?
-- Which prompt and model were used?
+- Which model was requested?
+- Which provider/model actually resolved, if known?
+- How long did the run take?
+- Did the run produce accepted value, revision work, no-op, blocked output, or
+  reverted output?
 - Was the prompt repeated?
-- Which model role was used: coordinator, executor, helper, or
-  reviewer?
-- What was the final review outcome?
-- Did the run produce accepted value, revision work, no-op, blocked
-  output, or reverted output?
+- Which lifecycle role was involved: coordinator, executor, reviewer, helper?
 - Where might cost/time/token waste be hiding?
 
-## Current slices
+## Current artifacts
 
-- Run outcome metadata: connect executor activity to review value.
-- Prompt hash metadata: detect repeated prompts without exporting
-  prompt text.
-- Agent/model usage audit: understand model-role traffic safely.
-- Cost-aware model routing policy: choose models deterministically by
-  lifecycle role.
+- `.agentops-runs/<run-id>/metadata.txt` — local execution metadata.
+- `.agentops-runs/<run-id>/routing.txt` — local routing/model metadata.
+- `.agentops/results/` — committed safe summaries and review/result notes.
+
+## Current and near-term slices
+
+- Run audit metadata: capture basic executor facts.
+- Routing metadata: record requested model, resolved provider/model, duration,
+  exit code, outcome, retry/fallback/error fields.
+- Bad-model fixture: intentionally exercise failure handling.
+- Prompt hash metadata: detect repeated prompts without exporting prompt text.
+- Agent/model usage audit: understand traffic by role/model safely.
+- Cost-aware routing policy: later deterministic model selection based on
+  lifecycle role and measured behavior.
 
 ## Safety rules
 
 - Keep raw `.agentops-runs/` logs local and gitignored.
 - Do not export full prompt content.
-- Prefer hashes, counts, sizes, and safe summaries.
-- Do not parse secrets.
-- Do not build a dashboard before the local metadata contract is
-  stable.
-````
+- Do not copy stdout/stderr contents into committed docs.
+- Do not export provider request/response payloads.
+- Do not parse or print secrets.
+- Prefer hashes, counts, sizes, durations, exit codes, and safe summaries.
+- Do not build dashboards or routing policy before the local metadata contract
+  is stable.
 
-Workflow requirements (to apply at promotion):
+## What comes later
 
-- The execution prompt MUST start with `/hermetic-coding-orchestrator`.
-- The agent MUST include `USING_SKILL: hermetic-coding-orchestrator` near
-  the beginning of its Plan or output.
+After the metadata foundation is reliable, AgentOps can add query helpers,
+failure fixtures, summaries, and eventually cost-aware model routing.
+```
+
+## Workflow requirements
+
+- The execution prompt should use the canonical skill command:
+  `/agentops-coder`
+- The agent should include:
+  `USING_SKILL: agentops-coder`
 - Keep the change minimal.
 - Do not commit.
 - Do not modify unrelated files.
 - Do not read or print secrets.
 - Executor model selection is controlled by runner configuration.
-- Preserve `OPENCODE_XDG_CONFIG_HOME` and `OPENCODE_XDG_DATA_HOME` if
-  invoking OpenCode.
+- Preserve `OPENCODE_XDG_CONFIG_HOME` and `OPENCODE_XDG_DATA_HOME` if invoking
+  OpenCode.
 
 ## Non-goals
 
-- Do not implement any helper scripts.
-- Do not modify executor wrappers (`scripts/run-opencode-executor.sh`).
-- Do not modify `scripts/record-agentops-outcome.sh` or other helper
-  scripts.
-- Do not modify task files in `planned/`, `ready/`, `running/`,
-  `review/`, or `done/`.
+- Do not implement helper scripts.
+- Do not modify executor wrappers.
+- Do not modify `scripts/run-opencode-executor.sh`.
+- Do not modify `scripts/record-agentops-outcome.sh`.
+- Do not modify lifecycle helpers.
+- Do not modify task files in lifecycle directories.
 - Do not redefine AgentOps lifecycle states.
 - Do not add automatic quality judgment.
 - Do not build a dashboard.
-- Do not export prompt text or other sensitive run contents.
+- Do not implement cost-aware routing.
+- Do not export prompt text or sensitive run contents.
 - Do not parse raw logs.
 
 ## Open questions
 
-- Is `docs/AGENTOPS-OBSERVABILITY.md` the right home, or should this
-  content live as a section inside an existing doc (e.g.
-  `docs/RUN-OBSERVABILITY.md` or `docs/RUN-AUDIT.md`)?
-- Should the doc link out to each related task file by path, or only
-  by name (path links rot when tasks move between lifecycle dirs)?
-- Should the "Current slices" section enumerate task IDs, or only
-  describe slices by theme (task IDs are more precise but rot faster
-  than themes)?
+These should be resolved during promotion:
+
+- Should `docs/DOCUMENTATION-MAP.md` receive a pointer to the new doc?
+- Should completed task IDs be mentioned in the doc, or should the doc stay
+  purely theme-based?
+
+Do not block the doc on historical perfection. Prefer a concise current overview.
 
 ## Promotion decision
 
-Decision: keep_planned.
+Decision: keep_planned
 
 Reason:
-The doc location and link strategy are open questions, and the
-"Current slices" listing should reflect the workstream state at
-promotion time (which slices are ready, which are planned, which are
-done). Lock those before promoting.
+The task is now shaped, but should be promoted only after confirming whether
+`docs/DOCUMENTATION-MAP.md` should be updated and whether completed task IDs
+should be mentioned.
 
 Next action:
-Decide doc location, link strategy, and the slice-listing approach.
-Then promote.
+Promote to ready after the link strategy is decided.
 
 ## Promotion criteria
 
 This task can be promoted to ready when:
 
-- the doc location is decided (`docs/AGENTOPS-OBSERVABILITY.md` or an
-  alternative)
-- the link strategy is decided (by path, by name, or by task ID)
-- the "Current slices" listing approach is decided
-- read/write scope is concrete
+- doc location is confirmed as `docs/AGENTOPS-OBSERVABILITY.md`
+- link strategy is decided
+- read/write scope is still accurate
+- the canonical skill marker remains `/agentops-coder` / `USING_SKILL:
+  agentops-coder`
 
 ## Verification
 
 ```bash
 git status --short --branch
 git diff --stat
+test -f docs/AGENTOPS-OBSERVABILITY.md
+grep -q '^# AgentOps Observability' docs/AGENTOPS-OBSERVABILITY.md
+grep -q '.agentops-runs' docs/AGENTOPS-OBSERVABILITY.md
+grep -q 'routing.txt' docs/AGENTOPS-OBSERVABILITY.md
+grep -q 'Do not export full prompt' docs/AGENTOPS-OBSERVABILITY.md
 ```
 
-Add task-specific checks below this base set during promotion (e.g.
-confirming the new doc is referenced from `docs/DOCUMENTATION-MAP.md`
-if that is part of the chosen scope).
+If `docs/DOCUMENTATION-MAP.md` is updated:
 
-Do not use `|| true` to mask failures.
+```bash
+grep -q 'AGENTOPS-OBSERVABILITY.md' docs/DOCUMENTATION-MAP.md
+```
+
+Do not use `|| true` to mask required verification failures.
 
 ## Accept criteria
 
-TBD during promotion.
-
-Expected direction:
-
-- `docs/AGENTOPS-OBSERVABILITY.md` (or the chosen alternative) exists
-  and is concise.
-- The doc covers origin, core questions, current slices, and safety
-  rules.
+- `docs/AGENTOPS-OBSERVABILITY.md` exists.
+- The doc covers origin, core questions, current artifacts, current/near-term
+  slices, safety rules, and later work.
+- The doc references `.agentops-runs/<run-id>/routing.txt`.
 - The doc does not export prompt text or other sensitive run contents.
-- No helper scripts, executor wrappers, or task files are modified.
+- No helper scripts, executor wrappers, lifecycle helpers, or task files are
+  modified.
 - Verification commands pass or failures are explained.
 
 ## Hermes/coder collection prompt
 
-TBD during promotion.
+```text
+/agentops-coder
 
-When ready, use the canonical Hermes/coder collection prompt shape from
-the planned/ready task template, with the concrete ready task path.
+Execute AgentOps ready task: .agentops/tasks/ready/<READY_TASK_FILENAME>.md
+
+Use the Hermes/OpenCode executor workflow from your profile/skill.
+
+Requirements:
+- create/switch appropriate task branch or worktree
+- do not run executor work on main
+- preserve OPENCODE_XDG_CONFIG_HOME and OPENCODE_XDG_DATA_HOME
+- use task-specified model
+- do not fallback
+- do not commit
+- independently verify
+
+Return:
+Plan
+Implementation
+Verification
+Review
+Changed files
+Uncertainty
+```
 
 ## Return format
-
-TBD during promotion.
-
-When ready, use the standard AgentOps return format:
 
 ```text
 Plan:
@@ -270,17 +304,8 @@ Uncertainty:
 
 ## Notes
 
-Relationship to other observability planning:
+This task is documentation-only.
 
-- TASK-0089 (observability-01, ready) — run outcome metadata writer.
-- observability-04 (planned 71) — wire decision helpers to outcome
-  writer.
-- observability-05 (planned 72) — paths for `no-op`, `blocked`, and
-  `revert` outcomes.
-- observability-02 (planned 80) — prompt-hash metadata.
-- observability-03 (planned 90) — agent/model usage audit.
-- policy-01 (planned 100) — cost-aware model routing policy.
-
-This task is documentation-only. Keep it that way. Heavier work —
-implementation, dashboards, automated quality judgment — belongs in
-the other observability slices, not here.
+Keep it small. The purpose is to make the observability workstream legible
+before adding more metadata, fixtures, helpers, dashboards, or cost-aware model
+routing.
