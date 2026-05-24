@@ -100,9 +100,12 @@ files.
   - Safety rules
   - What comes later
 - Mention the current artifact split:
-  - `.agentops-runs/<run-id>/metadata.txt`
-  - `.agentops-runs/<run-id>/routing.txt`
-  - `.agentops/results/`
+  - `.agentops-runs/<run-id>/metadata.txt` (executor metadata, including
+    prompt size/hash fields such as `prompt_sha256`)
+  - `.agentops-runs/<run-id>/routing.txt` (routing/model metadata)
+  - `.agentops-runs/<run-id>/outcome.txt` (post-review outcome metadata:
+    review decision, diff stats, verification status/exit code)
+  - `.agentops/results/` (committed safe summaries and review/result notes)
 - Explain that `.agentops-runs/` is local and gitignored.
 - Explain that committed files should contain only safe summaries.
 - Explain that prompt text, raw logs, request/response payloads, auth config,
@@ -111,6 +114,20 @@ files.
   foundation is stable.
 - Add a one-line pointer from `docs/DOCUMENTATION-MAP.md` if that is how the
   repository surfaces docs.
+
+Workflow requirements:
+
+- The execution prompt should use the canonical skill command:
+  `/agentops-coder`
+- The agent should include:
+  `USING_SKILL: agentops-coder`
+- Keep the change minimal.
+- Do not commit.
+- Do not modify unrelated files.
+- Do not read or print secrets.
+- Executor model selection is controlled by runner configuration.
+- Preserve `OPENCODE_XDG_CONFIG_HOME` and `OPENCODE_XDG_DATA_HOME` if invoking
+  OpenCode.
 
 ## Suggested doc outline
 
@@ -140,8 +157,9 @@ intended model role, or wasted time/cost.
 
 ## Current artifacts
 
-- `.agentops-runs/<run-id>/metadata.txt` — local execution metadata.
+- `.agentops-runs/<run-id>/metadata.txt` — local executor metadata, including prompt size/hash fields such as `prompt_sha256`.
 - `.agentops-runs/<run-id>/routing.txt` — local routing/model metadata.
+- `.agentops-runs/<run-id>/outcome.txt` — local post-review outcome metadata, including review decision, diff stats, verification status/exit code, and related outcome facts.
 - `.agentops/results/` — committed safe summaries and review/result notes.
 
 ## Current and near-term slices
@@ -149,6 +167,8 @@ intended model role, or wasted time/cost.
 - Run audit metadata: capture basic executor facts.
 - Routing metadata: record requested model, resolved provider/model, duration,
   exit code, outcome, retry/fallback/error fields.
+- Run outcome metadata: record post-review decision and diff/verification facts
+  via `scripts/record-agentops-outcome.sh`.
 - Bad-model fixture: intentionally exercise failure handling.
 - Prompt hash metadata: detect repeated prompts without exporting prompt text.
 - Agent/model usage audit: understand traffic by role/model safely.
@@ -172,20 +192,6 @@ After the metadata foundation is reliable, AgentOps can add query helpers,
 failure fixtures, summaries, and eventually cost-aware model routing.
 ```
 
-## Workflow requirements
-
-- The execution prompt should use the canonical skill command:
-  `/agentops-coder`
-- The agent should include:
-  `USING_SKILL: agentops-coder`
-- Keep the change minimal.
-- Do not commit.
-- Do not modify unrelated files.
-- Do not read or print secrets.
-- Executor model selection is controlled by runner configuration.
-- Preserve `OPENCODE_XDG_CONFIG_HOME` and `OPENCODE_XDG_DATA_HOME` if invoking
-  OpenCode.
-
 ## Non-goals
 
 - Do not implement helper scripts.
@@ -203,11 +209,8 @@ failure fixtures, summaries, and eventually cost-aware model routing.
 
 ## Open questions
 
-These should be resolved during promotion:
-
-- Should `docs/DOCUMENTATION-MAP.md` receive a pointer to the new doc?
 - Should completed task IDs be mentioned in the doc, or should the doc stay
-  purely theme-based?
+  purely theme/capability-based?
 
 Do not block the doc on historical perfection. Prefer a concise current overview.
 
