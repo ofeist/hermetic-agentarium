@@ -25,7 +25,8 @@ Use these documents when running or reviewing AgentOps tasks:
 5. `examples/opencode-docs-task.prompt.md` — filled example prompt.
 6. `docs/RUN-OBSERVABILITY.md` — inspect run metadata, artifacts, and token/time pressure.
 7. `.agentops/results/` — safe result summaries for completed tasks.
-8. `docs/AGENTOPS-ROUTING-METADATA.md` — routing metadata fields to include in future safe run summaries.
+8. `docs/AGENTOPS-OBSERVABILITY.md` — overview of why the observability workstream exists and how the slices fit together.
+9. `docs/AGENTOPS-ROUTING-METADATA.md` — routing metadata fields to include in future safe run summaries.
 
 If the `/agentops-coder` slash command is not recognized, see:
 - `docs/INSTALL.md` — short activation checklist and `Unknown command` troubleshooting.
